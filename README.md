@@ -195,3 +195,7 @@ This project does not have a NuGet package. Easiest way to use this is to either
 ## Development
 
 The core of this project is a set of pattern matching classes automatically generated through a T4 script from Roslyn CSharp [Syntax.xml](https://github.com/dotnet/roslyn/blob/master/src/Compilers/CSharp/Portable/Syntax/Syntax.xml) file. Upgrading to the latest version of Roslyn comes down to overwriting the Syntax.xml copy in the project, re-running the T4 script and fixing any compilation issues.
+
+## License
+
+LGPL 3 License.

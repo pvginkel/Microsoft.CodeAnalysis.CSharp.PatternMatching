@@ -18,7 +18,7 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _tokens = tokens.ToList();
         }
 
-        public bool IsMatch(SyntaxTokenList items, SemanticModel semanticModel)
+        public bool Test(SyntaxTokenList items, SemanticModel semanticModel)
         {
             if (items.Count != _tokens.Count)
                 return false;

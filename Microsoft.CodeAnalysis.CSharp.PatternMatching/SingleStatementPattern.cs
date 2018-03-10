@@ -18,24 +18,30 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
+        {
+            if (node is BlockSyntax block)
+                return block.Statements.Count == 1 && Test(block.Statements[0], semanticModel);
+
+            if (node is StatementSyntax statement)
+                return _statement == null || _statement.Test(statement, semanticModel);
+
+            return false;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
             if (node is BlockSyntax block)
             {
-                if (block.Statements.Count == 1)
-                    return IsMatch(block.Statements[0]);
+                RunCallback(block.Statements[0], semanticModel);
             }
-            else if (node is StatementSyntax statement)
+            else
             {
-                if (_statement != null && !_statement.IsMatch(statement))
-                    return false;
+                var statement = (StatementSyntax)node;
 
+                _statement?.RunCallback(statement, semanticModel);
                 _action?.Invoke(statement);
-
-                return true;
             }
-
-            return false;
         }
     }
 }

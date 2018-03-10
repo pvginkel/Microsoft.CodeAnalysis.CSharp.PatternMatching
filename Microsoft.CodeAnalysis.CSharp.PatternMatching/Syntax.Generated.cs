@@ -15,13 +15,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is NameSyntax typed))
                 return false;
-
 
 
             return true;
@@ -37,16 +36,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _identifier = identifier;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SimpleNameSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-
 
             return true;
         }
@@ -62,17 +60,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is IdentifierNameSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (IdentifierNameSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -89,21 +93,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is QualifiedNameSyntax typed))
                 return false;
 
-            if (_left != null && !_left.IsMatch(typed.Left, semanticModel))
+            if (_left != null && !_left.Test(typed.Left, semanticModel))
                 return false;
-            if (_right != null && !_right.IsMatch(typed.Right, semanticModel))
+            if (_right != null && !_right.Test(typed.Right, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (QualifiedNameSyntax)node;
+
+            _left?.RunCallback(typed.Left, semanticModel);
+            _right?.RunCallback(typed.Right, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -119,19 +131,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is GenericNameSyntax typed))
                 return false;
 
-            if (_typeArgumentList != null && !_typeArgumentList.IsMatch(typed.TypeArgumentList, semanticModel))
+            if (_typeArgumentList != null && !_typeArgumentList.Test(typed.TypeArgumentList, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (GenericNameSyntax)node;
+
+            _typeArgumentList?.RunCallback(typed.TypeArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -146,19 +165,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeArgumentListSyntax typed))
                 return false;
 
-            if (_arguments != null && !_arguments.IsMatch(typed.Arguments, semanticModel))
+            if (_arguments != null && !_arguments.Test(typed.Arguments, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TypeArgumentListSyntax)node;
+
+            _arguments?.RunCallback(typed.Arguments, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -175,21 +201,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AliasQualifiedNameSyntax typed))
                 return false;
 
-            if (_alias != null && !_alias.IsMatch(typed.Alias, semanticModel))
+            if (_alias != null && !_alias.Test(typed.Alias, semanticModel))
                 return false;
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AliasQualifiedNameSyntax)node;
+
+            _alias?.RunCallback(typed.Alias, semanticModel);
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -200,13 +234,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeSyntax typed))
                 return false;
-
 
 
             return true;
@@ -224,9 +257,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is PredefinedTypeSyntax typed))
                 return false;
@@ -234,9 +267,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_keyword != null && _keyword != typed.Keyword.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (PredefinedTypeSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -253,21 +292,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ArrayTypeSyntax typed))
                 return false;
 
-            if (_elementType != null && !_elementType.IsMatch(typed.ElementType, semanticModel))
+            if (_elementType != null && !_elementType.Test(typed.ElementType, semanticModel))
                 return false;
-            if (_rankSpecifiers != null && !_rankSpecifiers.IsMatch(typed.RankSpecifiers, semanticModel))
+            if (_rankSpecifiers != null && !_rankSpecifiers.Test(typed.RankSpecifiers, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ArrayTypeSyntax)node;
+
+            _elementType?.RunCallback(typed.ElementType, semanticModel);
+            _rankSpecifiers?.RunCallback(typed.RankSpecifiers, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -282,19 +329,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ArrayRankSpecifierSyntax typed))
                 return false;
 
-            if (_sizes != null && !_sizes.IsMatch(typed.Sizes, semanticModel))
+            if (_sizes != null && !_sizes.Test(typed.Sizes, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ArrayRankSpecifierSyntax)node;
+
+            _sizes?.RunCallback(typed.Sizes, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -309,19 +363,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is PointerTypeSyntax typed))
                 return false;
 
-            if (_elementType != null && !_elementType.IsMatch(typed.ElementType, semanticModel))
+            if (_elementType != null && !_elementType.Test(typed.ElementType, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (PointerTypeSyntax)node;
+
+            _elementType?.RunCallback(typed.ElementType, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -336,19 +397,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is NullableTypeSyntax typed))
                 return false;
 
-            if (_elementType != null && !_elementType.IsMatch(typed.ElementType, semanticModel))
+            if (_elementType != null && !_elementType.Test(typed.ElementType, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (NullableTypeSyntax)node;
+
+            _elementType?.RunCallback(typed.ElementType, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -363,19 +431,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TupleTypeSyntax typed))
                 return false;
 
-            if (_elements != null && !_elements.IsMatch(typed.Elements, semanticModel))
+            if (_elements != null && !_elements.Test(typed.Elements, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TupleTypeSyntax)node;
+
+            _elements?.RunCallback(typed.Elements, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -392,21 +467,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TupleElementSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TupleElementSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -419,17 +501,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is OmittedTypeArgumentSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (OmittedTypeArgumentSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -444,19 +532,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is RefTypeSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (RefTypeSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -467,13 +562,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ExpressionSyntax typed))
                 return false;
-
 
 
             return true;
@@ -491,19 +585,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ParenthesizedExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ParenthesizedExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -518,19 +619,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TupleExpressionSyntax typed))
                 return false;
 
-            if (_arguments != null && !_arguments.IsMatch(typed.Arguments, semanticModel))
+            if (_arguments != null && !_arguments.Test(typed.Arguments, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TupleExpressionSyntax)node;
+
+            _arguments?.RunCallback(typed.Arguments, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -547,21 +655,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is PrefixUnaryExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_operand != null && !_operand.IsMatch(typed.Operand, semanticModel))
+            if (_operand != null && !_operand.Test(typed.Operand, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (PrefixUnaryExpressionSyntax)node;
+
+            _operand?.RunCallback(typed.Operand, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -576,19 +691,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AwaitExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AwaitExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -605,21 +727,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is PostfixUnaryExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_operand != null && !_operand.IsMatch(typed.Operand, semanticModel))
+            if (_operand != null && !_operand.Test(typed.Operand, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (PostfixUnaryExpressionSyntax)node;
+
+            _operand?.RunCallback(typed.Operand, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -638,23 +767,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is MemberAccessExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (MemberAccessExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -671,21 +808,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConditionalAccessExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_whenNotNull != null && !_whenNotNull.IsMatch(typed.WhenNotNull, semanticModel))
+            if (_whenNotNull != null && !_whenNotNull.Test(typed.WhenNotNull, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConditionalAccessExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _whenNotNull?.RunCallback(typed.WhenNotNull, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -700,19 +845,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is MemberBindingExpressionSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (MemberBindingExpressionSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -727,19 +879,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ElementBindingExpressionSyntax typed))
                 return false;
 
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ElementBindingExpressionSyntax)node;
+
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -754,19 +913,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ImplicitElementAccessSyntax typed))
                 return false;
 
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ImplicitElementAccessSyntax)node;
+
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -785,23 +951,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BinaryExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_left != null && !_left.IsMatch(typed.Left, semanticModel))
+            if (_left != null && !_left.Test(typed.Left, semanticModel))
                 return false;
-            if (_right != null && !_right.IsMatch(typed.Right, semanticModel))
+            if (_right != null && !_right.Test(typed.Right, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BinaryExpressionSyntax)node;
+
+            _left?.RunCallback(typed.Left, semanticModel);
+            _right?.RunCallback(typed.Right, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -820,23 +994,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AssignmentExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_left != null && !_left.IsMatch(typed.Left, semanticModel))
+            if (_left != null && !_left.Test(typed.Left, semanticModel))
                 return false;
-            if (_right != null && !_right.IsMatch(typed.Right, semanticModel))
+            if (_right != null && !_right.Test(typed.Right, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AssignmentExpressionSyntax)node;
+
+            _left?.RunCallback(typed.Left, semanticModel);
+            _right?.RunCallback(typed.Right, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -855,23 +1037,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConditionalExpressionSyntax typed))
                 return false;
 
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
-            if (_whenTrue != null && !_whenTrue.IsMatch(typed.WhenTrue, semanticModel))
+            if (_whenTrue != null && !_whenTrue.Test(typed.WhenTrue, semanticModel))
                 return false;
-            if (_whenFalse != null && !_whenFalse.IsMatch(typed.WhenFalse, semanticModel))
+            if (_whenFalse != null && !_whenFalse.Test(typed.WhenFalse, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConditionalExpressionSyntax)node;
+
+            _condition?.RunCallback(typed.Condition, semanticModel);
+            _whenTrue?.RunCallback(typed.WhenTrue, semanticModel);
+            _whenFalse?.RunCallback(typed.WhenFalse, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -882,13 +1073,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InstanceExpressionSyntax typed))
                 return false;
-
 
 
             return true;
@@ -904,17 +1094,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ThisExpressionSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ThisExpressionSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -927,17 +1123,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseExpressionSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseExpressionSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -952,9 +1154,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LiteralExpressionSyntax typed))
                 return false;
@@ -962,9 +1164,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (LiteralExpressionSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -979,19 +1187,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is MakeRefExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (MakeRefExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1006,19 +1221,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is RefTypeExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (RefTypeExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1035,21 +1257,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is RefValueExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (RefValueExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1066,21 +1296,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CheckedExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CheckedExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1095,19 +1332,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DefaultExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DefaultExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1122,19 +1366,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeOfExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TypeOfExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1149,19 +1400,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SizeOfExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SizeOfExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1178,21 +1436,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InvocationExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InvocationExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1209,21 +1475,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ElementAccessExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ElementAccessExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1236,16 +1510,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _arguments = arguments;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseArgumentListSyntax typed))
                 return false;
 
-            if (_arguments != null && !_arguments.IsMatch(typed.Arguments, semanticModel))
+            if (_arguments != null && !_arguments.Test(typed.Arguments, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -1261,17 +1534,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ArgumentListSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ArgumentListSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1285,17 +1564,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BracketedArgumentListSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BracketedArgumentListSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1312,21 +1597,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ArgumentSyntax typed))
                 return false;
 
-            if (_nameColon != null && !_nameColon.IsMatch(typed.NameColon, semanticModel))
+            if (_nameColon != null && !_nameColon.Test(typed.NameColon, semanticModel))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ArgumentSyntax)node;
+
+            _nameColon?.RunCallback(typed.NameColon, semanticModel);
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1341,19 +1634,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is NameColonSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (NameColonSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1370,21 +1670,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DeclarationExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_designation != null && !_designation.IsMatch(typed.Designation, semanticModel))
+            if (_designation != null && !_designation.Test(typed.Designation, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DeclarationExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _designation?.RunCallback(typed.Designation, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1401,21 +1709,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CastExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CastExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1428,16 +1744,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _body = body;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AnonymousFunctionExpressionSyntax typed))
                 return false;
 
-            if (_body != null && !_body.IsMatch(typed.Body, semanticModel))
+            if (_body != null && !_body.Test(typed.Body, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -1455,19 +1770,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AnonymousMethodExpressionSyntax typed))
                 return false;
 
-            if (_parameterList != null && !_parameterList.IsMatch(typed.ParameterList, semanticModel))
+            if (_parameterList != null && !_parameterList.Test(typed.ParameterList, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AnonymousMethodExpressionSyntax)node;
+
+            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1479,13 +1801,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LambdaExpressionSyntax typed))
                 return false;
-
 
 
             return true;
@@ -1504,19 +1825,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SimpleLambdaExpressionSyntax typed))
                 return false;
 
-            if (_parameter != null && !_parameter.IsMatch(typed.Parameter, semanticModel))
+            if (_parameter != null && !_parameter.Test(typed.Parameter, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SimpleLambdaExpressionSyntax)node;
+
+            _parameter?.RunCallback(typed.Parameter, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1531,19 +1859,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is RefExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (RefExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1559,19 +1894,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ParenthesizedLambdaExpressionSyntax typed))
                 return false;
 
-            if (_parameterList != null && !_parameterList.IsMatch(typed.ParameterList, semanticModel))
+            if (_parameterList != null && !_parameterList.Test(typed.ParameterList, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ParenthesizedLambdaExpressionSyntax)node;
+
+            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1588,21 +1930,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InitializerExpressionSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_expressions != null && !_expressions.IsMatch(typed.Expressions, semanticModel))
+            if (_expressions != null && !_expressions.Test(typed.Expressions, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InitializerExpressionSyntax)node;
+
+            _expressions?.RunCallback(typed.Expressions, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1621,23 +1970,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ObjectCreationExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
-            if (_initializer != null && !_initializer.IsMatch(typed.Initializer, semanticModel))
+            if (_initializer != null && !_initializer.Test(typed.Initializer, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ObjectCreationExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            _initializer?.RunCallback(typed.Initializer, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1654,21 +2012,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AnonymousObjectMemberDeclaratorSyntax typed))
                 return false;
 
-            if (_nameEquals != null && !_nameEquals.IsMatch(typed.NameEquals, semanticModel))
+            if (_nameEquals != null && !_nameEquals.Test(typed.NameEquals, semanticModel))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AnonymousObjectMemberDeclaratorSyntax)node;
+
+            _nameEquals?.RunCallback(typed.NameEquals, semanticModel);
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1683,19 +2049,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AnonymousObjectCreationExpressionSyntax typed))
                 return false;
 
-            if (_initializers != null && !_initializers.IsMatch(typed.Initializers, semanticModel))
+            if (_initializers != null && !_initializers.Test(typed.Initializers, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AnonymousObjectCreationExpressionSyntax)node;
+
+            _initializers?.RunCallback(typed.Initializers, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1712,21 +2085,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ArrayCreationExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_initializer != null && !_initializer.IsMatch(typed.Initializer, semanticModel))
+            if (_initializer != null && !_initializer.Test(typed.Initializer, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ArrayCreationExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _initializer?.RunCallback(typed.Initializer, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1741,19 +2122,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ImplicitArrayCreationExpressionSyntax typed))
                 return false;
 
-            if (_initializer != null && !_initializer.IsMatch(typed.Initializer, semanticModel))
+            if (_initializer != null && !_initializer.Test(typed.Initializer, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ImplicitArrayCreationExpressionSyntax)node;
+
+            _initializer?.RunCallback(typed.Initializer, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1768,19 +2156,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is StackAllocArrayCreationExpressionSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (StackAllocArrayCreationExpressionSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1791,13 +2186,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is QueryClauseSyntax typed))
                 return false;
-
 
 
             return true;
@@ -1811,13 +2205,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SelectOrGroupClauseSyntax typed))
                 return false;
-
 
 
             return true;
@@ -1837,21 +2230,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is QueryExpressionSyntax typed))
                 return false;
 
-            if (_fromClause != null && !_fromClause.IsMatch(typed.FromClause, semanticModel))
+            if (_fromClause != null && !_fromClause.Test(typed.FromClause, semanticModel))
                 return false;
-            if (_body != null && !_body.IsMatch(typed.Body, semanticModel))
+            if (_body != null && !_body.Test(typed.Body, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (QueryExpressionSyntax)node;
+
+            _fromClause?.RunCallback(typed.FromClause, semanticModel);
+            _body?.RunCallback(typed.Body, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1870,23 +2271,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is QueryBodySyntax typed))
                 return false;
 
-            if (_clauses != null && !_clauses.IsMatch(typed.Clauses, semanticModel))
+            if (_clauses != null && !_clauses.Test(typed.Clauses, semanticModel))
                 return false;
-            if (_selectOrGroup != null && !_selectOrGroup.IsMatch(typed.SelectOrGroup, semanticModel))
+            if (_selectOrGroup != null && !_selectOrGroup.Test(typed.SelectOrGroup, semanticModel))
                 return false;
-            if (_continuation != null && !_continuation.IsMatch(typed.Continuation, semanticModel))
+            if (_continuation != null && !_continuation.Test(typed.Continuation, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (QueryBodySyntax)node;
+
+            _clauses?.RunCallback(typed.Clauses, semanticModel);
+            _selectOrGroup?.RunCallback(typed.SelectOrGroup, semanticModel);
+            _continuation?.RunCallback(typed.Continuation, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1905,23 +2315,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is FromClauseSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (FromClauseSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1938,21 +2356,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LetClauseSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (LetClauseSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -1977,29 +2402,40 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is JoinClauseSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_inExpression != null && !_inExpression.IsMatch(typed.InExpression, semanticModel))
+            if (_inExpression != null && !_inExpression.Test(typed.InExpression, semanticModel))
                 return false;
-            if (_leftExpression != null && !_leftExpression.IsMatch(typed.LeftExpression, semanticModel))
+            if (_leftExpression != null && !_leftExpression.Test(typed.LeftExpression, semanticModel))
                 return false;
-            if (_rightExpression != null && !_rightExpression.IsMatch(typed.RightExpression, semanticModel))
+            if (_rightExpression != null && !_rightExpression.Test(typed.RightExpression, semanticModel))
                 return false;
-            if (_into != null && !_into.IsMatch(typed.Into, semanticModel))
+            if (_into != null && !_into.Test(typed.Into, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (JoinClauseSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _inExpression?.RunCallback(typed.InExpression, semanticModel);
+            _leftExpression?.RunCallback(typed.LeftExpression, semanticModel);
+            _rightExpression?.RunCallback(typed.RightExpression, semanticModel);
+            _into?.RunCallback(typed.Into, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2014,9 +2450,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is JoinIntoClauseSyntax typed))
                 return false;
@@ -2024,9 +2460,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (JoinIntoClauseSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2041,19 +2483,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is WhereClauseSyntax typed))
                 return false;
 
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (WhereClauseSyntax)node;
+
+            _condition?.RunCallback(typed.Condition, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2068,19 +2517,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is OrderByClauseSyntax typed))
                 return false;
 
-            if (_orderings != null && !_orderings.IsMatch(typed.Orderings, semanticModel))
+            if (_orderings != null && !_orderings.Test(typed.Orderings, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (OrderByClauseSyntax)node;
+
+            _orderings?.RunCallback(typed.Orderings, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2097,21 +2553,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is OrderingSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (OrderingSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2126,19 +2589,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SelectClauseSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SelectClauseSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2155,21 +2625,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is GroupClauseSyntax typed))
                 return false;
 
-            if (_groupExpression != null && !_groupExpression.IsMatch(typed.GroupExpression, semanticModel))
+            if (_groupExpression != null && !_groupExpression.Test(typed.GroupExpression, semanticModel))
                 return false;
-            if (_byExpression != null && !_byExpression.IsMatch(typed.ByExpression, semanticModel))
+            if (_byExpression != null && !_byExpression.Test(typed.ByExpression, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (GroupClauseSyntax)node;
+
+            _groupExpression?.RunCallback(typed.GroupExpression, semanticModel);
+            _byExpression?.RunCallback(typed.ByExpression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2186,21 +2664,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is QueryContinuationSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_body != null && !_body.IsMatch(typed.Body, semanticModel))
+            if (_body != null && !_body.Test(typed.Body, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (QueryContinuationSyntax)node;
+
+            _body?.RunCallback(typed.Body, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2213,17 +2698,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is OmittedArraySizeExpressionSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (OmittedArraySizeExpressionSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2238,19 +2729,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterpolatedStringExpressionSyntax typed))
                 return false;
 
-            if (_contents != null && !_contents.IsMatch(typed.Contents, semanticModel))
+            if (_contents != null && !_contents.Test(typed.Contents, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InterpolatedStringExpressionSyntax)node;
+
+            _contents?.RunCallback(typed.Contents, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2267,21 +2765,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is IsPatternExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_pattern != null && !_pattern.IsMatch(typed.Pattern, semanticModel))
+            if (_pattern != null && !_pattern.Test(typed.Pattern, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (IsPatternExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _pattern?.RunCallback(typed.Pattern, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2296,19 +2802,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ThrowExpressionSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ThrowExpressionSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2323,19 +2836,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is WhenClauseSyntax typed))
                 return false;
 
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (WhenClauseSyntax)node;
+
+            _condition?.RunCallback(typed.Condition, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2346,13 +2866,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is PatternSyntax typed))
                 return false;
-
 
 
             return true;
@@ -2372,21 +2891,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DeclarationPatternSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_designation != null && !_designation.IsMatch(typed.Designation, semanticModel))
+            if (_designation != null && !_designation.Test(typed.Designation, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DeclarationPatternSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _designation?.RunCallback(typed.Designation, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2401,19 +2928,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConstantPatternSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConstantPatternSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2424,13 +2958,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterpolatedStringContentSyntax typed))
                 return false;
-
 
 
             return true;
@@ -2446,17 +2979,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterpolatedStringTextSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InterpolatedStringTextSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2475,23 +3014,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterpolationSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_alignmentClause != null && !_alignmentClause.IsMatch(typed.AlignmentClause, semanticModel))
+            if (_alignmentClause != null && !_alignmentClause.Test(typed.AlignmentClause, semanticModel))
                 return false;
-            if (_formatClause != null && !_formatClause.IsMatch(typed.FormatClause, semanticModel))
+            if (_formatClause != null && !_formatClause.Test(typed.FormatClause, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InterpolationSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _alignmentClause?.RunCallback(typed.AlignmentClause, semanticModel);
+            _formatClause?.RunCallback(typed.FormatClause, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2506,19 +3054,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterpolationAlignmentClauseSyntax typed))
                 return false;
 
-            if (_value != null && !_value.IsMatch(typed.Value, semanticModel))
+            if (_value != null && !_value.Test(typed.Value, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InterpolationAlignmentClauseSyntax)node;
+
+            _value?.RunCallback(typed.Value, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2531,17 +3086,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterpolationFormatClauseSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InterpolationFormatClauseSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2556,19 +3117,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is GlobalStatementSyntax typed))
                 return false;
 
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (GlobalStatementSyntax)node;
+
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2579,13 +3147,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is StatementSyntax typed))
                 return false;
-
 
 
             return true;
@@ -2603,19 +3170,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BlockSyntax typed))
                 return false;
 
-            if (_statements != null && !_statements.IsMatch(typed.Statements, semanticModel))
+            if (_statements != null && !_statements.Test(typed.Statements, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BlockSyntax)node;
+
+            _statements?.RunCallback(typed.Statements, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2644,33 +3218,45 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LocalFunctionStatementSyntax typed))
                 return false;
 
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_returnType != null && !_returnType.IsMatch(typed.ReturnType, semanticModel))
+            if (_returnType != null && !_returnType.Test(typed.ReturnType, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_typeParameterList != null && !_typeParameterList.IsMatch(typed.TypeParameterList, semanticModel))
+            if (_typeParameterList != null && !_typeParameterList.Test(typed.TypeParameterList, semanticModel))
                 return false;
-            if (_parameterList != null && !_parameterList.IsMatch(typed.ParameterList, semanticModel))
+            if (_parameterList != null && !_parameterList.Test(typed.ParameterList, semanticModel))
                 return false;
-            if (_constraintClauses != null && !_constraintClauses.IsMatch(typed.ConstraintClauses, semanticModel))
+            if (_constraintClauses != null && !_constraintClauses.Test(typed.ConstraintClauses, semanticModel))
                 return false;
-            if (_body != null && !_body.IsMatch(typed.Body, semanticModel))
+            if (_body != null && !_body.Test(typed.Body, semanticModel))
                 return false;
-            if (_expressionBody != null && !_expressionBody.IsMatch(typed.ExpressionBody, semanticModel))
+            if (_expressionBody != null && !_expressionBody.Test(typed.ExpressionBody, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (LocalFunctionStatementSyntax)node;
+
+            _returnType?.RunCallback(typed.ReturnType, semanticModel);
+            _typeParameterList?.RunCallback(typed.TypeParameterList, semanticModel);
+            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+            _constraintClauses?.RunCallback(typed.ConstraintClauses, semanticModel);
+            _body?.RunCallback(typed.Body, semanticModel);
+            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2687,21 +3273,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LocalDeclarationStatementSyntax typed))
                 return false;
 
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_declaration != null && !_declaration.IsMatch(typed.Declaration, semanticModel))
+            if (_declaration != null && !_declaration.Test(typed.Declaration, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (LocalDeclarationStatementSyntax)node;
+
+            _declaration?.RunCallback(typed.Declaration, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2718,21 +3311,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is VariableDeclarationSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_variables != null && !_variables.IsMatch(typed.Variables, semanticModel))
+            if (_variables != null && !_variables.Test(typed.Variables, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (VariableDeclarationSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+            _variables?.RunCallback(typed.Variables, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2751,23 +3352,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is VariableDeclaratorSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
-            if (_initializer != null && !_initializer.IsMatch(typed.Initializer, semanticModel))
+            if (_initializer != null && !_initializer.Test(typed.Initializer, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (VariableDeclaratorSyntax)node;
+
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            _initializer?.RunCallback(typed.Initializer, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2782,19 +3391,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is EqualsValueClauseSyntax typed))
                 return false;
 
-            if (_value != null && !_value.IsMatch(typed.Value, semanticModel))
+            if (_value != null && !_value.Test(typed.Value, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (EqualsValueClauseSyntax)node;
+
+            _value?.RunCallback(typed.Value, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2805,13 +3421,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is VariableDesignationSyntax typed))
                 return false;
-
 
 
             return true;
@@ -2829,9 +3444,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SingleVariableDesignationSyntax typed))
                 return false;
@@ -2839,9 +3454,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SingleVariableDesignationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2854,17 +3475,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DiscardDesignationSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DiscardDesignationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2879,19 +3506,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ParenthesizedVariableDesignationSyntax typed))
                 return false;
 
-            if (_variables != null && !_variables.IsMatch(typed.Variables, semanticModel))
+            if (_variables != null && !_variables.Test(typed.Variables, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ParenthesizedVariableDesignationSyntax)node;
+
+            _variables?.RunCallback(typed.Variables, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2906,19 +3540,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ExpressionStatementSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ExpressionStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2931,17 +3572,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is EmptyStatementSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (EmptyStatementSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2958,21 +3605,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LabeledStatementSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (LabeledStatementSyntax)node;
+
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -2989,21 +3643,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is GotoStatementSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (GotoStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3016,17 +3677,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BreakStatementSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BreakStatementSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3039,17 +3706,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ContinueStatementSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ContinueStatementSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3064,19 +3737,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ReturnStatementSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ReturnStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3091,19 +3771,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ThrowStatementSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ThrowStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3120,21 +3807,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is YieldStatementSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (YieldStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3151,21 +3845,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is WhileStatementSyntax typed))
                 return false;
 
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (WhileStatementSyntax)node;
+
+            _condition?.RunCallback(typed.Condition, semanticModel);
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3182,21 +3884,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DoStatementSyntax typed))
                 return false;
 
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DoStatementSyntax)node;
+
+            _statement?.RunCallback(typed.Statement, semanticModel);
+            _condition?.RunCallback(typed.Condition, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3219,27 +3929,38 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ForStatementSyntax typed))
                 return false;
 
-            if (_declaration != null && !_declaration.IsMatch(typed.Declaration, semanticModel))
+            if (_declaration != null && !_declaration.Test(typed.Declaration, semanticModel))
                 return false;
-            if (_initializers != null && !_initializers.IsMatch(typed.Initializers, semanticModel))
+            if (_initializers != null && !_initializers.Test(typed.Initializers, semanticModel))
                 return false;
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
-            if (_incrementors != null && !_incrementors.IsMatch(typed.Incrementors, semanticModel))
+            if (_incrementors != null && !_incrementors.Test(typed.Incrementors, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ForStatementSyntax)node;
+
+            _declaration?.RunCallback(typed.Declaration, semanticModel);
+            _initializers?.RunCallback(typed.Initializers, semanticModel);
+            _condition?.RunCallback(typed.Condition, semanticModel);
+            _incrementors?.RunCallback(typed.Incrementors, semanticModel);
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3254,18 +3975,17 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _statement = statement;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CommonForEachStatementSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -3285,21 +4005,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ForEachStatementSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ForEachStatementSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3315,19 +4042,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ForEachVariableStatementSyntax typed))
                 return false;
 
-            if (_variable != null && !_variable.IsMatch(typed.Variable, semanticModel))
+            if (_variable != null && !_variable.Test(typed.Variable, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ForEachVariableStatementSyntax)node;
+
+            _variable?.RunCallback(typed.Variable, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3346,23 +4080,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is UsingStatementSyntax typed))
                 return false;
 
-            if (_declaration != null && !_declaration.IsMatch(typed.Declaration, semanticModel))
+            if (_declaration != null && !_declaration.Test(typed.Declaration, semanticModel))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (UsingStatementSyntax)node;
+
+            _declaration?.RunCallback(typed.Declaration, semanticModel);
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3379,21 +4122,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is FixedStatementSyntax typed))
                 return false;
 
-            if (_declaration != null && !_declaration.IsMatch(typed.Declaration, semanticModel))
+            if (_declaration != null && !_declaration.Test(typed.Declaration, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (FixedStatementSyntax)node;
+
+            _declaration?.RunCallback(typed.Declaration, semanticModel);
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3410,21 +4161,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CheckedStatementSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_block != null && !_block.IsMatch(typed.Block, semanticModel))
+            if (_block != null && !_block.Test(typed.Block, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CheckedStatementSyntax)node;
+
+            _block?.RunCallback(typed.Block, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3439,19 +4197,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is UnsafeStatementSyntax typed))
                 return false;
 
-            if (_block != null && !_block.IsMatch(typed.Block, semanticModel))
+            if (_block != null && !_block.Test(typed.Block, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (UnsafeStatementSyntax)node;
+
+            _block?.RunCallback(typed.Block, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3468,21 +4233,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is LockStatementSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (LockStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3501,23 +4274,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is IfStatementSyntax typed))
                 return false;
 
-            if (_condition != null && !_condition.IsMatch(typed.Condition, semanticModel))
+            if (_condition != null && !_condition.Test(typed.Condition, semanticModel))
                 return false;
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
-            if (_else != null && !_else.IsMatch(typed.Else, semanticModel))
+            if (_else != null && !_else.Test(typed.Else, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (IfStatementSyntax)node;
+
+            _condition?.RunCallback(typed.Condition, semanticModel);
+            _statement?.RunCallback(typed.Statement, semanticModel);
+            _else?.RunCallback(typed.Else, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3532,19 +4314,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ElseClauseSyntax typed))
                 return false;
 
-            if (_statement != null && !_statement.IsMatch(typed.Statement, semanticModel))
+            if (_statement != null && !_statement.Test(typed.Statement, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ElseClauseSyntax)node;
+
+            _statement?.RunCallback(typed.Statement, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3561,21 +4350,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SwitchStatementSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-            if (_sections != null && !_sections.IsMatch(typed.Sections, semanticModel))
+            if (_sections != null && !_sections.Test(typed.Sections, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SwitchStatementSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+            _sections?.RunCallback(typed.Sections, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3592,21 +4389,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SwitchSectionSyntax typed))
                 return false;
 
-            if (_labels != null && !_labels.IsMatch(typed.Labels, semanticModel))
+            if (_labels != null && !_labels.Test(typed.Labels, semanticModel))
                 return false;
-            if (_statements != null && !_statements.IsMatch(typed.Statements, semanticModel))
+            if (_statements != null && !_statements.Test(typed.Statements, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SwitchSectionSyntax)node;
+
+            _labels?.RunCallback(typed.Labels, semanticModel);
+            _statements?.RunCallback(typed.Statements, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3617,13 +4422,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SwitchLabelSyntax typed))
                 return false;
-
 
 
             return true;
@@ -3643,21 +4447,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CasePatternSwitchLabelSyntax typed))
                 return false;
 
-            if (_pattern != null && !_pattern.IsMatch(typed.Pattern, semanticModel))
+            if (_pattern != null && !_pattern.Test(typed.Pattern, semanticModel))
                 return false;
-            if (_whenClause != null && !_whenClause.IsMatch(typed.WhenClause, semanticModel))
+            if (_whenClause != null && !_whenClause.Test(typed.WhenClause, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CasePatternSwitchLabelSyntax)node;
+
+            _pattern?.RunCallback(typed.Pattern, semanticModel);
+            _whenClause?.RunCallback(typed.WhenClause, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3672,19 +4484,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CaseSwitchLabelSyntax typed))
                 return false;
 
-            if (_value != null && !_value.IsMatch(typed.Value, semanticModel))
+            if (_value != null && !_value.Test(typed.Value, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CaseSwitchLabelSyntax)node;
+
+            _value?.RunCallback(typed.Value, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3697,17 +4516,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DefaultSwitchLabelSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DefaultSwitchLabelSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3726,23 +4551,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TryStatementSyntax typed))
                 return false;
 
-            if (_block != null && !_block.IsMatch(typed.Block, semanticModel))
+            if (_block != null && !_block.Test(typed.Block, semanticModel))
                 return false;
-            if (_catches != null && !_catches.IsMatch(typed.Catches, semanticModel))
+            if (_catches != null && !_catches.Test(typed.Catches, semanticModel))
                 return false;
-            if (_finally != null && !_finally.IsMatch(typed.Finally, semanticModel))
+            if (_finally != null && !_finally.Test(typed.Finally, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TryStatementSyntax)node;
+
+            _block?.RunCallback(typed.Block, semanticModel);
+            _catches?.RunCallback(typed.Catches, semanticModel);
+            _finally?.RunCallback(typed.Finally, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3761,23 +4595,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CatchClauseSyntax typed))
                 return false;
 
-            if (_declaration != null && !_declaration.IsMatch(typed.Declaration, semanticModel))
+            if (_declaration != null && !_declaration.Test(typed.Declaration, semanticModel))
                 return false;
-            if (_filter != null && !_filter.IsMatch(typed.Filter, semanticModel))
+            if (_filter != null && !_filter.Test(typed.Filter, semanticModel))
                 return false;
-            if (_block != null && !_block.IsMatch(typed.Block, semanticModel))
+            if (_block != null && !_block.Test(typed.Block, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CatchClauseSyntax)node;
+
+            _declaration?.RunCallback(typed.Declaration, semanticModel);
+            _filter?.RunCallback(typed.Filter, semanticModel);
+            _block?.RunCallback(typed.Block, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3794,21 +4637,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CatchDeclarationSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CatchDeclarationSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3823,19 +4673,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CatchFilterClauseSyntax typed))
                 return false;
 
-            if (_filterExpression != null && !_filterExpression.IsMatch(typed.FilterExpression, semanticModel))
+            if (_filterExpression != null && !_filterExpression.Test(typed.FilterExpression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CatchFilterClauseSyntax)node;
+
+            _filterExpression?.RunCallback(typed.FilterExpression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3850,19 +4707,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is FinallyClauseSyntax typed))
                 return false;
 
-            if (_block != null && !_block.IsMatch(typed.Block, semanticModel))
+            if (_block != null && !_block.Test(typed.Block, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (FinallyClauseSyntax)node;
+
+            _block?.RunCallback(typed.Block, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3883,25 +4747,35 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is CompilationUnitSyntax typed))
                 return false;
 
-            if (_externs != null && !_externs.IsMatch(typed.Externs, semanticModel))
+            if (_externs != null && !_externs.Test(typed.Externs, semanticModel))
                 return false;
-            if (_usings != null && !_usings.IsMatch(typed.Usings, semanticModel))
+            if (_usings != null && !_usings.Test(typed.Usings, semanticModel))
                 return false;
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_members != null && !_members.IsMatch(typed.Members, semanticModel))
+            if (_members != null && !_members.Test(typed.Members, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CompilationUnitSyntax)node;
+
+            _externs?.RunCallback(typed.Externs, semanticModel);
+            _usings?.RunCallback(typed.Usings, semanticModel);
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            _members?.RunCallback(typed.Members, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3916,9 +4790,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ExternAliasDirectiveSyntax typed))
                 return false;
@@ -3926,9 +4800,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ExternAliasDirectiveSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3945,21 +4825,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is UsingDirectiveSyntax typed))
                 return false;
 
-            if (_alias != null && !_alias.IsMatch(typed.Alias, semanticModel))
+            if (_alias != null && !_alias.Test(typed.Alias, semanticModel))
                 return false;
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (UsingDirectiveSyntax)node;
+
+            _alias?.RunCallback(typed.Alias, semanticModel);
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -3970,13 +4858,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is MemberDeclarationSyntax typed))
                 return false;
-
 
 
             return true;
@@ -4000,25 +4887,35 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is NamespaceDeclarationSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
-            if (_externs != null && !_externs.IsMatch(typed.Externs, semanticModel))
+            if (_externs != null && !_externs.Test(typed.Externs, semanticModel))
                 return false;
-            if (_usings != null && !_usings.IsMatch(typed.Usings, semanticModel))
+            if (_usings != null && !_usings.Test(typed.Usings, semanticModel))
                 return false;
-            if (_members != null && !_members.IsMatch(typed.Members, semanticModel))
+            if (_members != null && !_members.Test(typed.Members, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (NamespaceDeclarationSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+            _externs?.RunCallback(typed.Externs, semanticModel);
+            _usings?.RunCallback(typed.Usings, semanticModel);
+            _members?.RunCallback(typed.Members, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4035,21 +4932,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AttributeListSyntax typed))
                 return false;
 
-            if (_target != null && !_target.IsMatch(typed.Target, semanticModel))
+            if (_target != null && !_target.Test(typed.Target, semanticModel))
                 return false;
-            if (_attributes != null && !_attributes.IsMatch(typed.Attributes, semanticModel))
+            if (_attributes != null && !_attributes.Test(typed.Attributes, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AttributeListSyntax)node;
+
+            _target?.RunCallback(typed.Target, semanticModel);
+            _attributes?.RunCallback(typed.Attributes, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4064,9 +4969,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AttributeTargetSpecifierSyntax typed))
                 return false;
@@ -4074,9 +4979,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AttributeTargetSpecifierSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4093,21 +5004,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AttributeSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AttributeSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4122,19 +5041,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AttributeArgumentListSyntax typed))
                 return false;
 
-            if (_arguments != null && !_arguments.IsMatch(typed.Arguments, semanticModel))
+            if (_arguments != null && !_arguments.Test(typed.Arguments, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AttributeArgumentListSyntax)node;
+
+            _arguments?.RunCallback(typed.Arguments, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4153,23 +5079,32 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AttributeArgumentSyntax typed))
                 return false;
 
-            if (_nameEquals != null && !_nameEquals.IsMatch(typed.NameEquals, semanticModel))
+            if (_nameEquals != null && !_nameEquals.Test(typed.NameEquals, semanticModel))
                 return false;
-            if (_nameColon != null && !_nameColon.IsMatch(typed.NameColon, semanticModel))
+            if (_nameColon != null && !_nameColon.Test(typed.NameColon, semanticModel))
                 return false;
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AttributeArgumentSyntax)node;
+
+            _nameEquals?.RunCallback(typed.NameEquals, semanticModel);
+            _nameColon?.RunCallback(typed.NameColon, semanticModel);
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4184,19 +5119,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is NameEqualsSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (NameEqualsSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4211,19 +5153,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeParameterListSyntax typed))
                 return false;
 
-            if (_parameters != null && !_parameters.IsMatch(typed.Parameters, semanticModel))
+            if (_parameters != null && !_parameters.Test(typed.Parameters, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TypeParameterListSyntax)node;
+
+            _parameters?.RunCallback(typed.Parameters, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4240,21 +5189,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeParameterSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TypeParameterSyntax)node;
+
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4273,22 +5229,21 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _baseList = baseList;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseTypeDeclarationSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_baseList != null && !_baseList.IsMatch(typed.BaseList, semanticModel))
+            if (_baseList != null && !_baseList.Test(typed.BaseList, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -4308,20 +5263,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _members = members;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeDeclarationSyntax typed))
                 return false;
 
-            if (_typeParameterList != null && !_typeParameterList.IsMatch(typed.TypeParameterList, semanticModel))
+            if (_typeParameterList != null && !_typeParameterList.Test(typed.TypeParameterList, semanticModel))
                 return false;
-            if (_constraintClauses != null && !_constraintClauses.IsMatch(typed.ConstraintClauses, semanticModel))
+            if (_constraintClauses != null && !_constraintClauses.Test(typed.ConstraintClauses, semanticModel))
                 return false;
-            if (_members != null && !_members.IsMatch(typed.Members, semanticModel))
+            if (_members != null && !_members.Test(typed.Members, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -4337,17 +5291,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ClassDeclarationSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ClassDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4361,17 +5321,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is StructDeclarationSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (StructDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4385,17 +5351,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is InterfaceDeclarationSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (InterfaceDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4411,19 +5383,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is EnumDeclarationSyntax typed))
                 return false;
 
-            if (_members != null && !_members.IsMatch(typed.Members, semanticModel))
+            if (_members != null && !_members.Test(typed.Members, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (EnumDeclarationSyntax)node;
+
+            _members?.RunCallback(typed.Members, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4450,31 +5429,42 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DelegateDeclarationSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_returnType != null && !_returnType.IsMatch(typed.ReturnType, semanticModel))
+            if (_returnType != null && !_returnType.Test(typed.ReturnType, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_typeParameterList != null && !_typeParameterList.IsMatch(typed.TypeParameterList, semanticModel))
+            if (_typeParameterList != null && !_typeParameterList.Test(typed.TypeParameterList, semanticModel))
                 return false;
-            if (_parameterList != null && !_parameterList.IsMatch(typed.ParameterList, semanticModel))
+            if (_parameterList != null && !_parameterList.Test(typed.ParameterList, semanticModel))
                 return false;
-            if (_constraintClauses != null && !_constraintClauses.IsMatch(typed.ConstraintClauses, semanticModel))
+            if (_constraintClauses != null && !_constraintClauses.Test(typed.ConstraintClauses, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DelegateDeclarationSyntax)node;
+
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            _returnType?.RunCallback(typed.ReturnType, semanticModel);
+            _typeParameterList?.RunCallback(typed.TypeParameterList, semanticModel);
+            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+            _constraintClauses?.RunCallback(typed.ConstraintClauses, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4493,23 +5483,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is EnumMemberDeclarationSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_equalsValue != null && !_equalsValue.IsMatch(typed.EqualsValue, semanticModel))
+            if (_equalsValue != null && !_equalsValue.Test(typed.EqualsValue, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (EnumMemberDeclarationSyntax)node;
+
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            _equalsValue?.RunCallback(typed.EqualsValue, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4524,19 +5522,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseListSyntax typed))
                 return false;
 
-            if (_types != null && !_types.IsMatch(typed.Types, semanticModel))
+            if (_types != null && !_types.Test(typed.Types, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseListSyntax)node;
+
+            _types?.RunCallback(typed.Types, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4549,16 +5554,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _type = type;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseTypeSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -4574,17 +5578,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is SimpleBaseTypeSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (SimpleBaseTypeSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4601,21 +5611,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeParameterConstraintClauseSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
-            if (_constraints != null && !_constraints.IsMatch(typed.Constraints, semanticModel))
+            if (_constraints != null && !_constraints.Test(typed.Constraints, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TypeParameterConstraintClauseSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+            _constraints?.RunCallback(typed.Constraints, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4626,13 +5644,12 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeParameterConstraintSyntax typed))
                 return false;
-
 
 
             return true;
@@ -4648,17 +5665,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConstructorConstraintSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConstructorConstraintSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4673,9 +5696,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ClassOrStructConstraintSyntax typed))
                 return false;
@@ -4683,9 +5706,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ClassOrStructConstraintSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4700,19 +5729,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is TypeConstraintSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (TypeConstraintSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4729,20 +5765,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _declaration = declaration;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseFieldDeclarationSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_declaration != null && !_declaration.IsMatch(typed.Declaration, semanticModel))
+            if (_declaration != null && !_declaration.Test(typed.Declaration, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -4758,17 +5793,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is FieldDeclarationSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (FieldDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4782,17 +5823,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is EventFieldDeclarationSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (EventFieldDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4807,19 +5854,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ExplicitInterfaceSpecifierSyntax typed))
                 return false;
 
-            if (_name != null && !_name.IsMatch(typed.Name, semanticModel))
+            if (_name != null && !_name.Test(typed.Name, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ExplicitInterfaceSpecifierSyntax)node;
+
+            _name?.RunCallback(typed.Name, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4840,24 +5894,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _expressionBody = expressionBody;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseMethodDeclarationSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_parameterList != null && !_parameterList.IsMatch(typed.ParameterList, semanticModel))
+            if (_parameterList != null && !_parameterList.Test(typed.ParameterList, semanticModel))
                 return false;
-            if (_body != null && !_body.IsMatch(typed.Body, semanticModel))
+            if (_body != null && !_body.Test(typed.Body, semanticModel))
                 return false;
-            if (_expressionBody != null && !_expressionBody.IsMatch(typed.ExpressionBody, semanticModel))
+            if (_expressionBody != null && !_expressionBody.Test(typed.ExpressionBody, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -4883,27 +5936,37 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is MethodDeclarationSyntax typed))
                 return false;
 
-            if (_returnType != null && !_returnType.IsMatch(typed.ReturnType, semanticModel))
+            if (_returnType != null && !_returnType.Test(typed.ReturnType, semanticModel))
                 return false;
-            if (_explicitInterfaceSpecifier != null && !_explicitInterfaceSpecifier.IsMatch(typed.ExplicitInterfaceSpecifier, semanticModel))
+            if (_explicitInterfaceSpecifier != null && !_explicitInterfaceSpecifier.Test(typed.ExplicitInterfaceSpecifier, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_typeParameterList != null && !_typeParameterList.IsMatch(typed.TypeParameterList, semanticModel))
+            if (_typeParameterList != null && !_typeParameterList.Test(typed.TypeParameterList, semanticModel))
                 return false;
-            if (_constraintClauses != null && !_constraintClauses.IsMatch(typed.ConstraintClauses, semanticModel))
+            if (_constraintClauses != null && !_constraintClauses.Test(typed.ConstraintClauses, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (MethodDeclarationSyntax)node;
+
+            _returnType?.RunCallback(typed.ReturnType, semanticModel);
+            _explicitInterfaceSpecifier?.RunCallback(typed.ExplicitInterfaceSpecifier, semanticModel);
+            _typeParameterList?.RunCallback(typed.TypeParameterList, semanticModel);
+            _constraintClauses?.RunCallback(typed.ConstraintClauses, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4919,19 +5982,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is OperatorDeclarationSyntax typed))
                 return false;
 
-            if (_returnType != null && !_returnType.IsMatch(typed.ReturnType, semanticModel))
+            if (_returnType != null && !_returnType.Test(typed.ReturnType, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (OperatorDeclarationSyntax)node;
+
+            _returnType?.RunCallback(typed.ReturnType, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4947,19 +6017,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConversionOperatorDeclarationSyntax typed))
                 return false;
 
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConversionOperatorDeclarationSyntax)node;
+
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -4977,21 +6054,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConstructorDeclarationSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_initializer != null && !_initializer.IsMatch(typed.Initializer, semanticModel))
+            if (_initializer != null && !_initializer.Test(typed.Initializer, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConstructorDeclarationSyntax)node;
+
+            _initializer?.RunCallback(typed.Initializer, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5008,21 +6092,28 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ConstructorInitializerSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_argumentList != null && !_argumentList.IsMatch(typed.ArgumentList, semanticModel))
+            if (_argumentList != null && !_argumentList.Test(typed.ArgumentList, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ConstructorInitializerSyntax)node;
+
+            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5038,9 +6129,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is DestructorDeclarationSyntax typed))
                 return false;
@@ -5048,9 +6139,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (DestructorDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5071,24 +6168,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _accessorList = accessorList;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BasePropertyDeclarationSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-            if (_explicitInterfaceSpecifier != null && !_explicitInterfaceSpecifier.IsMatch(typed.ExplicitInterfaceSpecifier, semanticModel))
+            if (_explicitInterfaceSpecifier != null && !_explicitInterfaceSpecifier.Test(typed.ExplicitInterfaceSpecifier, semanticModel))
                 return false;
-            if (_accessorList != null && !_accessorList.IsMatch(typed.AccessorList, semanticModel))
+            if (_accessorList != null && !_accessorList.Test(typed.AccessorList, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -5110,23 +6206,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is PropertyDeclarationSyntax typed))
                 return false;
 
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_expressionBody != null && !_expressionBody.IsMatch(typed.ExpressionBody, semanticModel))
+            if (_expressionBody != null && !_expressionBody.Test(typed.ExpressionBody, semanticModel))
                 return false;
-            if (_initializer != null && !_initializer.IsMatch(typed.Initializer, semanticModel))
+            if (_initializer != null && !_initializer.Test(typed.Initializer, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (PropertyDeclarationSyntax)node;
+
+            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+            _initializer?.RunCallback(typed.Initializer, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5141,19 +6245,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ArrowExpressionClauseSyntax typed))
                 return false;
 
-            if (_expression != null && !_expression.IsMatch(typed.Expression, semanticModel))
+            if (_expression != null && !_expression.Test(typed.Expression, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ArrowExpressionClauseSyntax)node;
+
+            _expression?.RunCallback(typed.Expression, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5169,9 +6280,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is EventDeclarationSyntax typed))
                 return false;
@@ -5179,9 +6290,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (EventDeclarationSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5199,21 +6316,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is IndexerDeclarationSyntax typed))
                 return false;
 
-            if (_parameterList != null && !_parameterList.IsMatch(typed.ParameterList, semanticModel))
+            if (_parameterList != null && !_parameterList.Test(typed.ParameterList, semanticModel))
                 return false;
-            if (_expressionBody != null && !_expressionBody.IsMatch(typed.ExpressionBody, semanticModel))
+            if (_expressionBody != null && !_expressionBody.Test(typed.ExpressionBody, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (IndexerDeclarationSyntax)node;
+
+            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5228,19 +6353,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AccessorListSyntax typed))
                 return false;
 
-            if (_accessors != null && !_accessors.IsMatch(typed.Accessors, semanticModel))
+            if (_accessors != null && !_accessors.Test(typed.Accessors, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AccessorListSyntax)node;
+
+            _accessors?.RunCallback(typed.Accessors, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5263,27 +6395,36 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is AccessorDeclarationSyntax typed))
                 return false;
 
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_body != null && !_body.IsMatch(typed.Body, semanticModel))
+            if (_body != null && !_body.Test(typed.Body, semanticModel))
                 return false;
-            if (_expressionBody != null && !_expressionBody.IsMatch(typed.ExpressionBody, semanticModel))
+            if (_expressionBody != null && !_expressionBody.Test(typed.ExpressionBody, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AccessorDeclarationSyntax)node;
+
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            _body?.RunCallback(typed.Body, semanticModel);
+            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5296,16 +6437,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _parameters = parameters;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BaseParameterListSyntax typed))
                 return false;
 
-            if (_parameters != null && !_parameters.IsMatch(typed.Parameters, semanticModel))
+            if (_parameters != null && !_parameters.Test(typed.Parameters, semanticModel))
                 return false;
-
 
             return true;
         }
@@ -5321,17 +6461,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ParameterListSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ParameterListSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5345,17 +6491,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is BracketedParameterListSyntax typed))
                 return false;
 
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BracketedParameterListSyntax)node;
+
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5378,27 +6530,36 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is ParameterSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
             if (_identifier != null && _identifier != typed.Identifier.Text)
                 return false;
-            if (_default != null && !_default.IsMatch(typed.Default, semanticModel))
+            if (_default != null && !_default.Test(typed.Default, semanticModel))
                 return false;
 
-            _action?.Invoke(typed);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (ParameterSyntax)node;
+
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            _type?.RunCallback(typed.Type, semanticModel);
+            _default?.RunCallback(typed.Default, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 
@@ -5417,23 +6578,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is IncompleteMemberSyntax typed))
                 return false;
 
-            if (_attributeLists != null && !_attributeLists.IsMatch(typed.AttributeLists, semanticModel))
+            if (_attributeLists != null && !_attributeLists.Test(typed.AttributeLists, semanticModel))
                 return false;
-            if (_modifiers != null && !_modifiers.IsMatch(typed.Modifiers, semanticModel))
+            if (_modifiers != null && !_modifiers.Test(typed.Modifiers, semanticModel))
                 return false;
-            if (_type != null && !_type.IsMatch(typed.Type, semanticModel))
+            if (_type != null && !_type.Test(typed.Type, semanticModel))
                 return false;
-
-            _action?.Invoke(typed);
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (IncompleteMemberSyntax)node;
+
+            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            _type?.RunCallback(typed.Type, semanticModel);
+
+            _action?.Invoke(typed);
         }
     }
 

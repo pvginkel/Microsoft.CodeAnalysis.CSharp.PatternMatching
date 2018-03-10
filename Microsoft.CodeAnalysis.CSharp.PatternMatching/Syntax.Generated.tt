@@ -166,9 +166,9 @@ var baseFields = GetAllFields(types, type.BaseType);
 <# } #>
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
             if (!(node is <#= type.Name #> typed))
                 return false;
@@ -181,17 +181,28 @@ var baseFields = GetAllFields(types, type.BaseType);
             if (<#= GetFieldName(field.Name) #> != null && <#= GetFieldName(field.Name) #> != typed.<#= field.Name #>.Text)
                 return false;
 <# } else { #>
-            if (<#= GetFieldName(field.Name) #> != null && !<#= GetFieldName(field.Name) #>.IsMatch(typed.<#= field.Name #>, semanticModel))
+            if (<#= GetFieldName(field.Name) #> != null && !<#= GetFieldName(field.Name) #>.Test(typed.<#= field.Name #>, semanticModel))
                 return false;
 <# } #>
 <# } #>
 
-<# if (!type.Abstract) { #>
-            _action?.Invoke(typed);
-<# } #>
-
             return true;
         }
+<# if (!type.Abstract) { #>
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (<#= type.Name #>)node;
+
+<# foreach (var field in type.Fields.Where(p => !p.Override)) { #>
+<# if (field.Name != "Kind" && GetPatternName(field.Type) != "string" && GetPatternName(field.Type) != "TokenListPattern") { #>
+            <#= GetFieldName(field.Name) #>?.RunCallback(typed.<#= field.Name #>, semanticModel);
+<# } #>
+<# } #>
+
+            _action?.Invoke(typed);
+        }
+<# } #>
     }
 
 <# } #>

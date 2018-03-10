@@ -20,19 +20,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (!base.IsMatch(node, semanticModel))
+            if (!base.Test(node, semanticModel))
                 return false;
 
             if (node is ParenthesizedLambdaExpressionSyntax parenthesized)
             {
-                if (_parameterList != null && !_parameterList.IsMatch(parenthesized.ParameterList, semanticModel))
+                if (_parameterList != null && !_parameterList.Test(parenthesized.ParameterList, semanticModel))
                     return false;
             }
             else if (node is SimpleLambdaExpressionSyntax simple)
             {
-                if (_parameterList != null && !_parameterList.IsMatch(
+                if (_parameterList != null && !_parameterList.Test(
                     SyntaxFactory.ParameterList(
                         SyntaxFactory.SeparatedList(new[] { simple.Parameter })
                     ),
@@ -45,9 +45,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
             }
 
-            _action?.Invoke((LambdaExpressionSyntax)node);
-
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            if (node is ParenthesizedLambdaExpressionSyntax parenthesized)
+            {
+                _parameterList?.RunCallback(parenthesized.ParameterList, semanticModel);
+            }
+            else
+            {
+                _parameterList?.RunCallback(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SeparatedList(new[] { ((SimpleLambdaExpressionSyntax)node).Parameter })
+                    ),
+                    semanticModel
+                );
+            }
+
+            _action?.Invoke((LambdaExpressionSyntax)node);
         }
     }
 }

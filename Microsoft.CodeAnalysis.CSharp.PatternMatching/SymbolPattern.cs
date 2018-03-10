@@ -18,7 +18,7 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
             if (semanticModel == null)
                 throw new ArgumentNullException(nameof(semanticModel));
@@ -28,12 +28,16 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
             if (!semanticModel.TryGetSymbol(typed, out var nodeSymbol))
                 return false;
-            if (_symbol != null && !_symbol.Equals(nodeSymbol))
-                return false;
 
-            _action?.Invoke(typed);
+            return _symbol == null || _symbol.Equals(nodeSymbol);
+        }
 
-            return true;
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            if (semanticModel == null)
+                throw new ArgumentNullException(nameof(semanticModel));
+
+            _action?.Invoke((ExpressionSyntax)node);
         }
     }
 }

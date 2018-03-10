@@ -106,9 +106,23 @@ For example, the call to `P.InvocationExpression()` creates a pattern node for a
 
 Once you've built up the tree, you can call `IsMatch` on the root node to see whether the `SyntaxNode` tree matches the `PatternNode` tree. Only if all patterns you provided match exactly, will it return true.
 
-One other thing that's going on is the lambda expression in the `P.Argument()` call. Every pattern takes an optional `Action<T>` callback, where `T` is the type of `SyntaxNode` being matched. You can use this to, in very specific places, have callbacks run. In the above example, this is used to get the text argument to the `Console.WriteLine` call. These callbacks will be executed every time a `PatternNode`, including all its descendants, match. This means that it's possible that a callback is run without the whole tree being matched. This means that a callback may be run even of `IsMatch` returns false.
+One other thing that's going on is the lambda expression in the `P.Argument()` call. Every pattern takes an optional `Action<T>` callback, where `T` is the type of `SyntaxNode` being matched. You can use this to, in very specific places, have callbacks run. In the above example, this is used to get the text argument to the `Console.WriteLine` call. Note that callbacks will only be run if the whole tree matches. This is done by implementing `IsMatch` in two two phases: first it walks the tree to see whether it's a match and only when the complete tree matches, it's walked again to run any callbacks.
 
 The `IsMatch` method takes a second, optional, `SemanticModel` parameter. This is necessary for patterns that work with symbols. There is a pattern `AnySymbolPattern` that checks whether an expression resolves to a symbol and gives that to the callback. A second pattern is the `SymbolPattern` which takes a symbol and checks whether the expression matches that symbol. If you have any of these patterns in your tree, you need to provide the `SemanticModel` argument to the `IsMatch` method.
+
+### Matching groups of nodes
+
+There are a few specialized patterns that match a group of nodes:
+
+* `AnyExpressionPattern` will match any node that inherits from `ExpressionSyntax`;
+* `AnyLambdaExpressionPattern` will match both a `ParenthesizedLambdaExpressionSyntax` and a `SimpleLambdaExpressionSyntax`;
+* `AnyStatementPattern` will match any node that inherits from `StatementSyntax`;
+* `AnySymbolPattern` will match any expression that resolves into a symbol and passes the symbol into the callback;
+* `AnyTypePattern` will match any node that inherits from `TypeSyntax`;
+* `NullExpressionPattern` will match expressions that are `null`;
+* `NullStatementPattern` will match statements that are `null`;
+* `SingleStatementPattern` will match nodes that are either a `StatementSyntax` or a `BlockSyntax` with a single statement;
+* `VarTypePattern` will match any `TypeSyntax` that denotes the `var` type.
 
 ### Matching multiple nodes
 
@@ -135,7 +149,36 @@ public static class Program
 
 The following code finds all invocations with a single string argument.
 
-The result of this is an `IEnumerable<SyntaxNode>` with all nodes being matched. For every matched node, the pattern is run and the callbacks are executed. Note that here also the callbacks may be run for a sub tree even if the whole tree doesn't match.
+```csharp
+var syntaxTree = GetSimpleSyntaxTree();
+var methodDeclaration = syntaxTree.GetRoot()
+    .DescendantNodes()
+    .OfType<MethodDeclarationSyntax>()
+    .Single();
+
+var strings = new List<string>();
+
+int matches =
+    P.InvocationExpression(
+        P.MemberAccessExpression(),
+        P.ArgumentList(
+            P.Argument(
+                expression: P.LiteralExpression(
+                    action: p => strings.Add(p.Token.ValueText)
+                )
+            )
+        )
+    )
+    .MatchDescendantNodes(methodDeclaration.Body)
+    .Count();
+
+Assert.AreEqual(2, matches);
+Assert.AreEqual(new List<string> { "Hello ", "world!" }, strings);
+```
+
+The result of this is an `IEnumerable<SyntaxNode>` with all nodes being matched. For every matched node, the pattern is run and the callbacks are executed. In the example above we use this to build up a list to get all string arguments out of the invocations.
+
+Note that the `Match` methods are implemented as generators. This means that just calling a `Match` method does not walk the tree.
 
 ### Reusing patterns
 

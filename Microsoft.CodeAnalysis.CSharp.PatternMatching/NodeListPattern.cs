@@ -19,14 +19,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _nodes = nodes.ToList();
         }
 
-        public bool IsMatch<TNode>(SyntaxList<TNode> items, SemanticModel semanticModel)
+        public bool Test<TNode>(SyntaxList<TNode> items, SemanticModel semanticModel)
             where TNode : SyntaxNode
         {
             if (items.Count == _nodes.Count)
             {
                 for (var i = 0; i < items.Count; i++)
                 {
-                    if (!_nodes[i].IsMatch(items[i]))
+                    if (!_nodes[i].Test(items[i], semanticModel))
                         return false;
                 }
 
@@ -36,14 +36,23 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return false;
         }
 
-        public bool IsMatch<TNode>(SeparatedSyntaxList<TNode> items, SemanticModel semanticModel)
+        public void RunCallback<TNode>(SyntaxList<TNode> items, SemanticModel semanticModel)
+            where TNode : SyntaxNode
+        {
+            for (var i = 0; i < items.Count; i++)
+            {
+                _nodes[i].RunCallback(items[i], semanticModel);
+            }
+        }
+
+        public bool Test<TNode>(SeparatedSyntaxList<TNode> items, SemanticModel semanticModel)
             where TNode : SyntaxNode
         {
             if (items.Count == _nodes.Count)
             {
                 for (var i = 0; i < items.Count; i++)
                 {
-                    if (!_nodes[i].IsMatch(items[i]))
+                    if (!_nodes[i].Test(items[i], semanticModel))
                         return false;
                 }
 
@@ -51,6 +60,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             }
 
             return false;
+        }
+
+        public void RunCallback<TNode>(SeparatedSyntaxList<TNode> items, SemanticModel semanticModel)
+            where TNode : SyntaxNode
+        {
+            for (var i = 0; i < items.Count; i++)
+            {
+                _nodes[i].RunCallback(items[i], semanticModel);
+            }
         }
     }
 }

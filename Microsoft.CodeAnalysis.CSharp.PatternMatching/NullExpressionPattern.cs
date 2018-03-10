@@ -16,14 +16,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action = action;
         }
 
-        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            if (node != null)
-                return false;
+            return node == null;
+        }
 
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
             _action?.Invoke();
-
-            return true;
         }
     }
 }

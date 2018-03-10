@@ -9,20 +9,20 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
     internal class NodeListPattern<T>
         where T : PatternNode
     {
-        private readonly List<T> _nodes;
+        private readonly T[] _nodes;
 
         internal NodeListPattern(IEnumerable<T> nodes)
         {
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
 
-            _nodes = nodes.ToList();
+            _nodes = nodes.ToArray();
         }
 
         public bool Test<TNode>(SyntaxList<TNode> items, SemanticModel semanticModel)
             where TNode : SyntaxNode
         {
-            if (items.Count == _nodes.Count)
+            if (items.Count == _nodes.Length)
             {
                 for (var i = 0; i < items.Count; i++)
                 {
@@ -48,7 +48,7 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         public bool Test<TNode>(SeparatedSyntaxList<TNode> items, SemanticModel semanticModel)
             where TNode : SyntaxNode
         {
-            if (items.Count == _nodes.Count)
+            if (items.Count == _nodes.Length)
             {
                 for (var i = 0; i < items.Count; i++)
                 {

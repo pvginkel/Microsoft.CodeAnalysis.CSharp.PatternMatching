@@ -8,19 +8,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 {
     internal class TokenListPattern
     {
-        private readonly List<string> _tokens;
+        private readonly string[] _tokens;
 
         public TokenListPattern(IEnumerable<string> tokens)
         {
             if (tokens == null)
                 throw new ArgumentNullException(nameof(tokens));
 
-            _tokens = tokens.ToList();
+            _tokens = tokens.ToArray();
         }
 
         public bool Test(SyntaxTokenList items, SemanticModel semanticModel)
         {
-            if (items.Count != _tokens.Count)
+            if (items.Count != _tokens.Length)
                 return false;
 
             for (int i = 0; i < items.Count; i++)

@@ -178,7 +178,7 @@ Assert.AreEqual(new List<string> { "Hello ", "world!" }, strings);
 
 The result of this is an `IEnumerable<SyntaxNode>` with all nodes being matched. For every matched node, the pattern is run and the callbacks are executed. In the example above we use this to build up a list to get all string arguments out of the invocations.
 
-Note that the `Match` methods are implemented as generators. This means that just calling a `Match` method does not walk the tree.
+The `Match` methods eagerly execute the pattern against the list of syntax nodes. Alternative methods exist which start with `Enumerate` that are implemented as a generator and will lazily match against the tree. This can be used to e.g. find the first match in a tree by calling e.g. `.EnumerateAncestors(node).First()`. Internally the `Match` methods are implemented by calling the `Enumerate` methods and consuming them by calling `ToList()` on the enumerable.
 
 ### Reusing patterns
 

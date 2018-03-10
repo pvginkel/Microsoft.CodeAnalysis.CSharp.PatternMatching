@@ -1,0 +1,4 @@
+root = true
+
+[*.{cs,vb,tt}]
+indent_size = 4

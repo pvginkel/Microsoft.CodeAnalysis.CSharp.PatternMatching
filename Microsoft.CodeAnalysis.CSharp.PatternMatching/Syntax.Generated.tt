@@ -1,0 +1,427 @@
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension=".cs" encoding="utf-8" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#
+
+var syntax = XDocument.Load(Host.ResolvePath("Syntax.xml")).Root;
+
+var skip = new HashSet<string>
+{
+    "StructuredTriviaSyntax",
+    "XmlAttributeSyntax",
+    "XmlNodeSyntax",
+};
+
+var paramsFactoryBlacklist = new HashSet<string>
+{
+    "ArrayType",
+    "QueryBody",
+    "LocalFunctionStatement",
+    "SwitchStatement",
+    "TryStatement",
+    "TypeParameter",
+    "EnumMemberDeclaration",
+    "TypeParameterConstraintClause",
+    "FieldDeclaration",
+    "EventFieldDeclaration",
+    "OperatorDeclaration",
+    "ConversionOperatorDeclaration",
+    "DestructorDeclaration",
+    "PropertyDeclaration",
+    "IndexerDeclaration",
+    "AccessorDeclaration",
+    "Parameter",
+    "IncompleteMember",
+};
+
+var types = new List<SyntaxType>();
+
+foreach (var element in syntax.Elements())
+{
+    bool isAbstract = false;
+    if (element.Name.LocalName == "AbstractNode")
+        isAbstract = true;
+    else if (element.Name.LocalName != "Node")
+        continue;
+
+    string name = element.Attribute("Name").Value;
+    string baseType = element.Attribute("Base").Value;
+
+    if (skip.Contains(name) || skip.Contains(baseType) || name.Contains("Xml") || name.Contains("Cref"))
+    {
+        skip.Add(name);
+        continue;
+    }
+
+    var type = new SyntaxType
+    {
+        Name = name,
+        BaseType = baseType,
+        Abstract = isAbstract
+    };
+
+    if (element.Elements("Kind").Count() > 1)
+    {
+        type.Fields.Add(new SyntaxField
+        {
+            Name = "Kind",
+            Type = "SyntaxKind",
+            Default = "default(SyntaxKind)"
+        });
+    }
+
+    foreach (var field in element.Elements("Field"))
+    {
+        string fieldName = field.Attribute("Name").Value;
+        string fieldType = field.Attribute("Type").Value;
+        bool fieldOverride = field.Attribute("Override") != null && field.Attribute("Override").Value == "true";
+
+        bool isSomeToken = fieldType == "SyntaxToken" || fieldType.EndsWith("<SyntaxToken>");
+
+        if (!isSomeToken || ConsiderTokenField(fieldName, name))
+        {
+            type.Fields.Add(new SyntaxField
+            {
+                Name = fieldName,
+                Type = fieldType,
+                Override = fieldOverride,
+                Default = "null"
+            });
+        }
+    }
+
+    types.Add(type);
+}
+
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
+{
+<# foreach (var type in types) { #>
+    public <#= type.Abstract ? "abstract " : "" #>partial class <#= GetPatternName(type.Name) #> : <#= GetPatternName(type.BaseType) #>
+    {
+<# foreach (var field in type.Fields) {
+    if (field.Override) continue;
+#>
+        private readonly <#= GetPatternName(field.Type) #> <#= GetFieldName(field.Name) #>;
+<# } #>
+<# if (!type.Abstract) { #>
+        private readonly Action<<#= type.Name #>> _action;
+<# } #>
+<#
+
+var thisFields = GetAllFields(types, type.Name);
+var baseFields = GetAllFields(types, type.BaseType);
+
+#>
+
+        internal <#= GetPatternName(type.Name) #>(<#
+   for (int i = 0; i < thisFields.Count; i++)
+   {
+       if (i > 0) {
+           #>, <#
+       }
+       #><#= GetPatternName(thisFields[i].Type) #> <#= GetLocalName(thisFields[i].Name) #><#
+   }
+   if (!type.Abstract)
+   {
+       if (thisFields.Count > 0) {
+           #>, <#
+       }
+       #>Action<<#= type.Name #>> action<#
+   }
+   #>)
+<# if (baseFields.Count > 0) { #>
+            : base(<#
+   for (int i = 0; i < baseFields.Count; i++)
+   {
+       if (i > 0) {
+           #>, <#
+       }
+       #><#= GetLocalName(baseFields[i].Name) #><#
+   }
+   #>)
+<# } #>
+        {
+<# foreach (var field in type.Fields.Where(p => !p.Override)) { #>
+            <#= GetFieldName(field.Name) #> = <#= GetLocalName(field.Name) #>;
+<# } #>
+<# if (!type.Abstract) { #>
+            _action = action;
+<# } #>
+        }
+
+        public override bool IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        {
+            if (!base.IsMatch(node, semanticModel))
+                return false;
+            if (!(node is <#= type.Name #> typed))
+                return false;
+
+<# foreach (var field in type.Fields.Where(p => !p.Override)) { #>
+<# if (field.Name == "Kind") { #>
+            if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
+                return false;
+<# } else if (GetPatternName(field.Type) == "string") { #>
+            if (<#= GetFieldName(field.Name) #> != null && <#= GetFieldName(field.Name) #> != typed.<#= field.Name #>.Text)
+                return false;
+<# } else { #>
+            if (<#= GetFieldName(field.Name) #> != null && !<#= GetFieldName(field.Name) #>.IsMatch(typed.<#= field.Name #>, semanticModel))
+                return false;
+<# } #>
+<# } #>
+
+<# if (!type.Abstract) { #>
+            _action?.Invoke(typed);
+<# } #>
+
+            return true;
+        }
+    }
+
+<# } #>
+    partial class Pattern
+    {
+<# foreach (var type in types.Where(p => !p.Abstract)) {
+
+    var thisFields = GetAllFields(types, type.Name);
+
+#>
+        public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
+   for (int i = 0; i < thisFields.Count; i++)
+   {
+       if (i > 0) {
+           #>, <#
+       }
+       #><#= GetPatternName(thisFields[i].Type, true) #> <#= GetLocalName(thisFields[i].Name) #> = <#= thisFields[i].Default #><#
+   }
+   if (thisFields.Count > 0) {
+       #>, <#
+   }
+   #>Action<<#= type.Name #>> action = null<#
+   #>)
+        {
+            return new <#= GetPatternName(type.Name) #>(<#
+   for (int i = 0; i < thisFields.Count; i++)
+   {
+       if (i > 0) {
+           #>, <#
+       }
+       if (GetPatternName(thisFields[i].Type).StartsWith("NodeListPattern<")) {
+           #>NodeList(<#= GetLocalName(thisFields[i].Name) #>)<#
+       } else if (GetPatternName(thisFields[i].Type) == "TokenListPattern") {
+           #>TokenList(<#= GetLocalName(thisFields[i].Name) #>)<#
+       } else {
+           #><#= GetLocalName(thisFields[i].Name) #><#
+       }
+   }
+   if (thisFields.Count > 0) {
+       #>, <#
+   }
+   #>action<#
+   #>);
+        }
+<# if (!paramsFactoryBlacklist.Contains(GetSimpleName(type.Name)) && thisFields.Where(p => IsListType(p.Type)).Count() == 1) {
+    var kindField = thisFields.SingleOrDefault(p => p.Name == "Kind");
+    var singleField = thisFields.Single(p => IsListType(p.Type));
+#>
+
+        public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
+        if (kindField != null) {
+            #><#= kindField.Type #> <#= GetLocalName(kindField.Name) #>, <#
+        }
+        #>params <#= GetGenericArgumentType(singleField.Type) #>[] <#= GetLocalName(singleField.Name) #>)
+        {
+            return new <#= GetPatternName(type.Name) #>(<#
+   for (int i = 0; i < thisFields.Count; i++)
+   {
+       if (i > 0) {
+           #>, <#
+       }
+       if (thisFields[i] == kindField) {
+           #><#= GetLocalName(kindField.Name) #><#
+       } else if (thisFields[i] != singleField) {
+           #><#= thisFields[i].Default #><#
+       } else if (GetPatternName(singleField.Type).StartsWith("NodeListPattern<")) {
+           #>NodeList(<#= GetLocalName(singleField.Name) #>)<#
+       } else if (GetPatternName(singleField.Type) == "TokenListPattern") {
+           #>TokenList(<#= GetLocalName(singleField.Name) #>)<#
+       }
+   }
+   #>, null);
+        }
+<# } #>
+
+<# } #>
+    }
+}
+<#+
+
+private static bool IsListType(string name)
+{
+    return GetPatternName(name).StartsWith("NodeListPattern<");
+}
+
+private static string GetGenericArgumentType(string name)
+{
+    if (name.Contains("<"))
+    {
+        if (name == "SyntaxList<SyntaxToken>")
+            return "string";
+
+        return GetPatternName(name.Substring(name.IndexOf('<') + 1).TrimEnd('>'));
+    }
+
+    throw new InvalidOperationException();
+}
+
+private static string GetPatternName(string name, bool listAsEnumerable = false)
+{
+    if (name.Contains("<"))
+    {
+        if (name == "SyntaxList<SyntaxToken>")
+            return listAsEnumerable ? "IEnumerable<string>" : "TokenListPattern";
+        string baseName = name.Substring(0, name.IndexOf('<'));
+        string argumentName = name.Substring(name.IndexOf('<') + 1).TrimEnd('>');
+
+        switch (baseName)
+        {
+            case "SyntaxList":
+            case "SeparatedSyntaxList":
+                baseName = listAsEnumerable ? "IEnumerable" : "NodeListPattern";
+                break;
+            default:
+                throw new InvalidOperationException("Unmapped generic type '" + baseName + "'");
+        }
+
+        return baseName + "<" + GetPatternName(argumentName) + ">";
+    }
+
+    switch (name)
+    {
+        case "CSharpSyntaxNode":
+            return "PatternNode";
+        case "SyntaxToken":
+            return "string";
+        case "SyntaxKind":
+            return name;
+    }
+    
+    if (!name.EndsWith("Syntax"))
+        throw new InvalidOperationException("Invalid pattern name " + name);
+
+    return name.Substring(0, name.Length - 6) + "Pattern";
+}
+
+private static string GetSimpleName(string name)
+{
+    if (!name.EndsWith("Syntax"))
+        throw new InvalidOperationException("Invalid pattern name " + name);
+
+    return name.Substring(0, name.Length - 6);
+}
+
+private static string GetFieldName(string name)
+{
+    return "_" + LowerName(name);
+}
+
+private static string GetLocalName(string name)
+{
+    string lowerName = LowerName(name);
+    switch (lowerName)
+    {
+        case "else":
+        case "default":
+        case "finally":
+            return "@" + lowerName;
+        default:
+            return lowerName;
+    }
+}
+
+private static string LowerName(string name)
+{
+    return name.Substring(0, 1).ToLowerInvariant() + name.Substring(1);
+}
+
+private static bool ConsiderTokenField(string name, string type)
+{
+    if (name.EndsWith("Token"))
+        return false;
+
+    switch (name)
+    {
+        case "Identifier":
+        case "Modifiers":
+            return true;
+        case "Comma":
+        case "Commas":
+            return false;
+        case "Keyword":
+            return type == "PredefinedTypeSyntax";
+        default:
+            if (name.EndsWith("Keyword"))
+                return false;
+            break;
+    }
+
+    throw new InvalidOperationException("Unmapped token field name '" + type + "." + name + "'");
+}
+
+private static List<SyntaxField> GetAllFields(List<SyntaxType> types, string name)
+{
+    var fields = new List<SyntaxField>();
+    GetAllFields(types, fields, name);
+    return fields;
+}
+
+private static void GetAllFields(List<SyntaxType> types, List<SyntaxField> fields, string name)
+{
+    var type = types.SingleOrDefault(p => p.Name == name);
+    if (type == null)
+        return;
+
+    GetAllFields(types, fields, type.BaseType);
+    
+    fields.AddRange(type.Fields.Where(p => !p.Override));
+}
+
+private class SyntaxType
+{
+    public string Name { get; set; }
+    public string BaseType { get; set; }
+    public bool Abstract { get; set; }
+    public List<SyntaxField> Fields { get; private set; }
+
+    public SyntaxType()
+    {
+        Fields = new List<SyntaxField>();
+    }
+}
+
+private class SyntaxField
+{
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public bool Override { get; set; }
+    public bool Token { get; set; }
+    public string Default { get; set; }
+}
+
+#>

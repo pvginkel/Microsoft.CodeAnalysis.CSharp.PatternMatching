@@ -6613,9 +6613,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new IdentifierNamePattern(identifier, action);
         }
 
+        public static IdentifierNamePattern IdentifierName(Action<IdentifierNameSyntax> action)
+        {
+            return new IdentifierNamePattern(null, action);
+        }
+
         public static QualifiedNamePattern QualifiedName(NamePattern left = null, SimpleNamePattern right = null, Action<QualifiedNameSyntax> action = null)
         {
             return new QualifiedNamePattern(left, right, action);
+        }
+
+        public static QualifiedNamePattern QualifiedName(SimpleNamePattern right, Action<QualifiedNameSyntax> action = null)
+        {
+            return new QualifiedNamePattern(null, right, action);
+        }
+
+        public static QualifiedNamePattern QualifiedName(Action<QualifiedNameSyntax> action)
+        {
+            return new QualifiedNamePattern(null, null, action);
         }
 
         public static GenericNamePattern GenericName(string identifier = null, TypeArgumentListPattern typeArgumentList = null, Action<GenericNameSyntax> action = null)
@@ -6623,9 +6638,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new GenericNamePattern(identifier, typeArgumentList, action);
         }
 
+        public static GenericNamePattern GenericName(TypeArgumentListPattern typeArgumentList, Action<GenericNameSyntax> action = null)
+        {
+            return new GenericNamePattern(null, typeArgumentList, action);
+        }
+
+        public static GenericNamePattern GenericName(Action<GenericNameSyntax> action)
+        {
+            return new GenericNamePattern(null, null, action);
+        }
+
         public static TypeArgumentListPattern TypeArgumentList(IEnumerable<TypePattern> arguments = null, Action<TypeArgumentListSyntax> action = null)
         {
             return new TypeArgumentListPattern(NodeList(arguments), action);
+        }
+
+        public static TypeArgumentListPattern TypeArgumentList(Action<TypeArgumentListSyntax> action)
+        {
+            return new TypeArgumentListPattern(null, action);
         }
 
         public static TypeArgumentListPattern TypeArgumentList(params TypePattern[] arguments)
@@ -6638,9 +6668,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new AliasQualifiedNamePattern(alias, name, action);
         }
 
+        public static AliasQualifiedNamePattern AliasQualifiedName(SimpleNamePattern name, Action<AliasQualifiedNameSyntax> action = null)
+        {
+            return new AliasQualifiedNamePattern(null, name, action);
+        }
+
+        public static AliasQualifiedNamePattern AliasQualifiedName(Action<AliasQualifiedNameSyntax> action)
+        {
+            return new AliasQualifiedNamePattern(null, null, action);
+        }
+
         public static PredefinedTypePattern PredefinedType(string keyword = null, Action<PredefinedTypeSyntax> action = null)
         {
             return new PredefinedTypePattern(keyword, action);
+        }
+
+        public static PredefinedTypePattern PredefinedType(Action<PredefinedTypeSyntax> action)
+        {
+            return new PredefinedTypePattern(null, action);
         }
 
         public static ArrayTypePattern ArrayType(TypePattern elementType = null, IEnumerable<ArrayRankSpecifierPattern> rankSpecifiers = null, Action<ArrayTypeSyntax> action = null)
@@ -6648,9 +6693,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ArrayTypePattern(elementType, NodeList(rankSpecifiers), action);
         }
 
+        public static ArrayTypePattern ArrayType(IEnumerable<ArrayRankSpecifierPattern> rankSpecifiers, Action<ArrayTypeSyntax> action = null)
+        {
+            return new ArrayTypePattern(null, NodeList(rankSpecifiers), action);
+        }
+
+        public static ArrayTypePattern ArrayType(Action<ArrayTypeSyntax> action)
+        {
+            return new ArrayTypePattern(null, null, action);
+        }
+
         public static ArrayRankSpecifierPattern ArrayRankSpecifier(IEnumerable<ExpressionPattern> sizes = null, Action<ArrayRankSpecifierSyntax> action = null)
         {
             return new ArrayRankSpecifierPattern(NodeList(sizes), action);
+        }
+
+        public static ArrayRankSpecifierPattern ArrayRankSpecifier(Action<ArrayRankSpecifierSyntax> action)
+        {
+            return new ArrayRankSpecifierPattern(null, action);
         }
 
         public static ArrayRankSpecifierPattern ArrayRankSpecifier(params ExpressionPattern[] sizes)
@@ -6663,14 +6723,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new PointerTypePattern(elementType, action);
         }
 
+        public static PointerTypePattern PointerType(Action<PointerTypeSyntax> action)
+        {
+            return new PointerTypePattern(null, action);
+        }
+
         public static NullableTypePattern NullableType(TypePattern elementType = null, Action<NullableTypeSyntax> action = null)
         {
             return new NullableTypePattern(elementType, action);
         }
 
+        public static NullableTypePattern NullableType(Action<NullableTypeSyntax> action)
+        {
+            return new NullableTypePattern(null, action);
+        }
+
         public static TupleTypePattern TupleType(IEnumerable<TupleElementPattern> elements = null, Action<TupleTypeSyntax> action = null)
         {
             return new TupleTypePattern(NodeList(elements), action);
+        }
+
+        public static TupleTypePattern TupleType(Action<TupleTypeSyntax> action)
+        {
+            return new TupleTypePattern(null, action);
         }
 
         public static TupleTypePattern TupleType(params TupleElementPattern[] elements)
@@ -6683,6 +6758,16 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new TupleElementPattern(type, identifier, action);
         }
 
+        public static TupleElementPattern TupleElement(string identifier, Action<TupleElementSyntax> action = null)
+        {
+            return new TupleElementPattern(null, identifier, action);
+        }
+
+        public static TupleElementPattern TupleElement(Action<TupleElementSyntax> action)
+        {
+            return new TupleElementPattern(null, null, action);
+        }
+
         public static OmittedTypeArgumentPattern OmittedTypeArgument(Action<OmittedTypeArgumentSyntax> action = null)
         {
             return new OmittedTypeArgumentPattern(action);
@@ -6693,14 +6778,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new RefTypePattern(type, action);
         }
 
+        public static RefTypePattern RefType(Action<RefTypeSyntax> action)
+        {
+            return new RefTypePattern(null, action);
+        }
+
         public static ParenthesizedExpressionPattern ParenthesizedExpression(ExpressionPattern expression = null, Action<ParenthesizedExpressionSyntax> action = null)
         {
             return new ParenthesizedExpressionPattern(expression, action);
         }
 
+        public static ParenthesizedExpressionPattern ParenthesizedExpression(Action<ParenthesizedExpressionSyntax> action)
+        {
+            return new ParenthesizedExpressionPattern(null, action);
+        }
+
         public static TupleExpressionPattern TupleExpression(IEnumerable<ArgumentPattern> arguments = null, Action<TupleExpressionSyntax> action = null)
         {
             return new TupleExpressionPattern(NodeList(arguments), action);
+        }
+
+        public static TupleExpressionPattern TupleExpression(Action<TupleExpressionSyntax> action)
+        {
+            return new TupleExpressionPattern(null, action);
         }
 
         public static TupleExpressionPattern TupleExpression(params ArgumentPattern[] arguments)
@@ -6713,9 +6813,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new PrefixUnaryExpressionPattern(kind, operand, action);
         }
 
+        public static PrefixUnaryExpressionPattern PrefixUnaryExpression(ExpressionPattern operand, Action<PrefixUnaryExpressionSyntax> action = null)
+        {
+            return new PrefixUnaryExpressionPattern(default(SyntaxKind), operand, action);
+        }
+
+        public static PrefixUnaryExpressionPattern PrefixUnaryExpression(Action<PrefixUnaryExpressionSyntax> action)
+        {
+            return new PrefixUnaryExpressionPattern(default(SyntaxKind), null, action);
+        }
+
         public static AwaitExpressionPattern AwaitExpression(ExpressionPattern expression = null, Action<AwaitExpressionSyntax> action = null)
         {
             return new AwaitExpressionPattern(expression, action);
+        }
+
+        public static AwaitExpressionPattern AwaitExpression(Action<AwaitExpressionSyntax> action)
+        {
+            return new AwaitExpressionPattern(null, action);
         }
 
         public static PostfixUnaryExpressionPattern PostfixUnaryExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern operand = null, Action<PostfixUnaryExpressionSyntax> action = null)
@@ -6723,9 +6838,34 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new PostfixUnaryExpressionPattern(kind, operand, action);
         }
 
+        public static PostfixUnaryExpressionPattern PostfixUnaryExpression(ExpressionPattern operand, Action<PostfixUnaryExpressionSyntax> action = null)
+        {
+            return new PostfixUnaryExpressionPattern(default(SyntaxKind), operand, action);
+        }
+
+        public static PostfixUnaryExpressionPattern PostfixUnaryExpression(Action<PostfixUnaryExpressionSyntax> action)
+        {
+            return new PostfixUnaryExpressionPattern(default(SyntaxKind), null, action);
+        }
+
         public static MemberAccessExpressionPattern MemberAccessExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, SimpleNamePattern name = null, Action<MemberAccessExpressionSyntax> action = null)
         {
             return new MemberAccessExpressionPattern(kind, expression, name, action);
+        }
+
+        public static MemberAccessExpressionPattern MemberAccessExpression(ExpressionPattern expression, SimpleNamePattern name = null, Action<MemberAccessExpressionSyntax> action = null)
+        {
+            return new MemberAccessExpressionPattern(default(SyntaxKind), expression, name, action);
+        }
+
+        public static MemberAccessExpressionPattern MemberAccessExpression(SimpleNamePattern name, Action<MemberAccessExpressionSyntax> action = null)
+        {
+            return new MemberAccessExpressionPattern(default(SyntaxKind), null, name, action);
+        }
+
+        public static MemberAccessExpressionPattern MemberAccessExpression(Action<MemberAccessExpressionSyntax> action)
+        {
+            return new MemberAccessExpressionPattern(default(SyntaxKind), null, null, action);
         }
 
         public static ConditionalAccessExpressionPattern ConditionalAccessExpression(ExpressionPattern expression = null, ExpressionPattern whenNotNull = null, Action<ConditionalAccessExpressionSyntax> action = null)
@@ -6733,9 +6873,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ConditionalAccessExpressionPattern(expression, whenNotNull, action);
         }
 
+        public static ConditionalAccessExpressionPattern ConditionalAccessExpression(ExpressionPattern whenNotNull, Action<ConditionalAccessExpressionSyntax> action = null)
+        {
+            return new ConditionalAccessExpressionPattern(null, whenNotNull, action);
+        }
+
+        public static ConditionalAccessExpressionPattern ConditionalAccessExpression(Action<ConditionalAccessExpressionSyntax> action)
+        {
+            return new ConditionalAccessExpressionPattern(null, null, action);
+        }
+
         public static MemberBindingExpressionPattern MemberBindingExpression(SimpleNamePattern name = null, Action<MemberBindingExpressionSyntax> action = null)
         {
             return new MemberBindingExpressionPattern(name, action);
+        }
+
+        public static MemberBindingExpressionPattern MemberBindingExpression(Action<MemberBindingExpressionSyntax> action)
+        {
+            return new MemberBindingExpressionPattern(null, action);
         }
 
         public static ElementBindingExpressionPattern ElementBindingExpression(BracketedArgumentListPattern argumentList = null, Action<ElementBindingExpressionSyntax> action = null)
@@ -6743,9 +6898,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ElementBindingExpressionPattern(argumentList, action);
         }
 
+        public static ElementBindingExpressionPattern ElementBindingExpression(Action<ElementBindingExpressionSyntax> action)
+        {
+            return new ElementBindingExpressionPattern(null, action);
+        }
+
         public static ImplicitElementAccessPattern ImplicitElementAccess(BracketedArgumentListPattern argumentList = null, Action<ImplicitElementAccessSyntax> action = null)
         {
             return new ImplicitElementAccessPattern(argumentList, action);
+        }
+
+        public static ImplicitElementAccessPattern ImplicitElementAccess(Action<ImplicitElementAccessSyntax> action)
+        {
+            return new ImplicitElementAccessPattern(null, action);
         }
 
         public static BinaryExpressionPattern BinaryExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern left = null, ExpressionPattern right = null, Action<BinaryExpressionSyntax> action = null)
@@ -6753,14 +6918,59 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new BinaryExpressionPattern(kind, left, right, action);
         }
 
+        public static BinaryExpressionPattern BinaryExpression(ExpressionPattern left, ExpressionPattern right = null, Action<BinaryExpressionSyntax> action = null)
+        {
+            return new BinaryExpressionPattern(default(SyntaxKind), left, right, action);
+        }
+
+        public static BinaryExpressionPattern BinaryExpression(ExpressionPattern right, Action<BinaryExpressionSyntax> action = null)
+        {
+            return new BinaryExpressionPattern(default(SyntaxKind), null, right, action);
+        }
+
+        public static BinaryExpressionPattern BinaryExpression(Action<BinaryExpressionSyntax> action)
+        {
+            return new BinaryExpressionPattern(default(SyntaxKind), null, null, action);
+        }
+
         public static AssignmentExpressionPattern AssignmentExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern left = null, ExpressionPattern right = null, Action<AssignmentExpressionSyntax> action = null)
         {
             return new AssignmentExpressionPattern(kind, left, right, action);
         }
 
+        public static AssignmentExpressionPattern AssignmentExpression(ExpressionPattern left, ExpressionPattern right = null, Action<AssignmentExpressionSyntax> action = null)
+        {
+            return new AssignmentExpressionPattern(default(SyntaxKind), left, right, action);
+        }
+
+        public static AssignmentExpressionPattern AssignmentExpression(ExpressionPattern right, Action<AssignmentExpressionSyntax> action = null)
+        {
+            return new AssignmentExpressionPattern(default(SyntaxKind), null, right, action);
+        }
+
+        public static AssignmentExpressionPattern AssignmentExpression(Action<AssignmentExpressionSyntax> action)
+        {
+            return new AssignmentExpressionPattern(default(SyntaxKind), null, null, action);
+        }
+
         public static ConditionalExpressionPattern ConditionalExpression(ExpressionPattern condition = null, ExpressionPattern whenTrue = null, ExpressionPattern whenFalse = null, Action<ConditionalExpressionSyntax> action = null)
         {
             return new ConditionalExpressionPattern(condition, whenTrue, whenFalse, action);
+        }
+
+        public static ConditionalExpressionPattern ConditionalExpression(ExpressionPattern whenTrue, ExpressionPattern whenFalse = null, Action<ConditionalExpressionSyntax> action = null)
+        {
+            return new ConditionalExpressionPattern(null, whenTrue, whenFalse, action);
+        }
+
+        public static ConditionalExpressionPattern ConditionalExpression(ExpressionPattern whenFalse, Action<ConditionalExpressionSyntax> action = null)
+        {
+            return new ConditionalExpressionPattern(null, null, whenFalse, action);
+        }
+
+        public static ConditionalExpressionPattern ConditionalExpression(Action<ConditionalExpressionSyntax> action)
+        {
+            return new ConditionalExpressionPattern(null, null, null, action);
         }
 
         public static ThisExpressionPattern ThisExpression(Action<ThisExpressionSyntax> action = null)
@@ -6778,9 +6988,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new LiteralExpressionPattern(kind, action);
         }
 
+        public static LiteralExpressionPattern LiteralExpression(Action<LiteralExpressionSyntax> action)
+        {
+            return new LiteralExpressionPattern(default(SyntaxKind), action);
+        }
+
         public static MakeRefExpressionPattern MakeRefExpression(ExpressionPattern expression = null, Action<MakeRefExpressionSyntax> action = null)
         {
             return new MakeRefExpressionPattern(expression, action);
+        }
+
+        public static MakeRefExpressionPattern MakeRefExpression(Action<MakeRefExpressionSyntax> action)
+        {
+            return new MakeRefExpressionPattern(null, action);
         }
 
         public static RefTypeExpressionPattern RefTypeExpression(ExpressionPattern expression = null, Action<RefTypeExpressionSyntax> action = null)
@@ -6788,9 +7008,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new RefTypeExpressionPattern(expression, action);
         }
 
+        public static RefTypeExpressionPattern RefTypeExpression(Action<RefTypeExpressionSyntax> action)
+        {
+            return new RefTypeExpressionPattern(null, action);
+        }
+
         public static RefValueExpressionPattern RefValueExpression(ExpressionPattern expression = null, TypePattern type = null, Action<RefValueExpressionSyntax> action = null)
         {
             return new RefValueExpressionPattern(expression, type, action);
+        }
+
+        public static RefValueExpressionPattern RefValueExpression(TypePattern type, Action<RefValueExpressionSyntax> action = null)
+        {
+            return new RefValueExpressionPattern(null, type, action);
+        }
+
+        public static RefValueExpressionPattern RefValueExpression(Action<RefValueExpressionSyntax> action)
+        {
+            return new RefValueExpressionPattern(null, null, action);
         }
 
         public static CheckedExpressionPattern CheckedExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<CheckedExpressionSyntax> action = null)
@@ -6798,9 +7033,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new CheckedExpressionPattern(kind, expression, action);
         }
 
+        public static CheckedExpressionPattern CheckedExpression(ExpressionPattern expression, Action<CheckedExpressionSyntax> action = null)
+        {
+            return new CheckedExpressionPattern(default(SyntaxKind), expression, action);
+        }
+
+        public static CheckedExpressionPattern CheckedExpression(Action<CheckedExpressionSyntax> action)
+        {
+            return new CheckedExpressionPattern(default(SyntaxKind), null, action);
+        }
+
         public static DefaultExpressionPattern DefaultExpression(TypePattern type = null, Action<DefaultExpressionSyntax> action = null)
         {
             return new DefaultExpressionPattern(type, action);
+        }
+
+        public static DefaultExpressionPattern DefaultExpression(Action<DefaultExpressionSyntax> action)
+        {
+            return new DefaultExpressionPattern(null, action);
         }
 
         public static TypeOfExpressionPattern TypeOfExpression(TypePattern type = null, Action<TypeOfExpressionSyntax> action = null)
@@ -6808,9 +7058,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new TypeOfExpressionPattern(type, action);
         }
 
+        public static TypeOfExpressionPattern TypeOfExpression(Action<TypeOfExpressionSyntax> action)
+        {
+            return new TypeOfExpressionPattern(null, action);
+        }
+
         public static SizeOfExpressionPattern SizeOfExpression(TypePattern type = null, Action<SizeOfExpressionSyntax> action = null)
         {
             return new SizeOfExpressionPattern(type, action);
+        }
+
+        public static SizeOfExpressionPattern SizeOfExpression(Action<SizeOfExpressionSyntax> action)
+        {
+            return new SizeOfExpressionPattern(null, action);
         }
 
         public static InvocationExpressionPattern InvocationExpression(ExpressionPattern expression = null, ArgumentListPattern argumentList = null, Action<InvocationExpressionSyntax> action = null)
@@ -6818,14 +7078,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new InvocationExpressionPattern(expression, argumentList, action);
         }
 
+        public static InvocationExpressionPattern InvocationExpression(ArgumentListPattern argumentList, Action<InvocationExpressionSyntax> action = null)
+        {
+            return new InvocationExpressionPattern(null, argumentList, action);
+        }
+
+        public static InvocationExpressionPattern InvocationExpression(Action<InvocationExpressionSyntax> action)
+        {
+            return new InvocationExpressionPattern(null, null, action);
+        }
+
         public static ElementAccessExpressionPattern ElementAccessExpression(ExpressionPattern expression = null, BracketedArgumentListPattern argumentList = null, Action<ElementAccessExpressionSyntax> action = null)
         {
             return new ElementAccessExpressionPattern(expression, argumentList, action);
         }
 
+        public static ElementAccessExpressionPattern ElementAccessExpression(BracketedArgumentListPattern argumentList, Action<ElementAccessExpressionSyntax> action = null)
+        {
+            return new ElementAccessExpressionPattern(null, argumentList, action);
+        }
+
+        public static ElementAccessExpressionPattern ElementAccessExpression(Action<ElementAccessExpressionSyntax> action)
+        {
+            return new ElementAccessExpressionPattern(null, null, action);
+        }
+
         public static ArgumentListPattern ArgumentList(IEnumerable<ArgumentPattern> arguments = null, Action<ArgumentListSyntax> action = null)
         {
             return new ArgumentListPattern(NodeList(arguments), action);
+        }
+
+        public static ArgumentListPattern ArgumentList(Action<ArgumentListSyntax> action)
+        {
+            return new ArgumentListPattern(null, action);
         }
 
         public static ArgumentListPattern ArgumentList(params ArgumentPattern[] arguments)
@@ -6838,6 +7123,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new BracketedArgumentListPattern(NodeList(arguments), action);
         }
 
+        public static BracketedArgumentListPattern BracketedArgumentList(Action<BracketedArgumentListSyntax> action)
+        {
+            return new BracketedArgumentListPattern(null, action);
+        }
+
         public static BracketedArgumentListPattern BracketedArgumentList(params ArgumentPattern[] arguments)
         {
             return new BracketedArgumentListPattern(NodeList(arguments), null);
@@ -6848,9 +7138,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ArgumentPattern(nameColon, expression, action);
         }
 
+        public static ArgumentPattern Argument(ExpressionPattern expression, Action<ArgumentSyntax> action = null)
+        {
+            return new ArgumentPattern(null, expression, action);
+        }
+
+        public static ArgumentPattern Argument(Action<ArgumentSyntax> action)
+        {
+            return new ArgumentPattern(null, null, action);
+        }
+
         public static NameColonPattern NameColon(IdentifierNamePattern name = null, Action<NameColonSyntax> action = null)
         {
             return new NameColonPattern(name, action);
+        }
+
+        public static NameColonPattern NameColon(Action<NameColonSyntax> action)
+        {
+            return new NameColonPattern(null, action);
         }
 
         public static DeclarationExpressionPattern DeclarationExpression(TypePattern type = null, VariableDesignationPattern designation = null, Action<DeclarationExpressionSyntax> action = null)
@@ -6858,9 +7163,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new DeclarationExpressionPattern(type, designation, action);
         }
 
+        public static DeclarationExpressionPattern DeclarationExpression(VariableDesignationPattern designation, Action<DeclarationExpressionSyntax> action = null)
+        {
+            return new DeclarationExpressionPattern(null, designation, action);
+        }
+
+        public static DeclarationExpressionPattern DeclarationExpression(Action<DeclarationExpressionSyntax> action)
+        {
+            return new DeclarationExpressionPattern(null, null, action);
+        }
+
         public static CastExpressionPattern CastExpression(TypePattern type = null, ExpressionPattern expression = null, Action<CastExpressionSyntax> action = null)
         {
             return new CastExpressionPattern(type, expression, action);
+        }
+
+        public static CastExpressionPattern CastExpression(ExpressionPattern expression, Action<CastExpressionSyntax> action = null)
+        {
+            return new CastExpressionPattern(null, expression, action);
+        }
+
+        public static CastExpressionPattern CastExpression(Action<CastExpressionSyntax> action)
+        {
+            return new CastExpressionPattern(null, null, action);
         }
 
         public static AnonymousMethodExpressionPattern AnonymousMethodExpression(PatternNode body = null, ParameterListPattern parameterList = null, Action<AnonymousMethodExpressionSyntax> action = null)
@@ -6868,9 +7193,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new AnonymousMethodExpressionPattern(body, parameterList, action);
         }
 
+        public static AnonymousMethodExpressionPattern AnonymousMethodExpression(ParameterListPattern parameterList, Action<AnonymousMethodExpressionSyntax> action = null)
+        {
+            return new AnonymousMethodExpressionPattern(null, parameterList, action);
+        }
+
+        public static AnonymousMethodExpressionPattern AnonymousMethodExpression(Action<AnonymousMethodExpressionSyntax> action)
+        {
+            return new AnonymousMethodExpressionPattern(null, null, action);
+        }
+
         public static SimpleLambdaExpressionPattern SimpleLambdaExpression(PatternNode body = null, ParameterPattern parameter = null, Action<SimpleLambdaExpressionSyntax> action = null)
         {
             return new SimpleLambdaExpressionPattern(body, parameter, action);
+        }
+
+        public static SimpleLambdaExpressionPattern SimpleLambdaExpression(ParameterPattern parameter, Action<SimpleLambdaExpressionSyntax> action = null)
+        {
+            return new SimpleLambdaExpressionPattern(null, parameter, action);
+        }
+
+        public static SimpleLambdaExpressionPattern SimpleLambdaExpression(Action<SimpleLambdaExpressionSyntax> action)
+        {
+            return new SimpleLambdaExpressionPattern(null, null, action);
         }
 
         public static RefExpressionPattern RefExpression(ExpressionPattern expression = null, Action<RefExpressionSyntax> action = null)
@@ -6878,14 +7223,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new RefExpressionPattern(expression, action);
         }
 
+        public static RefExpressionPattern RefExpression(Action<RefExpressionSyntax> action)
+        {
+            return new RefExpressionPattern(null, action);
+        }
+
         public static ParenthesizedLambdaExpressionPattern ParenthesizedLambdaExpression(PatternNode body = null, ParameterListPattern parameterList = null, Action<ParenthesizedLambdaExpressionSyntax> action = null)
         {
             return new ParenthesizedLambdaExpressionPattern(body, parameterList, action);
         }
 
+        public static ParenthesizedLambdaExpressionPattern ParenthesizedLambdaExpression(ParameterListPattern parameterList, Action<ParenthesizedLambdaExpressionSyntax> action = null)
+        {
+            return new ParenthesizedLambdaExpressionPattern(null, parameterList, action);
+        }
+
+        public static ParenthesizedLambdaExpressionPattern ParenthesizedLambdaExpression(Action<ParenthesizedLambdaExpressionSyntax> action)
+        {
+            return new ParenthesizedLambdaExpressionPattern(null, null, action);
+        }
+
         public static InitializerExpressionPattern InitializerExpression(SyntaxKind kind = default(SyntaxKind), IEnumerable<ExpressionPattern> expressions = null, Action<InitializerExpressionSyntax> action = null)
         {
             return new InitializerExpressionPattern(kind, NodeList(expressions), action);
+        }
+
+        public static InitializerExpressionPattern InitializerExpression(IEnumerable<ExpressionPattern> expressions, Action<InitializerExpressionSyntax> action = null)
+        {
+            return new InitializerExpressionPattern(default(SyntaxKind), NodeList(expressions), action);
+        }
+
+        public static InitializerExpressionPattern InitializerExpression(Action<InitializerExpressionSyntax> action)
+        {
+            return new InitializerExpressionPattern(default(SyntaxKind), null, action);
         }
 
         public static InitializerExpressionPattern InitializerExpression(SyntaxKind kind, params ExpressionPattern[] expressions)
@@ -6898,14 +7268,44 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ObjectCreationExpressionPattern(type, argumentList, initializer, action);
         }
 
+        public static ObjectCreationExpressionPattern ObjectCreationExpression(ArgumentListPattern argumentList, InitializerExpressionPattern initializer = null, Action<ObjectCreationExpressionSyntax> action = null)
+        {
+            return new ObjectCreationExpressionPattern(null, argumentList, initializer, action);
+        }
+
+        public static ObjectCreationExpressionPattern ObjectCreationExpression(InitializerExpressionPattern initializer, Action<ObjectCreationExpressionSyntax> action = null)
+        {
+            return new ObjectCreationExpressionPattern(null, null, initializer, action);
+        }
+
+        public static ObjectCreationExpressionPattern ObjectCreationExpression(Action<ObjectCreationExpressionSyntax> action)
+        {
+            return new ObjectCreationExpressionPattern(null, null, null, action);
+        }
+
         public static AnonymousObjectMemberDeclaratorPattern AnonymousObjectMemberDeclarator(NameEqualsPattern nameEquals = null, ExpressionPattern expression = null, Action<AnonymousObjectMemberDeclaratorSyntax> action = null)
         {
             return new AnonymousObjectMemberDeclaratorPattern(nameEquals, expression, action);
         }
 
+        public static AnonymousObjectMemberDeclaratorPattern AnonymousObjectMemberDeclarator(ExpressionPattern expression, Action<AnonymousObjectMemberDeclaratorSyntax> action = null)
+        {
+            return new AnonymousObjectMemberDeclaratorPattern(null, expression, action);
+        }
+
+        public static AnonymousObjectMemberDeclaratorPattern AnonymousObjectMemberDeclarator(Action<AnonymousObjectMemberDeclaratorSyntax> action)
+        {
+            return new AnonymousObjectMemberDeclaratorPattern(null, null, action);
+        }
+
         public static AnonymousObjectCreationExpressionPattern AnonymousObjectCreationExpression(IEnumerable<AnonymousObjectMemberDeclaratorPattern> initializers = null, Action<AnonymousObjectCreationExpressionSyntax> action = null)
         {
             return new AnonymousObjectCreationExpressionPattern(NodeList(initializers), action);
+        }
+
+        public static AnonymousObjectCreationExpressionPattern AnonymousObjectCreationExpression(Action<AnonymousObjectCreationExpressionSyntax> action)
+        {
+            return new AnonymousObjectCreationExpressionPattern(null, action);
         }
 
         public static AnonymousObjectCreationExpressionPattern AnonymousObjectCreationExpression(params AnonymousObjectMemberDeclaratorPattern[] initializers)
@@ -6918,9 +7318,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ArrayCreationExpressionPattern(type, initializer, action);
         }
 
+        public static ArrayCreationExpressionPattern ArrayCreationExpression(InitializerExpressionPattern initializer, Action<ArrayCreationExpressionSyntax> action = null)
+        {
+            return new ArrayCreationExpressionPattern(null, initializer, action);
+        }
+
+        public static ArrayCreationExpressionPattern ArrayCreationExpression(Action<ArrayCreationExpressionSyntax> action)
+        {
+            return new ArrayCreationExpressionPattern(null, null, action);
+        }
+
         public static ImplicitArrayCreationExpressionPattern ImplicitArrayCreationExpression(InitializerExpressionPattern initializer = null, Action<ImplicitArrayCreationExpressionSyntax> action = null)
         {
             return new ImplicitArrayCreationExpressionPattern(initializer, action);
+        }
+
+        public static ImplicitArrayCreationExpressionPattern ImplicitArrayCreationExpression(Action<ImplicitArrayCreationExpressionSyntax> action)
+        {
+            return new ImplicitArrayCreationExpressionPattern(null, action);
         }
 
         public static StackAllocArrayCreationExpressionPattern StackAllocArrayCreationExpression(TypePattern type = null, Action<StackAllocArrayCreationExpressionSyntax> action = null)
@@ -6928,9 +7343,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new StackAllocArrayCreationExpressionPattern(type, action);
         }
 
+        public static StackAllocArrayCreationExpressionPattern StackAllocArrayCreationExpression(Action<StackAllocArrayCreationExpressionSyntax> action)
+        {
+            return new StackAllocArrayCreationExpressionPattern(null, action);
+        }
+
         public static QueryExpressionPattern QueryExpression(FromClausePattern fromClause = null, QueryBodyPattern body = null, Action<QueryExpressionSyntax> action = null)
         {
             return new QueryExpressionPattern(fromClause, body, action);
+        }
+
+        public static QueryExpressionPattern QueryExpression(QueryBodyPattern body, Action<QueryExpressionSyntax> action = null)
+        {
+            return new QueryExpressionPattern(null, body, action);
+        }
+
+        public static QueryExpressionPattern QueryExpression(Action<QueryExpressionSyntax> action)
+        {
+            return new QueryExpressionPattern(null, null, action);
         }
 
         public static QueryBodyPattern QueryBody(IEnumerable<QueryClausePattern> clauses = null, SelectOrGroupClausePattern selectOrGroup = null, QueryContinuationPattern continuation = null, Action<QueryBodySyntax> action = null)
@@ -6938,9 +7368,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new QueryBodyPattern(NodeList(clauses), selectOrGroup, continuation, action);
         }
 
+        public static QueryBodyPattern QueryBody(SelectOrGroupClausePattern selectOrGroup, QueryContinuationPattern continuation = null, Action<QueryBodySyntax> action = null)
+        {
+            return new QueryBodyPattern(null, selectOrGroup, continuation, action);
+        }
+
+        public static QueryBodyPattern QueryBody(QueryContinuationPattern continuation, Action<QueryBodySyntax> action = null)
+        {
+            return new QueryBodyPattern(null, null, continuation, action);
+        }
+
+        public static QueryBodyPattern QueryBody(Action<QueryBodySyntax> action)
+        {
+            return new QueryBodyPattern(null, null, null, action);
+        }
+
         public static FromClausePattern FromClause(TypePattern type = null, string identifier = null, ExpressionPattern expression = null, Action<FromClauseSyntax> action = null)
         {
             return new FromClausePattern(type, identifier, expression, action);
+        }
+
+        public static FromClausePattern FromClause(string identifier, ExpressionPattern expression = null, Action<FromClauseSyntax> action = null)
+        {
+            return new FromClausePattern(null, identifier, expression, action);
+        }
+
+        public static FromClausePattern FromClause(ExpressionPattern expression, Action<FromClauseSyntax> action = null)
+        {
+            return new FromClausePattern(null, null, expression, action);
+        }
+
+        public static FromClausePattern FromClause(Action<FromClauseSyntax> action)
+        {
+            return new FromClausePattern(null, null, null, action);
         }
 
         public static LetClausePattern LetClause(string identifier = null, ExpressionPattern expression = null, Action<LetClauseSyntax> action = null)
@@ -6948,9 +7408,49 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new LetClausePattern(identifier, expression, action);
         }
 
+        public static LetClausePattern LetClause(ExpressionPattern expression, Action<LetClauseSyntax> action = null)
+        {
+            return new LetClausePattern(null, expression, action);
+        }
+
+        public static LetClausePattern LetClause(Action<LetClauseSyntax> action)
+        {
+            return new LetClausePattern(null, null, action);
+        }
+
         public static JoinClausePattern JoinClause(TypePattern type = null, string identifier = null, ExpressionPattern inExpression = null, ExpressionPattern leftExpression = null, ExpressionPattern rightExpression = null, JoinIntoClausePattern into = null, Action<JoinClauseSyntax> action = null)
         {
             return new JoinClausePattern(type, identifier, inExpression, leftExpression, rightExpression, into, action);
+        }
+
+        public static JoinClausePattern JoinClause(string identifier, ExpressionPattern inExpression = null, ExpressionPattern leftExpression = null, ExpressionPattern rightExpression = null, JoinIntoClausePattern into = null, Action<JoinClauseSyntax> action = null)
+        {
+            return new JoinClausePattern(null, identifier, inExpression, leftExpression, rightExpression, into, action);
+        }
+
+        public static JoinClausePattern JoinClause(ExpressionPattern inExpression, ExpressionPattern leftExpression = null, ExpressionPattern rightExpression = null, JoinIntoClausePattern into = null, Action<JoinClauseSyntax> action = null)
+        {
+            return new JoinClausePattern(null, null, inExpression, leftExpression, rightExpression, into, action);
+        }
+
+        public static JoinClausePattern JoinClause(ExpressionPattern leftExpression, ExpressionPattern rightExpression = null, JoinIntoClausePattern into = null, Action<JoinClauseSyntax> action = null)
+        {
+            return new JoinClausePattern(null, null, null, leftExpression, rightExpression, into, action);
+        }
+
+        public static JoinClausePattern JoinClause(ExpressionPattern rightExpression, JoinIntoClausePattern into = null, Action<JoinClauseSyntax> action = null)
+        {
+            return new JoinClausePattern(null, null, null, null, rightExpression, into, action);
+        }
+
+        public static JoinClausePattern JoinClause(JoinIntoClausePattern into, Action<JoinClauseSyntax> action = null)
+        {
+            return new JoinClausePattern(null, null, null, null, null, into, action);
+        }
+
+        public static JoinClausePattern JoinClause(Action<JoinClauseSyntax> action)
+        {
+            return new JoinClausePattern(null, null, null, null, null, null, action);
         }
 
         public static JoinIntoClausePattern JoinIntoClause(string identifier = null, Action<JoinIntoClauseSyntax> action = null)
@@ -6958,14 +7458,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new JoinIntoClausePattern(identifier, action);
         }
 
+        public static JoinIntoClausePattern JoinIntoClause(Action<JoinIntoClauseSyntax> action)
+        {
+            return new JoinIntoClausePattern(null, action);
+        }
+
         public static WhereClausePattern WhereClause(ExpressionPattern condition = null, Action<WhereClauseSyntax> action = null)
         {
             return new WhereClausePattern(condition, action);
         }
 
+        public static WhereClausePattern WhereClause(Action<WhereClauseSyntax> action)
+        {
+            return new WhereClausePattern(null, action);
+        }
+
         public static OrderByClausePattern OrderByClause(IEnumerable<OrderingPattern> orderings = null, Action<OrderByClauseSyntax> action = null)
         {
             return new OrderByClausePattern(NodeList(orderings), action);
+        }
+
+        public static OrderByClausePattern OrderByClause(Action<OrderByClauseSyntax> action)
+        {
+            return new OrderByClausePattern(null, action);
         }
 
         public static OrderByClausePattern OrderByClause(params OrderingPattern[] orderings)
@@ -6978,9 +7493,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new OrderingPattern(kind, expression, action);
         }
 
+        public static OrderingPattern Ordering(ExpressionPattern expression, Action<OrderingSyntax> action = null)
+        {
+            return new OrderingPattern(default(SyntaxKind), expression, action);
+        }
+
+        public static OrderingPattern Ordering(Action<OrderingSyntax> action)
+        {
+            return new OrderingPattern(default(SyntaxKind), null, action);
+        }
+
         public static SelectClausePattern SelectClause(ExpressionPattern expression = null, Action<SelectClauseSyntax> action = null)
         {
             return new SelectClausePattern(expression, action);
+        }
+
+        public static SelectClausePattern SelectClause(Action<SelectClauseSyntax> action)
+        {
+            return new SelectClausePattern(null, action);
         }
 
         public static GroupClausePattern GroupClause(ExpressionPattern groupExpression = null, ExpressionPattern byExpression = null, Action<GroupClauseSyntax> action = null)
@@ -6988,9 +7518,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new GroupClausePattern(groupExpression, byExpression, action);
         }
 
+        public static GroupClausePattern GroupClause(ExpressionPattern byExpression, Action<GroupClauseSyntax> action = null)
+        {
+            return new GroupClausePattern(null, byExpression, action);
+        }
+
+        public static GroupClausePattern GroupClause(Action<GroupClauseSyntax> action)
+        {
+            return new GroupClausePattern(null, null, action);
+        }
+
         public static QueryContinuationPattern QueryContinuation(string identifier = null, QueryBodyPattern body = null, Action<QueryContinuationSyntax> action = null)
         {
             return new QueryContinuationPattern(identifier, body, action);
+        }
+
+        public static QueryContinuationPattern QueryContinuation(QueryBodyPattern body, Action<QueryContinuationSyntax> action = null)
+        {
+            return new QueryContinuationPattern(null, body, action);
+        }
+
+        public static QueryContinuationPattern QueryContinuation(Action<QueryContinuationSyntax> action)
+        {
+            return new QueryContinuationPattern(null, null, action);
         }
 
         public static OmittedArraySizeExpressionPattern OmittedArraySizeExpression(Action<OmittedArraySizeExpressionSyntax> action = null)
@@ -7003,6 +7553,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new InterpolatedStringExpressionPattern(NodeList(contents), action);
         }
 
+        public static InterpolatedStringExpressionPattern InterpolatedStringExpression(Action<InterpolatedStringExpressionSyntax> action)
+        {
+            return new InterpolatedStringExpressionPattern(null, action);
+        }
+
         public static InterpolatedStringExpressionPattern InterpolatedStringExpression(params InterpolatedStringContentPattern[] contents)
         {
             return new InterpolatedStringExpressionPattern(NodeList(contents), null);
@@ -7013,9 +7568,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new IsPatternExpressionPattern(expression, pattern, action);
         }
 
+        public static IsPatternExpressionPattern IsPatternExpression(PatternPattern pattern, Action<IsPatternExpressionSyntax> action = null)
+        {
+            return new IsPatternExpressionPattern(null, pattern, action);
+        }
+
+        public static IsPatternExpressionPattern IsPatternExpression(Action<IsPatternExpressionSyntax> action)
+        {
+            return new IsPatternExpressionPattern(null, null, action);
+        }
+
         public static ThrowExpressionPattern ThrowExpression(ExpressionPattern expression = null, Action<ThrowExpressionSyntax> action = null)
         {
             return new ThrowExpressionPattern(expression, action);
+        }
+
+        public static ThrowExpressionPattern ThrowExpression(Action<ThrowExpressionSyntax> action)
+        {
+            return new ThrowExpressionPattern(null, action);
         }
 
         public static WhenClausePattern WhenClause(ExpressionPattern condition = null, Action<WhenClauseSyntax> action = null)
@@ -7023,14 +7593,34 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new WhenClausePattern(condition, action);
         }
 
+        public static WhenClausePattern WhenClause(Action<WhenClauseSyntax> action)
+        {
+            return new WhenClausePattern(null, action);
+        }
+
         public static DeclarationPatternPattern DeclarationPattern(TypePattern type = null, VariableDesignationPattern designation = null, Action<DeclarationPatternSyntax> action = null)
         {
             return new DeclarationPatternPattern(type, designation, action);
         }
 
+        public static DeclarationPatternPattern DeclarationPattern(VariableDesignationPattern designation, Action<DeclarationPatternSyntax> action = null)
+        {
+            return new DeclarationPatternPattern(null, designation, action);
+        }
+
+        public static DeclarationPatternPattern DeclarationPattern(Action<DeclarationPatternSyntax> action)
+        {
+            return new DeclarationPatternPattern(null, null, action);
+        }
+
         public static ConstantPatternPattern ConstantPattern(ExpressionPattern expression = null, Action<ConstantPatternSyntax> action = null)
         {
             return new ConstantPatternPattern(expression, action);
+        }
+
+        public static ConstantPatternPattern ConstantPattern(Action<ConstantPatternSyntax> action)
+        {
+            return new ConstantPatternPattern(null, action);
         }
 
         public static InterpolatedStringTextPattern InterpolatedStringText(Action<InterpolatedStringTextSyntax> action = null)
@@ -7043,9 +7633,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new InterpolationPattern(expression, alignmentClause, formatClause, action);
         }
 
+        public static InterpolationPattern Interpolation(InterpolationAlignmentClausePattern alignmentClause, InterpolationFormatClausePattern formatClause = null, Action<InterpolationSyntax> action = null)
+        {
+            return new InterpolationPattern(null, alignmentClause, formatClause, action);
+        }
+
+        public static InterpolationPattern Interpolation(InterpolationFormatClausePattern formatClause, Action<InterpolationSyntax> action = null)
+        {
+            return new InterpolationPattern(null, null, formatClause, action);
+        }
+
+        public static InterpolationPattern Interpolation(Action<InterpolationSyntax> action)
+        {
+            return new InterpolationPattern(null, null, null, action);
+        }
+
         public static InterpolationAlignmentClausePattern InterpolationAlignmentClause(ExpressionPattern value = null, Action<InterpolationAlignmentClauseSyntax> action = null)
         {
             return new InterpolationAlignmentClausePattern(value, action);
+        }
+
+        public static InterpolationAlignmentClausePattern InterpolationAlignmentClause(Action<InterpolationAlignmentClauseSyntax> action)
+        {
+            return new InterpolationAlignmentClausePattern(null, action);
         }
 
         public static InterpolationFormatClausePattern InterpolationFormatClause(Action<InterpolationFormatClauseSyntax> action = null)
@@ -7058,9 +7668,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new GlobalStatementPattern(statement, action);
         }
 
+        public static GlobalStatementPattern GlobalStatement(Action<GlobalStatementSyntax> action)
+        {
+            return new GlobalStatementPattern(null, action);
+        }
+
         public static BlockPattern Block(IEnumerable<StatementPattern> statements = null, Action<BlockSyntax> action = null)
         {
             return new BlockPattern(NodeList(statements), action);
+        }
+
+        public static BlockPattern Block(Action<BlockSyntax> action)
+        {
+            return new BlockPattern(null, action);
         }
 
         public static BlockPattern Block(params StatementPattern[] statements)
@@ -7073,14 +7693,74 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new LocalFunctionStatementPattern(TokenList(modifiers), returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), body, expressionBody, action);
         }
 
+        public static LocalFunctionStatementPattern LocalFunctionStatement(TypePattern returnType, string identifier = null, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), body, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(string identifier, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, null, identifier, typeParameterList, parameterList, NodeList(constraintClauses), body, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(TypeParameterListPattern typeParameterList, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, null, null, typeParameterList, parameterList, NodeList(constraintClauses), body, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(ParameterListPattern parameterList, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, null, null, null, parameterList, NodeList(constraintClauses), body, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(IEnumerable<TypeParameterConstraintClausePattern> constraintClauses, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, null, null, null, null, NodeList(constraintClauses), body, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, null, null, null, null, null, body, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(ArrowExpressionClausePattern expressionBody, Action<LocalFunctionStatementSyntax> action = null)
+        {
+            return new LocalFunctionStatementPattern(null, null, null, null, null, null, null, expressionBody, action);
+        }
+
+        public static LocalFunctionStatementPattern LocalFunctionStatement(Action<LocalFunctionStatementSyntax> action)
+        {
+            return new LocalFunctionStatementPattern(null, null, null, null, null, null, null, null, action);
+        }
+
         public static LocalDeclarationStatementPattern LocalDeclarationStatement(IEnumerable<string> modifiers = null, VariableDeclarationPattern declaration = null, Action<LocalDeclarationStatementSyntax> action = null)
         {
             return new LocalDeclarationStatementPattern(TokenList(modifiers), declaration, action);
         }
 
+        public static LocalDeclarationStatementPattern LocalDeclarationStatement(VariableDeclarationPattern declaration, Action<LocalDeclarationStatementSyntax> action = null)
+        {
+            return new LocalDeclarationStatementPattern(null, declaration, action);
+        }
+
+        public static LocalDeclarationStatementPattern LocalDeclarationStatement(Action<LocalDeclarationStatementSyntax> action)
+        {
+            return new LocalDeclarationStatementPattern(null, null, action);
+        }
+
         public static VariableDeclarationPattern VariableDeclaration(TypePattern type = null, IEnumerable<VariableDeclaratorPattern> variables = null, Action<VariableDeclarationSyntax> action = null)
         {
             return new VariableDeclarationPattern(type, NodeList(variables), action);
+        }
+
+        public static VariableDeclarationPattern VariableDeclaration(IEnumerable<VariableDeclaratorPattern> variables, Action<VariableDeclarationSyntax> action = null)
+        {
+            return new VariableDeclarationPattern(null, NodeList(variables), action);
+        }
+
+        public static VariableDeclarationPattern VariableDeclaration(Action<VariableDeclarationSyntax> action)
+        {
+            return new VariableDeclarationPattern(null, null, action);
         }
 
         public static VariableDeclarationPattern VariableDeclaration(params VariableDeclaratorPattern[] variables)
@@ -7093,14 +7773,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new VariableDeclaratorPattern(identifier, argumentList, initializer, action);
         }
 
+        public static VariableDeclaratorPattern VariableDeclarator(BracketedArgumentListPattern argumentList, EqualsValueClausePattern initializer = null, Action<VariableDeclaratorSyntax> action = null)
+        {
+            return new VariableDeclaratorPattern(null, argumentList, initializer, action);
+        }
+
+        public static VariableDeclaratorPattern VariableDeclarator(EqualsValueClausePattern initializer, Action<VariableDeclaratorSyntax> action = null)
+        {
+            return new VariableDeclaratorPattern(null, null, initializer, action);
+        }
+
+        public static VariableDeclaratorPattern VariableDeclarator(Action<VariableDeclaratorSyntax> action)
+        {
+            return new VariableDeclaratorPattern(null, null, null, action);
+        }
+
         public static EqualsValueClausePattern EqualsValueClause(ExpressionPattern value = null, Action<EqualsValueClauseSyntax> action = null)
         {
             return new EqualsValueClausePattern(value, action);
         }
 
+        public static EqualsValueClausePattern EqualsValueClause(Action<EqualsValueClauseSyntax> action)
+        {
+            return new EqualsValueClausePattern(null, action);
+        }
+
         public static SingleVariableDesignationPattern SingleVariableDesignation(string identifier = null, Action<SingleVariableDesignationSyntax> action = null)
         {
             return new SingleVariableDesignationPattern(identifier, action);
+        }
+
+        public static SingleVariableDesignationPattern SingleVariableDesignation(Action<SingleVariableDesignationSyntax> action)
+        {
+            return new SingleVariableDesignationPattern(null, action);
         }
 
         public static DiscardDesignationPattern DiscardDesignation(Action<DiscardDesignationSyntax> action = null)
@@ -7113,6 +7818,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ParenthesizedVariableDesignationPattern(NodeList(variables), action);
         }
 
+        public static ParenthesizedVariableDesignationPattern ParenthesizedVariableDesignation(Action<ParenthesizedVariableDesignationSyntax> action)
+        {
+            return new ParenthesizedVariableDesignationPattern(null, action);
+        }
+
         public static ParenthesizedVariableDesignationPattern ParenthesizedVariableDesignation(params VariableDesignationPattern[] variables)
         {
             return new ParenthesizedVariableDesignationPattern(NodeList(variables), null);
@@ -7121,6 +7831,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         public static ExpressionStatementPattern ExpressionStatement(ExpressionPattern expression = null, Action<ExpressionStatementSyntax> action = null)
         {
             return new ExpressionStatementPattern(expression, action);
+        }
+
+        public static ExpressionStatementPattern ExpressionStatement(Action<ExpressionStatementSyntax> action)
+        {
+            return new ExpressionStatementPattern(null, action);
         }
 
         public static EmptyStatementPattern EmptyStatement(Action<EmptyStatementSyntax> action = null)
@@ -7133,9 +7848,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new LabeledStatementPattern(identifier, statement, action);
         }
 
+        public static LabeledStatementPattern LabeledStatement(StatementPattern statement, Action<LabeledStatementSyntax> action = null)
+        {
+            return new LabeledStatementPattern(null, statement, action);
+        }
+
+        public static LabeledStatementPattern LabeledStatement(Action<LabeledStatementSyntax> action)
+        {
+            return new LabeledStatementPattern(null, null, action);
+        }
+
         public static GotoStatementPattern GotoStatement(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<GotoStatementSyntax> action = null)
         {
             return new GotoStatementPattern(kind, expression, action);
+        }
+
+        public static GotoStatementPattern GotoStatement(ExpressionPattern expression, Action<GotoStatementSyntax> action = null)
+        {
+            return new GotoStatementPattern(default(SyntaxKind), expression, action);
+        }
+
+        public static GotoStatementPattern GotoStatement(Action<GotoStatementSyntax> action)
+        {
+            return new GotoStatementPattern(default(SyntaxKind), null, action);
         }
 
         public static BreakStatementPattern BreakStatement(Action<BreakStatementSyntax> action = null)
@@ -7153,9 +7888,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ReturnStatementPattern(expression, action);
         }
 
+        public static ReturnStatementPattern ReturnStatement(Action<ReturnStatementSyntax> action)
+        {
+            return new ReturnStatementPattern(null, action);
+        }
+
         public static ThrowStatementPattern ThrowStatement(ExpressionPattern expression = null, Action<ThrowStatementSyntax> action = null)
         {
             return new ThrowStatementPattern(expression, action);
+        }
+
+        public static ThrowStatementPattern ThrowStatement(Action<ThrowStatementSyntax> action)
+        {
+            return new ThrowStatementPattern(null, action);
         }
 
         public static YieldStatementPattern YieldStatement(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<YieldStatementSyntax> action = null)
@@ -7163,9 +7908,29 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new YieldStatementPattern(kind, expression, action);
         }
 
+        public static YieldStatementPattern YieldStatement(ExpressionPattern expression, Action<YieldStatementSyntax> action = null)
+        {
+            return new YieldStatementPattern(default(SyntaxKind), expression, action);
+        }
+
+        public static YieldStatementPattern YieldStatement(Action<YieldStatementSyntax> action)
+        {
+            return new YieldStatementPattern(default(SyntaxKind), null, action);
+        }
+
         public static WhileStatementPattern WhileStatement(ExpressionPattern condition = null, StatementPattern statement = null, Action<WhileStatementSyntax> action = null)
         {
             return new WhileStatementPattern(condition, statement, action);
+        }
+
+        public static WhileStatementPattern WhileStatement(StatementPattern statement, Action<WhileStatementSyntax> action = null)
+        {
+            return new WhileStatementPattern(null, statement, action);
+        }
+
+        public static WhileStatementPattern WhileStatement(Action<WhileStatementSyntax> action)
+        {
+            return new WhileStatementPattern(null, null, action);
         }
 
         public static DoStatementPattern DoStatement(StatementPattern statement = null, ExpressionPattern condition = null, Action<DoStatementSyntax> action = null)
@@ -7173,9 +7938,44 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new DoStatementPattern(statement, condition, action);
         }
 
+        public static DoStatementPattern DoStatement(ExpressionPattern condition, Action<DoStatementSyntax> action = null)
+        {
+            return new DoStatementPattern(null, condition, action);
+        }
+
+        public static DoStatementPattern DoStatement(Action<DoStatementSyntax> action)
+        {
+            return new DoStatementPattern(null, null, action);
+        }
+
         public static ForStatementPattern ForStatement(VariableDeclarationPattern declaration = null, IEnumerable<ExpressionPattern> initializers = null, ExpressionPattern condition = null, IEnumerable<ExpressionPattern> incrementors = null, StatementPattern statement = null, Action<ForStatementSyntax> action = null)
         {
             return new ForStatementPattern(declaration, NodeList(initializers), condition, NodeList(incrementors), statement, action);
+        }
+
+        public static ForStatementPattern ForStatement(IEnumerable<ExpressionPattern> initializers, ExpressionPattern condition = null, IEnumerable<ExpressionPattern> incrementors = null, StatementPattern statement = null, Action<ForStatementSyntax> action = null)
+        {
+            return new ForStatementPattern(null, NodeList(initializers), condition, NodeList(incrementors), statement, action);
+        }
+
+        public static ForStatementPattern ForStatement(ExpressionPattern condition, IEnumerable<ExpressionPattern> incrementors = null, StatementPattern statement = null, Action<ForStatementSyntax> action = null)
+        {
+            return new ForStatementPattern(null, null, condition, NodeList(incrementors), statement, action);
+        }
+
+        public static ForStatementPattern ForStatement(IEnumerable<ExpressionPattern> incrementors, StatementPattern statement = null, Action<ForStatementSyntax> action = null)
+        {
+            return new ForStatementPattern(null, null, null, NodeList(incrementors), statement, action);
+        }
+
+        public static ForStatementPattern ForStatement(StatementPattern statement, Action<ForStatementSyntax> action = null)
+        {
+            return new ForStatementPattern(null, null, null, null, statement, action);
+        }
+
+        public static ForStatementPattern ForStatement(Action<ForStatementSyntax> action)
+        {
+            return new ForStatementPattern(null, null, null, null, null, action);
         }
 
         public static ForEachStatementPattern ForEachStatement(ExpressionPattern expression = null, StatementPattern statement = null, TypePattern type = null, string identifier = null, Action<ForEachStatementSyntax> action = null)
@@ -7183,9 +7983,44 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ForEachStatementPattern(expression, statement, type, identifier, action);
         }
 
+        public static ForEachStatementPattern ForEachStatement(StatementPattern statement, TypePattern type = null, string identifier = null, Action<ForEachStatementSyntax> action = null)
+        {
+            return new ForEachStatementPattern(null, statement, type, identifier, action);
+        }
+
+        public static ForEachStatementPattern ForEachStatement(TypePattern type, string identifier = null, Action<ForEachStatementSyntax> action = null)
+        {
+            return new ForEachStatementPattern(null, null, type, identifier, action);
+        }
+
+        public static ForEachStatementPattern ForEachStatement(string identifier, Action<ForEachStatementSyntax> action = null)
+        {
+            return new ForEachStatementPattern(null, null, null, identifier, action);
+        }
+
+        public static ForEachStatementPattern ForEachStatement(Action<ForEachStatementSyntax> action)
+        {
+            return new ForEachStatementPattern(null, null, null, null, action);
+        }
+
         public static ForEachVariableStatementPattern ForEachVariableStatement(ExpressionPattern expression = null, StatementPattern statement = null, ExpressionPattern variable = null, Action<ForEachVariableStatementSyntax> action = null)
         {
             return new ForEachVariableStatementPattern(expression, statement, variable, action);
+        }
+
+        public static ForEachVariableStatementPattern ForEachVariableStatement(StatementPattern statement, ExpressionPattern variable = null, Action<ForEachVariableStatementSyntax> action = null)
+        {
+            return new ForEachVariableStatementPattern(null, statement, variable, action);
+        }
+
+        public static ForEachVariableStatementPattern ForEachVariableStatement(ExpressionPattern variable, Action<ForEachVariableStatementSyntax> action = null)
+        {
+            return new ForEachVariableStatementPattern(null, null, variable, action);
+        }
+
+        public static ForEachVariableStatementPattern ForEachVariableStatement(Action<ForEachVariableStatementSyntax> action)
+        {
+            return new ForEachVariableStatementPattern(null, null, null, action);
         }
 
         public static UsingStatementPattern UsingStatement(VariableDeclarationPattern declaration = null, ExpressionPattern expression = null, StatementPattern statement = null, Action<UsingStatementSyntax> action = null)
@@ -7193,9 +8028,34 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new UsingStatementPattern(declaration, expression, statement, action);
         }
 
+        public static UsingStatementPattern UsingStatement(ExpressionPattern expression, StatementPattern statement = null, Action<UsingStatementSyntax> action = null)
+        {
+            return new UsingStatementPattern(null, expression, statement, action);
+        }
+
+        public static UsingStatementPattern UsingStatement(StatementPattern statement, Action<UsingStatementSyntax> action = null)
+        {
+            return new UsingStatementPattern(null, null, statement, action);
+        }
+
+        public static UsingStatementPattern UsingStatement(Action<UsingStatementSyntax> action)
+        {
+            return new UsingStatementPattern(null, null, null, action);
+        }
+
         public static FixedStatementPattern FixedStatement(VariableDeclarationPattern declaration = null, StatementPattern statement = null, Action<FixedStatementSyntax> action = null)
         {
             return new FixedStatementPattern(declaration, statement, action);
+        }
+
+        public static FixedStatementPattern FixedStatement(StatementPattern statement, Action<FixedStatementSyntax> action = null)
+        {
+            return new FixedStatementPattern(null, statement, action);
+        }
+
+        public static FixedStatementPattern FixedStatement(Action<FixedStatementSyntax> action)
+        {
+            return new FixedStatementPattern(null, null, action);
         }
 
         public static CheckedStatementPattern CheckedStatement(SyntaxKind kind = default(SyntaxKind), BlockPattern block = null, Action<CheckedStatementSyntax> action = null)
@@ -7203,9 +8063,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new CheckedStatementPattern(kind, block, action);
         }
 
+        public static CheckedStatementPattern CheckedStatement(BlockPattern block, Action<CheckedStatementSyntax> action = null)
+        {
+            return new CheckedStatementPattern(default(SyntaxKind), block, action);
+        }
+
+        public static CheckedStatementPattern CheckedStatement(Action<CheckedStatementSyntax> action)
+        {
+            return new CheckedStatementPattern(default(SyntaxKind), null, action);
+        }
+
         public static UnsafeStatementPattern UnsafeStatement(BlockPattern block = null, Action<UnsafeStatementSyntax> action = null)
         {
             return new UnsafeStatementPattern(block, action);
+        }
+
+        public static UnsafeStatementPattern UnsafeStatement(Action<UnsafeStatementSyntax> action)
+        {
+            return new UnsafeStatementPattern(null, action);
         }
 
         public static LockStatementPattern LockStatement(ExpressionPattern expression = null, StatementPattern statement = null, Action<LockStatementSyntax> action = null)
@@ -7213,9 +8088,34 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new LockStatementPattern(expression, statement, action);
         }
 
+        public static LockStatementPattern LockStatement(StatementPattern statement, Action<LockStatementSyntax> action = null)
+        {
+            return new LockStatementPattern(null, statement, action);
+        }
+
+        public static LockStatementPattern LockStatement(Action<LockStatementSyntax> action)
+        {
+            return new LockStatementPattern(null, null, action);
+        }
+
         public static IfStatementPattern IfStatement(ExpressionPattern condition = null, StatementPattern statement = null, ElseClausePattern @else = null, Action<IfStatementSyntax> action = null)
         {
             return new IfStatementPattern(condition, statement, @else, action);
+        }
+
+        public static IfStatementPattern IfStatement(StatementPattern statement, ElseClausePattern @else = null, Action<IfStatementSyntax> action = null)
+        {
+            return new IfStatementPattern(null, statement, @else, action);
+        }
+
+        public static IfStatementPattern IfStatement(ElseClausePattern @else, Action<IfStatementSyntax> action = null)
+        {
+            return new IfStatementPattern(null, null, @else, action);
+        }
+
+        public static IfStatementPattern IfStatement(Action<IfStatementSyntax> action)
+        {
+            return new IfStatementPattern(null, null, null, action);
         }
 
         public static ElseClausePattern ElseClause(StatementPattern statement = null, Action<ElseClauseSyntax> action = null)
@@ -7223,9 +8123,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ElseClausePattern(statement, action);
         }
 
+        public static ElseClausePattern ElseClause(Action<ElseClauseSyntax> action)
+        {
+            return new ElseClausePattern(null, action);
+        }
+
         public static SwitchStatementPattern SwitchStatement(ExpressionPattern expression = null, IEnumerable<SwitchSectionPattern> sections = null, Action<SwitchStatementSyntax> action = null)
         {
             return new SwitchStatementPattern(expression, NodeList(sections), action);
+        }
+
+        public static SwitchStatementPattern SwitchStatement(IEnumerable<SwitchSectionPattern> sections, Action<SwitchStatementSyntax> action = null)
+        {
+            return new SwitchStatementPattern(null, NodeList(sections), action);
+        }
+
+        public static SwitchStatementPattern SwitchStatement(Action<SwitchStatementSyntax> action)
+        {
+            return new SwitchStatementPattern(null, null, action);
         }
 
         public static SwitchStatementPattern SwitchStatement(params SwitchSectionPattern[] sections)
@@ -7238,14 +8153,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new SwitchSectionPattern(NodeList(labels), NodeList(statements), action);
         }
 
+        public static SwitchSectionPattern SwitchSection(IEnumerable<StatementPattern> statements, Action<SwitchSectionSyntax> action = null)
+        {
+            return new SwitchSectionPattern(null, NodeList(statements), action);
+        }
+
+        public static SwitchSectionPattern SwitchSection(Action<SwitchSectionSyntax> action)
+        {
+            return new SwitchSectionPattern(null, null, action);
+        }
+
         public static CasePatternSwitchLabelPattern CasePatternSwitchLabel(PatternPattern pattern = null, WhenClausePattern whenClause = null, Action<CasePatternSwitchLabelSyntax> action = null)
         {
             return new CasePatternSwitchLabelPattern(pattern, whenClause, action);
         }
 
+        public static CasePatternSwitchLabelPattern CasePatternSwitchLabel(WhenClausePattern whenClause, Action<CasePatternSwitchLabelSyntax> action = null)
+        {
+            return new CasePatternSwitchLabelPattern(null, whenClause, action);
+        }
+
+        public static CasePatternSwitchLabelPattern CasePatternSwitchLabel(Action<CasePatternSwitchLabelSyntax> action)
+        {
+            return new CasePatternSwitchLabelPattern(null, null, action);
+        }
+
         public static CaseSwitchLabelPattern CaseSwitchLabel(ExpressionPattern value = null, Action<CaseSwitchLabelSyntax> action = null)
         {
             return new CaseSwitchLabelPattern(value, action);
+        }
+
+        public static CaseSwitchLabelPattern CaseSwitchLabel(Action<CaseSwitchLabelSyntax> action)
+        {
+            return new CaseSwitchLabelPattern(null, action);
         }
 
         public static DefaultSwitchLabelPattern DefaultSwitchLabel(Action<DefaultSwitchLabelSyntax> action = null)
@@ -7258,9 +8198,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new TryStatementPattern(block, NodeList(catches), @finally, action);
         }
 
+        public static TryStatementPattern TryStatement(IEnumerable<CatchClausePattern> catches, FinallyClausePattern @finally = null, Action<TryStatementSyntax> action = null)
+        {
+            return new TryStatementPattern(null, NodeList(catches), @finally, action);
+        }
+
+        public static TryStatementPattern TryStatement(FinallyClausePattern @finally, Action<TryStatementSyntax> action = null)
+        {
+            return new TryStatementPattern(null, null, @finally, action);
+        }
+
+        public static TryStatementPattern TryStatement(Action<TryStatementSyntax> action)
+        {
+            return new TryStatementPattern(null, null, null, action);
+        }
+
         public static CatchClausePattern CatchClause(CatchDeclarationPattern declaration = null, CatchFilterClausePattern filter = null, BlockPattern block = null, Action<CatchClauseSyntax> action = null)
         {
             return new CatchClausePattern(declaration, filter, block, action);
+        }
+
+        public static CatchClausePattern CatchClause(CatchFilterClausePattern filter, BlockPattern block = null, Action<CatchClauseSyntax> action = null)
+        {
+            return new CatchClausePattern(null, filter, block, action);
+        }
+
+        public static CatchClausePattern CatchClause(BlockPattern block, Action<CatchClauseSyntax> action = null)
+        {
+            return new CatchClausePattern(null, null, block, action);
+        }
+
+        public static CatchClausePattern CatchClause(Action<CatchClauseSyntax> action)
+        {
+            return new CatchClausePattern(null, null, null, action);
         }
 
         public static CatchDeclarationPattern CatchDeclaration(TypePattern type = null, string identifier = null, Action<CatchDeclarationSyntax> action = null)
@@ -7268,9 +8238,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new CatchDeclarationPattern(type, identifier, action);
         }
 
+        public static CatchDeclarationPattern CatchDeclaration(string identifier, Action<CatchDeclarationSyntax> action = null)
+        {
+            return new CatchDeclarationPattern(null, identifier, action);
+        }
+
+        public static CatchDeclarationPattern CatchDeclaration(Action<CatchDeclarationSyntax> action)
+        {
+            return new CatchDeclarationPattern(null, null, action);
+        }
+
         public static CatchFilterClausePattern CatchFilterClause(ExpressionPattern filterExpression = null, Action<CatchFilterClauseSyntax> action = null)
         {
             return new CatchFilterClausePattern(filterExpression, action);
+        }
+
+        public static CatchFilterClausePattern CatchFilterClause(Action<CatchFilterClauseSyntax> action)
+        {
+            return new CatchFilterClausePattern(null, action);
         }
 
         public static FinallyClausePattern FinallyClause(BlockPattern block = null, Action<FinallyClauseSyntax> action = null)
@@ -7278,9 +8263,34 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new FinallyClausePattern(block, action);
         }
 
+        public static FinallyClausePattern FinallyClause(Action<FinallyClauseSyntax> action)
+        {
+            return new FinallyClausePattern(null, action);
+        }
+
         public static CompilationUnitPattern CompilationUnit(IEnumerable<ExternAliasDirectivePattern> externs = null, IEnumerable<UsingDirectivePattern> usings = null, IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<MemberDeclarationPattern> members = null, Action<CompilationUnitSyntax> action = null)
         {
             return new CompilationUnitPattern(NodeList(externs), NodeList(usings), NodeList(attributeLists), NodeList(members), action);
+        }
+
+        public static CompilationUnitPattern CompilationUnit(IEnumerable<UsingDirectivePattern> usings, IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<MemberDeclarationPattern> members = null, Action<CompilationUnitSyntax> action = null)
+        {
+            return new CompilationUnitPattern(null, NodeList(usings), NodeList(attributeLists), NodeList(members), action);
+        }
+
+        public static CompilationUnitPattern CompilationUnit(IEnumerable<AttributeListPattern> attributeLists, IEnumerable<MemberDeclarationPattern> members = null, Action<CompilationUnitSyntax> action = null)
+        {
+            return new CompilationUnitPattern(null, null, NodeList(attributeLists), NodeList(members), action);
+        }
+
+        public static CompilationUnitPattern CompilationUnit(IEnumerable<MemberDeclarationPattern> members, Action<CompilationUnitSyntax> action = null)
+        {
+            return new CompilationUnitPattern(null, null, null, NodeList(members), action);
+        }
+
+        public static CompilationUnitPattern CompilationUnit(Action<CompilationUnitSyntax> action)
+        {
+            return new CompilationUnitPattern(null, null, null, null, action);
         }
 
         public static ExternAliasDirectivePattern ExternAliasDirective(string identifier = null, Action<ExternAliasDirectiveSyntax> action = null)
@@ -7288,9 +8298,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ExternAliasDirectivePattern(identifier, action);
         }
 
+        public static ExternAliasDirectivePattern ExternAliasDirective(Action<ExternAliasDirectiveSyntax> action)
+        {
+            return new ExternAliasDirectivePattern(null, action);
+        }
+
         public static UsingDirectivePattern UsingDirective(NameEqualsPattern alias = null, NamePattern name = null, Action<UsingDirectiveSyntax> action = null)
         {
             return new UsingDirectivePattern(alias, name, action);
+        }
+
+        public static UsingDirectivePattern UsingDirective(NamePattern name, Action<UsingDirectiveSyntax> action = null)
+        {
+            return new UsingDirectivePattern(null, name, action);
+        }
+
+        public static UsingDirectivePattern UsingDirective(Action<UsingDirectiveSyntax> action)
+        {
+            return new UsingDirectivePattern(null, null, action);
         }
 
         public static NamespaceDeclarationPattern NamespaceDeclaration(NamePattern name = null, IEnumerable<ExternAliasDirectivePattern> externs = null, IEnumerable<UsingDirectivePattern> usings = null, IEnumerable<MemberDeclarationPattern> members = null, Action<NamespaceDeclarationSyntax> action = null)
@@ -7298,9 +8323,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new NamespaceDeclarationPattern(name, NodeList(externs), NodeList(usings), NodeList(members), action);
         }
 
+        public static NamespaceDeclarationPattern NamespaceDeclaration(IEnumerable<ExternAliasDirectivePattern> externs, IEnumerable<UsingDirectivePattern> usings = null, IEnumerable<MemberDeclarationPattern> members = null, Action<NamespaceDeclarationSyntax> action = null)
+        {
+            return new NamespaceDeclarationPattern(null, NodeList(externs), NodeList(usings), NodeList(members), action);
+        }
+
+        public static NamespaceDeclarationPattern NamespaceDeclaration(IEnumerable<UsingDirectivePattern> usings, IEnumerable<MemberDeclarationPattern> members = null, Action<NamespaceDeclarationSyntax> action = null)
+        {
+            return new NamespaceDeclarationPattern(null, null, NodeList(usings), NodeList(members), action);
+        }
+
+        public static NamespaceDeclarationPattern NamespaceDeclaration(IEnumerable<MemberDeclarationPattern> members, Action<NamespaceDeclarationSyntax> action = null)
+        {
+            return new NamespaceDeclarationPattern(null, null, null, NodeList(members), action);
+        }
+
+        public static NamespaceDeclarationPattern NamespaceDeclaration(Action<NamespaceDeclarationSyntax> action)
+        {
+            return new NamespaceDeclarationPattern(null, null, null, null, action);
+        }
+
         public static AttributeListPattern AttributeList(AttributeTargetSpecifierPattern target = null, IEnumerable<AttributePattern> attributes = null, Action<AttributeListSyntax> action = null)
         {
             return new AttributeListPattern(target, NodeList(attributes), action);
+        }
+
+        public static AttributeListPattern AttributeList(IEnumerable<AttributePattern> attributes, Action<AttributeListSyntax> action = null)
+        {
+            return new AttributeListPattern(null, NodeList(attributes), action);
+        }
+
+        public static AttributeListPattern AttributeList(Action<AttributeListSyntax> action)
+        {
+            return new AttributeListPattern(null, null, action);
         }
 
         public static AttributeListPattern AttributeList(params AttributePattern[] attributes)
@@ -7313,14 +8368,34 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new AttributeTargetSpecifierPattern(identifier, action);
         }
 
+        public static AttributeTargetSpecifierPattern AttributeTargetSpecifier(Action<AttributeTargetSpecifierSyntax> action)
+        {
+            return new AttributeTargetSpecifierPattern(null, action);
+        }
+
         public static AttributePattern Attribute(NamePattern name = null, AttributeArgumentListPattern argumentList = null, Action<AttributeSyntax> action = null)
         {
             return new AttributePattern(name, argumentList, action);
         }
 
+        public static AttributePattern Attribute(AttributeArgumentListPattern argumentList, Action<AttributeSyntax> action = null)
+        {
+            return new AttributePattern(null, argumentList, action);
+        }
+
+        public static AttributePattern Attribute(Action<AttributeSyntax> action)
+        {
+            return new AttributePattern(null, null, action);
+        }
+
         public static AttributeArgumentListPattern AttributeArgumentList(IEnumerable<AttributeArgumentPattern> arguments = null, Action<AttributeArgumentListSyntax> action = null)
         {
             return new AttributeArgumentListPattern(NodeList(arguments), action);
+        }
+
+        public static AttributeArgumentListPattern AttributeArgumentList(Action<AttributeArgumentListSyntax> action)
+        {
+            return new AttributeArgumentListPattern(null, action);
         }
 
         public static AttributeArgumentListPattern AttributeArgumentList(params AttributeArgumentPattern[] arguments)
@@ -7333,14 +8408,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new AttributeArgumentPattern(nameEquals, nameColon, expression, action);
         }
 
+        public static AttributeArgumentPattern AttributeArgument(NameColonPattern nameColon, ExpressionPattern expression = null, Action<AttributeArgumentSyntax> action = null)
+        {
+            return new AttributeArgumentPattern(null, nameColon, expression, action);
+        }
+
+        public static AttributeArgumentPattern AttributeArgument(ExpressionPattern expression, Action<AttributeArgumentSyntax> action = null)
+        {
+            return new AttributeArgumentPattern(null, null, expression, action);
+        }
+
+        public static AttributeArgumentPattern AttributeArgument(Action<AttributeArgumentSyntax> action)
+        {
+            return new AttributeArgumentPattern(null, null, null, action);
+        }
+
         public static NameEqualsPattern NameEquals(IdentifierNamePattern name = null, Action<NameEqualsSyntax> action = null)
         {
             return new NameEqualsPattern(name, action);
         }
 
+        public static NameEqualsPattern NameEquals(Action<NameEqualsSyntax> action)
+        {
+            return new NameEqualsPattern(null, action);
+        }
+
         public static TypeParameterListPattern TypeParameterList(IEnumerable<TypeParameterPattern> parameters = null, Action<TypeParameterListSyntax> action = null)
         {
             return new TypeParameterListPattern(NodeList(parameters), action);
+        }
+
+        public static TypeParameterListPattern TypeParameterList(Action<TypeParameterListSyntax> action)
+        {
+            return new TypeParameterListPattern(null, action);
         }
 
         public static TypeParameterListPattern TypeParameterList(params TypeParameterPattern[] parameters)
@@ -7353,9 +8453,54 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new TypeParameterPattern(NodeList(attributeLists), identifier, action);
         }
 
+        public static TypeParameterPattern TypeParameter(string identifier, Action<TypeParameterSyntax> action = null)
+        {
+            return new TypeParameterPattern(null, identifier, action);
+        }
+
+        public static TypeParameterPattern TypeParameter(Action<TypeParameterSyntax> action)
+        {
+            return new TypeParameterPattern(null, null, action);
+        }
+
         public static ClassDeclarationPattern ClassDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
         {
             return new ClassDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(IEnumerable<string> modifiers, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
+        {
+            return new ClassDeclarationPattern(null, TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(string identifier, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
+        {
+            return new ClassDeclarationPattern(null, null, identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(BaseListPattern baseList, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
+        {
+            return new ClassDeclarationPattern(null, null, null, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(TypeParameterListPattern typeParameterList, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
+        {
+            return new ClassDeclarationPattern(null, null, null, null, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(IEnumerable<TypeParameterConstraintClausePattern> constraintClauses, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
+        {
+            return new ClassDeclarationPattern(null, null, null, null, null, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(IEnumerable<MemberDeclarationPattern> members, Action<ClassDeclarationSyntax> action = null)
+        {
+            return new ClassDeclarationPattern(null, null, null, null, null, null, NodeList(members), action);
+        }
+
+        public static ClassDeclarationPattern ClassDeclaration(Action<ClassDeclarationSyntax> action)
+        {
+            return new ClassDeclarationPattern(null, null, null, null, null, null, null, action);
         }
 
         public static ClassDeclarationPattern ClassDeclaration(params MemberDeclarationPattern[] members)
@@ -7368,6 +8513,41 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new StructDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
         }
 
+        public static StructDeclarationPattern StructDeclaration(IEnumerable<string> modifiers, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
+        {
+            return new StructDeclarationPattern(null, TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(string identifier, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
+        {
+            return new StructDeclarationPattern(null, null, identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(BaseListPattern baseList, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
+        {
+            return new StructDeclarationPattern(null, null, null, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(TypeParameterListPattern typeParameterList, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
+        {
+            return new StructDeclarationPattern(null, null, null, null, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(IEnumerable<TypeParameterConstraintClausePattern> constraintClauses, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
+        {
+            return new StructDeclarationPattern(null, null, null, null, null, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(IEnumerable<MemberDeclarationPattern> members, Action<StructDeclarationSyntax> action = null)
+        {
+            return new StructDeclarationPattern(null, null, null, null, null, null, NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(Action<StructDeclarationSyntax> action)
+        {
+            return new StructDeclarationPattern(null, null, null, null, null, null, null, action);
+        }
+
         public static StructDeclarationPattern StructDeclaration(params MemberDeclarationPattern[] members)
         {
             return new StructDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
@@ -7376,6 +8556,41 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         public static InterfaceDeclarationPattern InterfaceDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
         {
             return new InterfaceDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(IEnumerable<string> modifiers, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
+        {
+            return new InterfaceDeclarationPattern(null, TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(string identifier, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
+        {
+            return new InterfaceDeclarationPattern(null, null, identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(BaseListPattern baseList, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
+        {
+            return new InterfaceDeclarationPattern(null, null, null, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(TypeParameterListPattern typeParameterList, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
+        {
+            return new InterfaceDeclarationPattern(null, null, null, null, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(IEnumerable<TypeParameterConstraintClausePattern> constraintClauses, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
+        {
+            return new InterfaceDeclarationPattern(null, null, null, null, null, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(IEnumerable<MemberDeclarationPattern> members, Action<InterfaceDeclarationSyntax> action = null)
+        {
+            return new InterfaceDeclarationPattern(null, null, null, null, null, null, NodeList(members), action);
+        }
+
+        public static InterfaceDeclarationPattern InterfaceDeclaration(Action<InterfaceDeclarationSyntax> action)
+        {
+            return new InterfaceDeclarationPattern(null, null, null, null, null, null, null, action);
         }
 
         public static InterfaceDeclarationPattern InterfaceDeclaration(params MemberDeclarationPattern[] members)
@@ -7388,6 +8603,31 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new EnumDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, NodeList(members), action);
         }
 
+        public static EnumDeclarationPattern EnumDeclaration(IEnumerable<string> modifiers, string identifier = null, BaseListPattern baseList = null, IEnumerable<EnumMemberDeclarationPattern> members = null, Action<EnumDeclarationSyntax> action = null)
+        {
+            return new EnumDeclarationPattern(null, TokenList(modifiers), identifier, baseList, NodeList(members), action);
+        }
+
+        public static EnumDeclarationPattern EnumDeclaration(string identifier, BaseListPattern baseList = null, IEnumerable<EnumMemberDeclarationPattern> members = null, Action<EnumDeclarationSyntax> action = null)
+        {
+            return new EnumDeclarationPattern(null, null, identifier, baseList, NodeList(members), action);
+        }
+
+        public static EnumDeclarationPattern EnumDeclaration(BaseListPattern baseList, IEnumerable<EnumMemberDeclarationPattern> members = null, Action<EnumDeclarationSyntax> action = null)
+        {
+            return new EnumDeclarationPattern(null, null, null, baseList, NodeList(members), action);
+        }
+
+        public static EnumDeclarationPattern EnumDeclaration(IEnumerable<EnumMemberDeclarationPattern> members, Action<EnumDeclarationSyntax> action = null)
+        {
+            return new EnumDeclarationPattern(null, null, null, null, NodeList(members), action);
+        }
+
+        public static EnumDeclarationPattern EnumDeclaration(Action<EnumDeclarationSyntax> action)
+        {
+            return new EnumDeclarationPattern(null, null, null, null, null, action);
+        }
+
         public static EnumDeclarationPattern EnumDeclaration(params EnumMemberDeclarationPattern[] members)
         {
             return new EnumDeclarationPattern(null, null, null, null, NodeList(members), null);
@@ -7398,14 +8638,69 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new DelegateDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), action);
         }
 
+        public static DelegateDeclarationPattern DelegateDeclaration(IEnumerable<string> modifiers, TypePattern returnType = null, string identifier = null, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
+        {
+            return new DelegateDeclarationPattern(null, TokenList(modifiers), returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), action);
+        }
+
+        public static DelegateDeclarationPattern DelegateDeclaration(TypePattern returnType, string identifier = null, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
+        {
+            return new DelegateDeclarationPattern(null, null, returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), action);
+        }
+
+        public static DelegateDeclarationPattern DelegateDeclaration(string identifier, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
+        {
+            return new DelegateDeclarationPattern(null, null, null, identifier, typeParameterList, parameterList, NodeList(constraintClauses), action);
+        }
+
+        public static DelegateDeclarationPattern DelegateDeclaration(TypeParameterListPattern typeParameterList, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
+        {
+            return new DelegateDeclarationPattern(null, null, null, null, typeParameterList, parameterList, NodeList(constraintClauses), action);
+        }
+
+        public static DelegateDeclarationPattern DelegateDeclaration(ParameterListPattern parameterList, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
+        {
+            return new DelegateDeclarationPattern(null, null, null, null, null, parameterList, NodeList(constraintClauses), action);
+        }
+
+        public static DelegateDeclarationPattern DelegateDeclaration(IEnumerable<TypeParameterConstraintClausePattern> constraintClauses, Action<DelegateDeclarationSyntax> action = null)
+        {
+            return new DelegateDeclarationPattern(null, null, null, null, null, null, NodeList(constraintClauses), action);
+        }
+
+        public static DelegateDeclarationPattern DelegateDeclaration(Action<DelegateDeclarationSyntax> action)
+        {
+            return new DelegateDeclarationPattern(null, null, null, null, null, null, null, action);
+        }
+
         public static EnumMemberDeclarationPattern EnumMemberDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, string identifier = null, EqualsValueClausePattern equalsValue = null, Action<EnumMemberDeclarationSyntax> action = null)
         {
             return new EnumMemberDeclarationPattern(NodeList(attributeLists), identifier, equalsValue, action);
         }
 
+        public static EnumMemberDeclarationPattern EnumMemberDeclaration(string identifier, EqualsValueClausePattern equalsValue = null, Action<EnumMemberDeclarationSyntax> action = null)
+        {
+            return new EnumMemberDeclarationPattern(null, identifier, equalsValue, action);
+        }
+
+        public static EnumMemberDeclarationPattern EnumMemberDeclaration(EqualsValueClausePattern equalsValue, Action<EnumMemberDeclarationSyntax> action = null)
+        {
+            return new EnumMemberDeclarationPattern(null, null, equalsValue, action);
+        }
+
+        public static EnumMemberDeclarationPattern EnumMemberDeclaration(Action<EnumMemberDeclarationSyntax> action)
+        {
+            return new EnumMemberDeclarationPattern(null, null, null, action);
+        }
+
         public static BaseListPattern BaseList(IEnumerable<BaseTypePattern> types = null, Action<BaseListSyntax> action = null)
         {
             return new BaseListPattern(NodeList(types), action);
+        }
+
+        public static BaseListPattern BaseList(Action<BaseListSyntax> action)
+        {
+            return new BaseListPattern(null, action);
         }
 
         public static BaseListPattern BaseList(params BaseTypePattern[] types)
@@ -7418,9 +8713,24 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new SimpleBaseTypePattern(type, action);
         }
 
+        public static SimpleBaseTypePattern SimpleBaseType(Action<SimpleBaseTypeSyntax> action)
+        {
+            return new SimpleBaseTypePattern(null, action);
+        }
+
         public static TypeParameterConstraintClausePattern TypeParameterConstraintClause(IdentifierNamePattern name = null, IEnumerable<TypeParameterConstraintPattern> constraints = null, Action<TypeParameterConstraintClauseSyntax> action = null)
         {
             return new TypeParameterConstraintClausePattern(name, NodeList(constraints), action);
+        }
+
+        public static TypeParameterConstraintClausePattern TypeParameterConstraintClause(IEnumerable<TypeParameterConstraintPattern> constraints, Action<TypeParameterConstraintClauseSyntax> action = null)
+        {
+            return new TypeParameterConstraintClausePattern(null, NodeList(constraints), action);
+        }
+
+        public static TypeParameterConstraintClausePattern TypeParameterConstraintClause(Action<TypeParameterConstraintClauseSyntax> action)
+        {
+            return new TypeParameterConstraintClausePattern(null, null, action);
         }
 
         public static ConstructorConstraintPattern ConstructorConstraint(Action<ConstructorConstraintSyntax> action = null)
@@ -7433,9 +8743,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ClassOrStructConstraintPattern(kind, action);
         }
 
+        public static ClassOrStructConstraintPattern ClassOrStructConstraint(Action<ClassOrStructConstraintSyntax> action)
+        {
+            return new ClassOrStructConstraintPattern(default(SyntaxKind), action);
+        }
+
         public static TypeConstraintPattern TypeConstraint(TypePattern type = null, Action<TypeConstraintSyntax> action = null)
         {
             return new TypeConstraintPattern(type, action);
+        }
+
+        public static TypeConstraintPattern TypeConstraint(Action<TypeConstraintSyntax> action)
+        {
+            return new TypeConstraintPattern(null, action);
         }
 
         public static FieldDeclarationPattern FieldDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, VariableDeclarationPattern declaration = null, Action<FieldDeclarationSyntax> action = null)
@@ -7443,9 +8763,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new FieldDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), declaration, action);
         }
 
+        public static FieldDeclarationPattern FieldDeclaration(IEnumerable<string> modifiers, VariableDeclarationPattern declaration = null, Action<FieldDeclarationSyntax> action = null)
+        {
+            return new FieldDeclarationPattern(null, TokenList(modifiers), declaration, action);
+        }
+
+        public static FieldDeclarationPattern FieldDeclaration(VariableDeclarationPattern declaration, Action<FieldDeclarationSyntax> action = null)
+        {
+            return new FieldDeclarationPattern(null, null, declaration, action);
+        }
+
+        public static FieldDeclarationPattern FieldDeclaration(Action<FieldDeclarationSyntax> action)
+        {
+            return new FieldDeclarationPattern(null, null, null, action);
+        }
+
         public static EventFieldDeclarationPattern EventFieldDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, VariableDeclarationPattern declaration = null, Action<EventFieldDeclarationSyntax> action = null)
         {
             return new EventFieldDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), declaration, action);
+        }
+
+        public static EventFieldDeclarationPattern EventFieldDeclaration(IEnumerable<string> modifiers, VariableDeclarationPattern declaration = null, Action<EventFieldDeclarationSyntax> action = null)
+        {
+            return new EventFieldDeclarationPattern(null, TokenList(modifiers), declaration, action);
+        }
+
+        public static EventFieldDeclarationPattern EventFieldDeclaration(VariableDeclarationPattern declaration, Action<EventFieldDeclarationSyntax> action = null)
+        {
+            return new EventFieldDeclarationPattern(null, null, declaration, action);
+        }
+
+        public static EventFieldDeclarationPattern EventFieldDeclaration(Action<EventFieldDeclarationSyntax> action)
+        {
+            return new EventFieldDeclarationPattern(null, null, null, action);
         }
 
         public static ExplicitInterfaceSpecifierPattern ExplicitInterfaceSpecifier(NamePattern name = null, Action<ExplicitInterfaceSpecifierSyntax> action = null)
@@ -7453,9 +8803,64 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ExplicitInterfaceSpecifierPattern(name, action);
         }
 
+        public static ExplicitInterfaceSpecifierPattern ExplicitInterfaceSpecifier(Action<ExplicitInterfaceSpecifierSyntax> action)
+        {
+            return new ExplicitInterfaceSpecifierPattern(null, action);
+        }
+
         public static MethodDeclarationPattern MethodDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
         {
             return new MethodDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(IEnumerable<string> modifiers, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, TokenList(modifiers), parameterList, body, expressionBody, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(ParameterListPattern parameterList, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, parameterList, body, expressionBody, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, body, expressionBody, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(ArrowExpressionClausePattern expressionBody, TypePattern returnType = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, expressionBody, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(TypePattern returnType, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, null, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, null, null, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(string identifier, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, null, null, null, identifier, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(TypeParameterListPattern typeParameterList, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, null, null, null, null, typeParameterList, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(IEnumerable<TypeParameterConstraintClausePattern> constraintClauses, Action<MethodDeclarationSyntax> action = null)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, null, null, null, null, null, NodeList(constraintClauses), action);
+        }
+
+        public static MethodDeclarationPattern MethodDeclaration(Action<MethodDeclarationSyntax> action)
+        {
+            return new MethodDeclarationPattern(null, null, null, null, null, null, null, null, null, null, action);
         }
 
         public static OperatorDeclarationPattern OperatorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, Action<OperatorDeclarationSyntax> action = null)
@@ -7463,9 +8868,69 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new OperatorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, returnType, action);
         }
 
+        public static OperatorDeclarationPattern OperatorDeclaration(IEnumerable<string> modifiers, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, Action<OperatorDeclarationSyntax> action = null)
+        {
+            return new OperatorDeclarationPattern(null, TokenList(modifiers), parameterList, body, expressionBody, returnType, action);
+        }
+
+        public static OperatorDeclarationPattern OperatorDeclaration(ParameterListPattern parameterList, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, Action<OperatorDeclarationSyntax> action = null)
+        {
+            return new OperatorDeclarationPattern(null, null, parameterList, body, expressionBody, returnType, action);
+        }
+
+        public static OperatorDeclarationPattern OperatorDeclaration(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, Action<OperatorDeclarationSyntax> action = null)
+        {
+            return new OperatorDeclarationPattern(null, null, null, body, expressionBody, returnType, action);
+        }
+
+        public static OperatorDeclarationPattern OperatorDeclaration(ArrowExpressionClausePattern expressionBody, TypePattern returnType = null, Action<OperatorDeclarationSyntax> action = null)
+        {
+            return new OperatorDeclarationPattern(null, null, null, null, expressionBody, returnType, action);
+        }
+
+        public static OperatorDeclarationPattern OperatorDeclaration(TypePattern returnType, Action<OperatorDeclarationSyntax> action = null)
+        {
+            return new OperatorDeclarationPattern(null, null, null, null, null, returnType, action);
+        }
+
+        public static OperatorDeclarationPattern OperatorDeclaration(Action<OperatorDeclarationSyntax> action)
+        {
+            return new OperatorDeclarationPattern(null, null, null, null, null, null, action);
+        }
+
         public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern type = null, Action<ConversionOperatorDeclarationSyntax> action = null)
         {
             return new ConversionOperatorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, type, action);
+        }
+
+        public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(IEnumerable<string> modifiers, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern type = null, Action<ConversionOperatorDeclarationSyntax> action = null)
+        {
+            return new ConversionOperatorDeclarationPattern(null, TokenList(modifiers), parameterList, body, expressionBody, type, action);
+        }
+
+        public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(ParameterListPattern parameterList, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern type = null, Action<ConversionOperatorDeclarationSyntax> action = null)
+        {
+            return new ConversionOperatorDeclarationPattern(null, null, parameterList, body, expressionBody, type, action);
+        }
+
+        public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, TypePattern type = null, Action<ConversionOperatorDeclarationSyntax> action = null)
+        {
+            return new ConversionOperatorDeclarationPattern(null, null, null, body, expressionBody, type, action);
+        }
+
+        public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(ArrowExpressionClausePattern expressionBody, TypePattern type = null, Action<ConversionOperatorDeclarationSyntax> action = null)
+        {
+            return new ConversionOperatorDeclarationPattern(null, null, null, null, expressionBody, type, action);
+        }
+
+        public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(TypePattern type, Action<ConversionOperatorDeclarationSyntax> action = null)
+        {
+            return new ConversionOperatorDeclarationPattern(null, null, null, null, null, type, action);
+        }
+
+        public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(Action<ConversionOperatorDeclarationSyntax> action)
+        {
+            return new ConversionOperatorDeclarationPattern(null, null, null, null, null, null, action);
         }
 
         public static ConstructorDeclarationPattern ConstructorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
@@ -7473,9 +8938,54 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ConstructorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, identifier, initializer, action);
         }
 
+        public static ConstructorDeclarationPattern ConstructorDeclaration(IEnumerable<string> modifiers, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
+        {
+            return new ConstructorDeclarationPattern(null, TokenList(modifiers), parameterList, body, expressionBody, identifier, initializer, action);
+        }
+
+        public static ConstructorDeclarationPattern ConstructorDeclaration(ParameterListPattern parameterList, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
+        {
+            return new ConstructorDeclarationPattern(null, null, parameterList, body, expressionBody, identifier, initializer, action);
+        }
+
+        public static ConstructorDeclarationPattern ConstructorDeclaration(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, string identifier = null, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
+        {
+            return new ConstructorDeclarationPattern(null, null, null, body, expressionBody, identifier, initializer, action);
+        }
+
+        public static ConstructorDeclarationPattern ConstructorDeclaration(ArrowExpressionClausePattern expressionBody, string identifier = null, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
+        {
+            return new ConstructorDeclarationPattern(null, null, null, null, expressionBody, identifier, initializer, action);
+        }
+
+        public static ConstructorDeclarationPattern ConstructorDeclaration(string identifier, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
+        {
+            return new ConstructorDeclarationPattern(null, null, null, null, null, identifier, initializer, action);
+        }
+
+        public static ConstructorDeclarationPattern ConstructorDeclaration(ConstructorInitializerPattern initializer, Action<ConstructorDeclarationSyntax> action = null)
+        {
+            return new ConstructorDeclarationPattern(null, null, null, null, null, null, initializer, action);
+        }
+
+        public static ConstructorDeclarationPattern ConstructorDeclaration(Action<ConstructorDeclarationSyntax> action)
+        {
+            return new ConstructorDeclarationPattern(null, null, null, null, null, null, null, action);
+        }
+
         public static ConstructorInitializerPattern ConstructorInitializer(SyntaxKind kind = default(SyntaxKind), ArgumentListPattern argumentList = null, Action<ConstructorInitializerSyntax> action = null)
         {
             return new ConstructorInitializerPattern(kind, argumentList, action);
+        }
+
+        public static ConstructorInitializerPattern ConstructorInitializer(ArgumentListPattern argumentList, Action<ConstructorInitializerSyntax> action = null)
+        {
+            return new ConstructorInitializerPattern(default(SyntaxKind), argumentList, action);
+        }
+
+        public static ConstructorInitializerPattern ConstructorInitializer(Action<ConstructorInitializerSyntax> action)
+        {
+            return new ConstructorInitializerPattern(default(SyntaxKind), null, action);
         }
 
         public static DestructorDeclarationPattern DestructorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, Action<DestructorDeclarationSyntax> action = null)
@@ -7483,9 +8993,79 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new DestructorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, identifier, action);
         }
 
+        public static DestructorDeclarationPattern DestructorDeclaration(IEnumerable<string> modifiers, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, Action<DestructorDeclarationSyntax> action = null)
+        {
+            return new DestructorDeclarationPattern(null, TokenList(modifiers), parameterList, body, expressionBody, identifier, action);
+        }
+
+        public static DestructorDeclarationPattern DestructorDeclaration(ParameterListPattern parameterList, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, Action<DestructorDeclarationSyntax> action = null)
+        {
+            return new DestructorDeclarationPattern(null, null, parameterList, body, expressionBody, identifier, action);
+        }
+
+        public static DestructorDeclarationPattern DestructorDeclaration(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, string identifier = null, Action<DestructorDeclarationSyntax> action = null)
+        {
+            return new DestructorDeclarationPattern(null, null, null, body, expressionBody, identifier, action);
+        }
+
+        public static DestructorDeclarationPattern DestructorDeclaration(ArrowExpressionClausePattern expressionBody, string identifier = null, Action<DestructorDeclarationSyntax> action = null)
+        {
+            return new DestructorDeclarationPattern(null, null, null, null, expressionBody, identifier, action);
+        }
+
+        public static DestructorDeclarationPattern DestructorDeclaration(string identifier, Action<DestructorDeclarationSyntax> action = null)
+        {
+            return new DestructorDeclarationPattern(null, null, null, null, null, identifier, action);
+        }
+
+        public static DestructorDeclarationPattern DestructorDeclaration(Action<DestructorDeclarationSyntax> action)
+        {
+            return new DestructorDeclarationPattern(null, null, null, null, null, null, action);
+        }
+
         public static PropertyDeclarationPattern PropertyDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
         {
             return new PropertyDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(IEnumerable<string> modifiers, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(TypePattern type, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, null, type, explicitInterfaceSpecifier, accessorList, identifier, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier, AccessorListPattern accessorList = null, string identifier = null, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, null, null, explicitInterfaceSpecifier, accessorList, identifier, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(AccessorListPattern accessorList, string identifier = null, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, null, null, null, accessorList, identifier, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(string identifier, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, null, null, null, null, identifier, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(ArrowExpressionClausePattern expressionBody, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, null, null, null, null, null, expressionBody, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(EqualsValueClausePattern initializer, Action<PropertyDeclarationSyntax> action = null)
+        {
+            return new PropertyDeclarationPattern(null, null, null, null, null, null, null, initializer, action);
+        }
+
+        public static PropertyDeclarationPattern PropertyDeclaration(Action<PropertyDeclarationSyntax> action)
+        {
+            return new PropertyDeclarationPattern(null, null, null, null, null, null, null, null, action);
         }
 
         public static ArrowExpressionClausePattern ArrowExpressionClause(ExpressionPattern expression = null, Action<ArrowExpressionClauseSyntax> action = null)
@@ -7493,9 +9073,44 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ArrowExpressionClausePattern(expression, action);
         }
 
+        public static ArrowExpressionClausePattern ArrowExpressionClause(Action<ArrowExpressionClauseSyntax> action)
+        {
+            return new ArrowExpressionClausePattern(null, action);
+        }
+
         public static EventDeclarationPattern EventDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, Action<EventDeclarationSyntax> action = null)
         {
             return new EventDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, action);
+        }
+
+        public static EventDeclarationPattern EventDeclaration(IEnumerable<string> modifiers, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, Action<EventDeclarationSyntax> action = null)
+        {
+            return new EventDeclarationPattern(null, TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, action);
+        }
+
+        public static EventDeclarationPattern EventDeclaration(TypePattern type, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, Action<EventDeclarationSyntax> action = null)
+        {
+            return new EventDeclarationPattern(null, null, type, explicitInterfaceSpecifier, accessorList, identifier, action);
+        }
+
+        public static EventDeclarationPattern EventDeclaration(ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier, AccessorListPattern accessorList = null, string identifier = null, Action<EventDeclarationSyntax> action = null)
+        {
+            return new EventDeclarationPattern(null, null, null, explicitInterfaceSpecifier, accessorList, identifier, action);
+        }
+
+        public static EventDeclarationPattern EventDeclaration(AccessorListPattern accessorList, string identifier = null, Action<EventDeclarationSyntax> action = null)
+        {
+            return new EventDeclarationPattern(null, null, null, null, accessorList, identifier, action);
+        }
+
+        public static EventDeclarationPattern EventDeclaration(string identifier, Action<EventDeclarationSyntax> action = null)
+        {
+            return new EventDeclarationPattern(null, null, null, null, null, identifier, action);
+        }
+
+        public static EventDeclarationPattern EventDeclaration(Action<EventDeclarationSyntax> action)
+        {
+            return new EventDeclarationPattern(null, null, null, null, null, null, action);
         }
 
         public static IndexerDeclarationPattern IndexerDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
@@ -7503,9 +9118,49 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new IndexerDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, parameterList, expressionBody, action);
         }
 
+        public static IndexerDeclarationPattern IndexerDeclaration(IEnumerable<string> modifiers, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
+        {
+            return new IndexerDeclarationPattern(null, TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, parameterList, expressionBody, action);
+        }
+
+        public static IndexerDeclarationPattern IndexerDeclaration(TypePattern type, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
+        {
+            return new IndexerDeclarationPattern(null, null, type, explicitInterfaceSpecifier, accessorList, parameterList, expressionBody, action);
+        }
+
+        public static IndexerDeclarationPattern IndexerDeclaration(ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier, AccessorListPattern accessorList = null, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
+        {
+            return new IndexerDeclarationPattern(null, null, null, explicitInterfaceSpecifier, accessorList, parameterList, expressionBody, action);
+        }
+
+        public static IndexerDeclarationPattern IndexerDeclaration(AccessorListPattern accessorList, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
+        {
+            return new IndexerDeclarationPattern(null, null, null, null, accessorList, parameterList, expressionBody, action);
+        }
+
+        public static IndexerDeclarationPattern IndexerDeclaration(BracketedParameterListPattern parameterList, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
+        {
+            return new IndexerDeclarationPattern(null, null, null, null, null, parameterList, expressionBody, action);
+        }
+
+        public static IndexerDeclarationPattern IndexerDeclaration(ArrowExpressionClausePattern expressionBody, Action<IndexerDeclarationSyntax> action = null)
+        {
+            return new IndexerDeclarationPattern(null, null, null, null, null, null, expressionBody, action);
+        }
+
+        public static IndexerDeclarationPattern IndexerDeclaration(Action<IndexerDeclarationSyntax> action)
+        {
+            return new IndexerDeclarationPattern(null, null, null, null, null, null, null, action);
+        }
+
         public static AccessorListPattern AccessorList(IEnumerable<AccessorDeclarationPattern> accessors = null, Action<AccessorListSyntax> action = null)
         {
             return new AccessorListPattern(NodeList(accessors), action);
+        }
+
+        public static AccessorListPattern AccessorList(Action<AccessorListSyntax> action)
+        {
+            return new AccessorListPattern(null, action);
         }
 
         public static AccessorListPattern AccessorList(params AccessorDeclarationPattern[] accessors)
@@ -7518,9 +9173,39 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new AccessorDeclarationPattern(kind, NodeList(attributeLists), TokenList(modifiers), body, expressionBody, action);
         }
 
+        public static AccessorDeclarationPattern AccessorDeclaration(IEnumerable<AttributeListPattern> attributeLists, IEnumerable<string> modifiers = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<AccessorDeclarationSyntax> action = null)
+        {
+            return new AccessorDeclarationPattern(default(SyntaxKind), NodeList(attributeLists), TokenList(modifiers), body, expressionBody, action);
+        }
+
+        public static AccessorDeclarationPattern AccessorDeclaration(IEnumerable<string> modifiers, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<AccessorDeclarationSyntax> action = null)
+        {
+            return new AccessorDeclarationPattern(default(SyntaxKind), null, TokenList(modifiers), body, expressionBody, action);
+        }
+
+        public static AccessorDeclarationPattern AccessorDeclaration(BlockPattern body, ArrowExpressionClausePattern expressionBody = null, Action<AccessorDeclarationSyntax> action = null)
+        {
+            return new AccessorDeclarationPattern(default(SyntaxKind), null, null, body, expressionBody, action);
+        }
+
+        public static AccessorDeclarationPattern AccessorDeclaration(ArrowExpressionClausePattern expressionBody, Action<AccessorDeclarationSyntax> action = null)
+        {
+            return new AccessorDeclarationPattern(default(SyntaxKind), null, null, null, expressionBody, action);
+        }
+
+        public static AccessorDeclarationPattern AccessorDeclaration(Action<AccessorDeclarationSyntax> action)
+        {
+            return new AccessorDeclarationPattern(default(SyntaxKind), null, null, null, null, action);
+        }
+
         public static ParameterListPattern ParameterList(IEnumerable<ParameterPattern> parameters = null, Action<ParameterListSyntax> action = null)
         {
             return new ParameterListPattern(NodeList(parameters), action);
+        }
+
+        public static ParameterListPattern ParameterList(Action<ParameterListSyntax> action)
+        {
+            return new ParameterListPattern(null, action);
         }
 
         public static ParameterListPattern ParameterList(params ParameterPattern[] parameters)
@@ -7533,6 +9218,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new BracketedParameterListPattern(NodeList(parameters), action);
         }
 
+        public static BracketedParameterListPattern BracketedParameterList(Action<BracketedParameterListSyntax> action)
+        {
+            return new BracketedParameterListPattern(null, action);
+        }
+
         public static BracketedParameterListPattern BracketedParameterList(params ParameterPattern[] parameters)
         {
             return new BracketedParameterListPattern(NodeList(parameters), null);
@@ -7543,9 +9233,49 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ParameterPattern(NodeList(attributeLists), TokenList(modifiers), type, identifier, @default, action);
         }
 
+        public static ParameterPattern Parameter(IEnumerable<string> modifiers, TypePattern type = null, string identifier = null, EqualsValueClausePattern @default = null, Action<ParameterSyntax> action = null)
+        {
+            return new ParameterPattern(null, TokenList(modifiers), type, identifier, @default, action);
+        }
+
+        public static ParameterPattern Parameter(TypePattern type, string identifier = null, EqualsValueClausePattern @default = null, Action<ParameterSyntax> action = null)
+        {
+            return new ParameterPattern(null, null, type, identifier, @default, action);
+        }
+
+        public static ParameterPattern Parameter(string identifier, EqualsValueClausePattern @default = null, Action<ParameterSyntax> action = null)
+        {
+            return new ParameterPattern(null, null, null, identifier, @default, action);
+        }
+
+        public static ParameterPattern Parameter(EqualsValueClausePattern @default, Action<ParameterSyntax> action = null)
+        {
+            return new ParameterPattern(null, null, null, null, @default, action);
+        }
+
+        public static ParameterPattern Parameter(Action<ParameterSyntax> action)
+        {
+            return new ParameterPattern(null, null, null, null, null, action);
+        }
+
         public static IncompleteMemberPattern IncompleteMember(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, Action<IncompleteMemberSyntax> action = null)
         {
             return new IncompleteMemberPattern(NodeList(attributeLists), TokenList(modifiers), type, action);
+        }
+
+        public static IncompleteMemberPattern IncompleteMember(IEnumerable<string> modifiers, TypePattern type = null, Action<IncompleteMemberSyntax> action = null)
+        {
+            return new IncompleteMemberPattern(null, TokenList(modifiers), type, action);
+        }
+
+        public static IncompleteMemberPattern IncompleteMember(TypePattern type, Action<IncompleteMemberSyntax> action = null)
+        {
+            return new IncompleteMemberPattern(null, null, type, action);
+        }
+
+        public static IncompleteMemberPattern IncompleteMember(Action<IncompleteMemberSyntax> action)
+        {
+            return new IncompleteMemberPattern(null, null, null, action);
         }
 
     }

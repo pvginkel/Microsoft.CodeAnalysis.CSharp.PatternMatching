@@ -188,50 +188,63 @@ var baseFields = GetAllFields(types, type.BaseType);
     {
 <# foreach (var type in types.Where(p => !p.Abstract)) {
 
-    var thisFields = GetAllFields(types, type.Name);
+    var allThisFields = GetAllFields(types, type.Name);
+
+    for (int i = 0; i <= allThisFields.Count; i++) {
+         var thisFields = allThisFields.Skip(i).ToList();
 
 #>
         public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
-   for (int i = 0; i < thisFields.Count; i++)
+   for (int j = 0; j < thisFields.Count; j++)
    {
-       if (i > 0) {
+       if (j > 0) {
            #>, <#
        }
-       #><#= GetPatternName(thisFields[i].Type, true) #> <#= GetLocalName(thisFields[i].Name) #> = <#= thisFields[i].Default #><#
+       #><#= GetPatternName(thisFields[j].Type, true) #> <#= GetLocalName(thisFields[j].Name) #><#
+       if (i == 0 || j > 0) {
+           #> = <#= thisFields[j].Default #><#
+       }
    }
    if (thisFields.Count > 0) {
        #>, <#
    }
-   #>Action<<#= type.Name #>> action = null<#
+   #>Action<<#= type.Name #>> action<#
+   if (allThisFields.Count == 0 || thisFields.Count > 0) {
+       #> = null<#
+   }
    #>)
         {
             return new <#= GetPatternName(type.Name) #>(<#
-   for (int i = 0; i < thisFields.Count; i++)
+   for (int j = 0; j < allThisFields.Count; j++)
    {
-       if (i > 0) {
+       if (j > 0) {
            #>, <#
        }
-       if (GetPatternName(thisFields[i].Type).StartsWith("NodeListPattern<")) {
-           #>NodeList(<#= GetLocalName(thisFields[i].Name) #>)<#
-       } else if (GetPatternName(thisFields[i].Type) == "TokenListPattern") {
-           #>TokenList(<#= GetLocalName(thisFields[i].Name) #>)<#
+       if (!thisFields.Contains(allThisFields[j])) {
+           #><#= allThisFields[j].Default #><#
+       } else if (GetPatternName(allThisFields[j].Type).StartsWith("NodeListPattern<")) {
+           #>NodeList(<#= GetLocalName(allThisFields[j].Name) #>)<#
+       } else if (GetPatternName(allThisFields[j].Type) == "TokenListPattern") {
+           #>TokenList(<#= GetLocalName(allThisFields[j].Name) #>)<#
        } else {
-           #><#= GetLocalName(thisFields[i].Name) #><#
+           #><#= GetLocalName(allThisFields[j].Name) #><#
        }
    }
-   if (thisFields.Count > 0) {
+   if (allThisFields.Count > 0) {
        #>, <#
    }
    #>action<#
    #>);
         }
+
 <#
-var paramsFields = thisFields.Where(p => ConsiderParamsFactory(type.Name, p.Type)).ToList();
+}
+
+var paramsFields = allThisFields.Where(p => ConsiderParamsFactory(type.Name, p.Type)).ToList();
 if (paramsFields.Count == 1) {
     var paramsField = paramsFields[0];
-    var kindField = thisFields.SingleOrDefault(p => p.Name == "Kind");
+    var kindField = allThisFields.SingleOrDefault(p => p.Name == "Kind");
 #>
-
         public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
         if (kindField != null) {
             #><#= kindField.Type #> <#= GetLocalName(kindField.Name) #>, <#
@@ -239,15 +252,15 @@ if (paramsFields.Count == 1) {
         #>params <#= GetGenericArgumentType(paramsField.Type) #>[] <#= GetLocalName(paramsField.Name) #>)
         {
             return new <#= GetPatternName(type.Name) #>(<#
-   for (int i = 0; i < thisFields.Count; i++)
+   for (int i = 0; i < allThisFields.Count; i++)
    {
        if (i > 0) {
            #>, <#
        }
-       if (thisFields[i] == kindField) {
+       if (allThisFields[i] == kindField) {
            #><#= GetLocalName(kindField.Name) #><#
-       } else if (thisFields[i] != paramsField) {
-           #><#= thisFields[i].Default #><#
+       } else if (allThisFields[i] != paramsField) {
+           #><#= allThisFields[i].Default #><#
        } else if (GetPatternName(paramsField.Type).StartsWith("NodeListPattern<")) {
            #>NodeList(<#= GetLocalName(paramsField.Name) #>)<#
        } else if (GetPatternName(paramsField.Type) == "TokenListPattern") {
@@ -256,8 +269,8 @@ if (paramsFields.Count == 1) {
    }
    #>, null);
         }
-<# } #>
 
+<# } #>
 <# } #>
     }
 }

@@ -27,8 +27,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching.Test
                     P.MemberAccessExpression(),
                     P.ArgumentList(
                         P.Argument(
-                            expression: P.LiteralExpression(
-                                action: p => strings.Add(p.Token.ValueText)
+                            P.LiteralExpression(
+                                p => strings.Add(p.Token.ValueText)
                             )
                         )
                     )

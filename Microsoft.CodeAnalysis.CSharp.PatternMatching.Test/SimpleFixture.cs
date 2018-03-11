@@ -34,8 +34,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching.Test
                             ),
                             P.ArgumentList(
                                 P.Argument(
-                                    expression: P.LiteralExpression(
-                                        action: p => expression = p.Token.ValueText
+                                    P.LiteralExpression(
+                                        p => expression = p.Token.ValueText
                                     )
                                 )
                             )

@@ -34,7 +34,7 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching.Test
                     )
                 )
                 .MatchDescendantNodes(methodDeclaration.Body)
-                .Count();
+                .Count;
 
             Assert.AreEqual(2, matches);
             Assert.AreEqual(new List<string> { "Hello ", "world!" }, strings);

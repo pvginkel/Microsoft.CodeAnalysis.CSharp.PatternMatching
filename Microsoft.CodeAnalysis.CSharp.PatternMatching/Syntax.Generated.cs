@@ -7228,6 +7228,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new SwitchStatementPattern(expression, NodeList(sections), action);
         }
 
+        public static SwitchStatementPattern SwitchStatement(params SwitchSectionPattern[] sections)
+        {
+            return new SwitchStatementPattern(null, NodeList(sections), null);
+        }
+
         public static SwitchSectionPattern SwitchSection(IEnumerable<SwitchLabelPattern> labels = null, IEnumerable<StatementPattern> statements = null, Action<SwitchSectionSyntax> action = null)
         {
             return new SwitchSectionPattern(NodeList(labels), NodeList(statements), action);
@@ -7353,9 +7358,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ClassDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
         }
 
+        public static ClassDeclarationPattern ClassDeclaration(params MemberDeclarationPattern[] members)
+        {
+            return new ClassDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
+        }
+
         public static StructDeclarationPattern StructDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
         {
             return new StructDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
+        }
+
+        public static StructDeclarationPattern StructDeclaration(params MemberDeclarationPattern[] members)
+        {
+            return new StructDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
         }
 
         public static InterfaceDeclarationPattern InterfaceDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
@@ -7363,9 +7378,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new InterfaceDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
         }
 
+        public static InterfaceDeclarationPattern InterfaceDeclaration(params MemberDeclarationPattern[] members)
+        {
+            return new InterfaceDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
+        }
+
         public static EnumDeclarationPattern EnumDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, IEnumerable<EnumMemberDeclarationPattern> members = null, Action<EnumDeclarationSyntax> action = null)
         {
             return new EnumDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, NodeList(members), action);
+        }
+
+        public static EnumDeclarationPattern EnumDeclaration(params EnumMemberDeclarationPattern[] members)
+        {
+            return new EnumDeclarationPattern(null, null, null, null, NodeList(members), null);
         }
 
         public static DelegateDeclarationPattern DelegateDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern returnType = null, string identifier = null, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
@@ -7448,11 +7473,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new ConstructorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, identifier, initializer, action);
         }
 
-        public static ConstructorDeclarationPattern ConstructorDeclaration(params AttributeListPattern[] attributeLists)
-        {
-            return new ConstructorDeclarationPattern(NodeList(attributeLists), null, null, null, null, null, null, null);
-        }
-
         public static ConstructorInitializerPattern ConstructorInitializer(SyntaxKind kind = default(SyntaxKind), ArgumentListPattern argumentList = null, Action<ConstructorInitializerSyntax> action = null)
         {
             return new ConstructorInitializerPattern(kind, argumentList, action);
@@ -7476,11 +7496,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         public static EventDeclarationPattern EventDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, Action<EventDeclarationSyntax> action = null)
         {
             return new EventDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, action);
-        }
-
-        public static EventDeclarationPattern EventDeclaration(params AttributeListPattern[] attributeLists)
-        {
-            return new EventDeclarationPattern(NodeList(attributeLists), null, null, null, null, null, null);
         }
 
         public static IndexerDeclarationPattern IndexerDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)

@@ -20,28 +20,6 @@ var skip = new HashSet<string>
     "XmlNodeSyntax",
 };
 
-var paramsFactoryBlacklist = new HashSet<string>
-{
-    "ArrayType",
-    "QueryBody",
-    "LocalFunctionStatement",
-    "SwitchStatement",
-    "TryStatement",
-    "TypeParameter",
-    "EnumMemberDeclaration",
-    "TypeParameterConstraintClause",
-    "FieldDeclaration",
-    "EventFieldDeclaration",
-    "OperatorDeclaration",
-    "ConversionOperatorDeclaration",
-    "DestructorDeclaration",
-    "PropertyDeclaration",
-    "IndexerDeclaration",
-    "AccessorDeclaration",
-    "Parameter",
-    "IncompleteMember",
-};
-
 var types = new List<SyntaxType>();
 
 foreach (var element in syntax.Elements())
@@ -247,16 +225,18 @@ var baseFields = GetAllFields(types, type.BaseType);
    #>action<#
    #>);
         }
-<# if (!paramsFactoryBlacklist.Contains(GetSimpleName(type.Name)) && thisFields.Where(p => IsListType(p.Type)).Count() == 1) {
+<#
+var paramsFields = thisFields.Where(p => ConsiderParamsFactory(type.Name, p.Type)).ToList();
+if (paramsFields.Count == 1) {
+    var paramsField = paramsFields[0];
     var kindField = thisFields.SingleOrDefault(p => p.Name == "Kind");
-    var singleField = thisFields.Single(p => IsListType(p.Type));
 #>
 
         public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
         if (kindField != null) {
             #><#= kindField.Type #> <#= GetLocalName(kindField.Name) #>, <#
         }
-        #>params <#= GetGenericArgumentType(singleField.Type) #>[] <#= GetLocalName(singleField.Name) #>)
+        #>params <#= GetGenericArgumentType(paramsField.Type) #>[] <#= GetLocalName(paramsField.Name) #>)
         {
             return new <#= GetPatternName(type.Name) #>(<#
    for (int i = 0; i < thisFields.Count; i++)
@@ -266,12 +246,12 @@ var baseFields = GetAllFields(types, type.BaseType);
        }
        if (thisFields[i] == kindField) {
            #><#= GetLocalName(kindField.Name) #><#
-       } else if (thisFields[i] != singleField) {
+       } else if (thisFields[i] != paramsField) {
            #><#= thisFields[i].Default #><#
-       } else if (GetPatternName(singleField.Type).StartsWith("NodeListPattern<")) {
-           #>NodeList(<#= GetLocalName(singleField.Name) #>)<#
-       } else if (GetPatternName(singleField.Type) == "TokenListPattern") {
-           #>TokenList(<#= GetLocalName(singleField.Name) #>)<#
+       } else if (GetPatternName(paramsField.Type).StartsWith("NodeListPattern<")) {
+           #>NodeList(<#= GetLocalName(paramsField.Name) #>)<#
+       } else if (GetPatternName(paramsField.Type) == "TokenListPattern") {
+           #>TokenList(<#= GetLocalName(paramsField.Name) #>)<#
        }
    }
    #>, null);
@@ -412,6 +392,24 @@ private static void GetAllFields(List<SyntaxType> types, List<SyntaxField> field
     
     fields.AddRange(type.Fields.Where(p => !p.Override));
 }
+
+private static bool ConsiderParamsFactory(string type, string fieldType)
+{
+    return
+        IsListType(fieldType) &&
+        GetGenericArgumentType(fieldType) != "AttributeListPattern" &&
+        GetGenericArgumentType(fieldType) != "TypeParameterConstraintClausePattern" &&
+        !_paramsFactoryBlacklist.Contains(GetSimpleName(type));
+}
+
+private static readonly HashSet<string> _paramsFactoryBlacklist = new HashSet<string>
+{
+    "ArrayType",
+    "QueryBody",
+    "LocalFunctionStatement",
+    "TryStatement",
+    "TypeParameterConstraintClause",
+};
 
 private class SyntaxType
 {

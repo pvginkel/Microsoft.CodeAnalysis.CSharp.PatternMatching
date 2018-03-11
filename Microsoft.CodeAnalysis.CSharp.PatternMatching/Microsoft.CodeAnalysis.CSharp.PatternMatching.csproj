@@ -111,11 +111,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnyExpressionPattern.cs" />
     <Compile Include="AnyLambdaExpressionPattern.cs" />
-    <Compile Include="AnyStatementPattern.cs" />
+    <Compile Include="AnyNodePattern.cs" />
     <Compile Include="AnySymbolPattern.cs" />
-    <Compile Include="AnyTypePattern.cs" />
     <Compile Include="NodeListPattern.cs" />
     <Compile Include="NullExpressionPattern.cs" />
     <Compile Include="NullStatementPattern.cs" />

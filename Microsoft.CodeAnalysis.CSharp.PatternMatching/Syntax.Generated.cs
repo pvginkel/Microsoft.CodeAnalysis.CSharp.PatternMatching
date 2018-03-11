@@ -76,7 +76,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (IdentifierNameSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -112,10 +113,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (QualifiedNameSyntax)node;
 
-            _left?.RunCallback(typed.Left, semanticModel);
-            _right?.RunCallback(typed.Right, semanticModel);
+            if (_left != null)
+                _left.RunCallback(typed.Left, semanticModel);
+            if (_right != null)
+                _right.RunCallback(typed.Right, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -148,9 +152,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (GenericNameSyntax)node;
 
-            _typeArgumentList?.RunCallback(typed.TypeArgumentList, semanticModel);
+            if (_typeArgumentList != null)
+                _typeArgumentList.RunCallback(typed.TypeArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -182,9 +188,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TypeArgumentListSyntax)node;
 
-            _arguments?.RunCallback(typed.Arguments, semanticModel);
+            if (_arguments != null)
+                _arguments.RunCallback(typed.Arguments, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -220,10 +228,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AliasQualifiedNameSyntax)node;
 
-            _alias?.RunCallback(typed.Alias, semanticModel);
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_alias != null)
+                _alias.RunCallback(typed.Alias, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -275,7 +286,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (PredefinedTypeSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -311,10 +323,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ArrayTypeSyntax)node;
 
-            _elementType?.RunCallback(typed.ElementType, semanticModel);
-            _rankSpecifiers?.RunCallback(typed.RankSpecifiers, semanticModel);
+            if (_elementType != null)
+                _elementType.RunCallback(typed.ElementType, semanticModel);
+            if (_rankSpecifiers != null)
+                _rankSpecifiers.RunCallback(typed.RankSpecifiers, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -346,9 +361,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ArrayRankSpecifierSyntax)node;
 
-            _sizes?.RunCallback(typed.Sizes, semanticModel);
+            if (_sizes != null)
+                _sizes.RunCallback(typed.Sizes, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -380,9 +397,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (PointerTypeSyntax)node;
 
-            _elementType?.RunCallback(typed.ElementType, semanticModel);
+            if (_elementType != null)
+                _elementType.RunCallback(typed.ElementType, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -414,9 +433,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (NullableTypeSyntax)node;
 
-            _elementType?.RunCallback(typed.ElementType, semanticModel);
+            if (_elementType != null)
+                _elementType.RunCallback(typed.ElementType, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -448,9 +469,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TupleTypeSyntax)node;
 
-            _elements?.RunCallback(typed.Elements, semanticModel);
+            if (_elements != null)
+                _elements.RunCallback(typed.Elements, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -486,9 +509,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TupleElementSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -517,7 +542,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (OmittedTypeArgumentSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -549,9 +575,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (RefTypeSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -602,9 +630,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ParenthesizedExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -636,9 +666,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TupleExpressionSyntax)node;
 
-            _arguments?.RunCallback(typed.Arguments, semanticModel);
+            if (_arguments != null)
+                _arguments.RunCallback(typed.Arguments, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -674,9 +706,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (PrefixUnaryExpressionSyntax)node;
 
-            _operand?.RunCallback(typed.Operand, semanticModel);
+            if (_operand != null)
+                _operand.RunCallback(typed.Operand, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -708,9 +742,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AwaitExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -746,9 +782,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (PostfixUnaryExpressionSyntax)node;
 
-            _operand?.RunCallback(typed.Operand, semanticModel);
+            if (_operand != null)
+                _operand.RunCallback(typed.Operand, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -788,10 +826,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (MemberAccessExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -827,10 +868,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ConditionalAccessExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _whenNotNull?.RunCallback(typed.WhenNotNull, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_whenNotNull != null)
+                _whenNotNull.RunCallback(typed.WhenNotNull, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -862,9 +906,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (MemberBindingExpressionSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -896,9 +942,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ElementBindingExpressionSyntax)node;
 
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -930,9 +978,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ImplicitElementAccessSyntax)node;
 
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -972,10 +1022,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (BinaryExpressionSyntax)node;
 
-            _left?.RunCallback(typed.Left, semanticModel);
-            _right?.RunCallback(typed.Right, semanticModel);
+            if (_left != null)
+                _left.RunCallback(typed.Left, semanticModel);
+            if (_right != null)
+                _right.RunCallback(typed.Right, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1015,10 +1068,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AssignmentExpressionSyntax)node;
 
-            _left?.RunCallback(typed.Left, semanticModel);
-            _right?.RunCallback(typed.Right, semanticModel);
+            if (_left != null)
+                _left.RunCallback(typed.Left, semanticModel);
+            if (_right != null)
+                _right.RunCallback(typed.Right, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1058,11 +1114,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ConditionalExpressionSyntax)node;
 
-            _condition?.RunCallback(typed.Condition, semanticModel);
-            _whenTrue?.RunCallback(typed.WhenTrue, semanticModel);
-            _whenFalse?.RunCallback(typed.WhenFalse, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
+            if (_whenTrue != null)
+                _whenTrue.RunCallback(typed.WhenTrue, semanticModel);
+            if (_whenFalse != null)
+                _whenFalse.RunCallback(typed.WhenFalse, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1110,7 +1170,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (ThisExpressionSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1139,7 +1200,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (BaseExpressionSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1172,7 +1234,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (LiteralExpressionSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1204,9 +1267,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (MakeRefExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1238,9 +1303,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (RefTypeExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1276,10 +1343,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (RefValueExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1315,9 +1385,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CheckedExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1349,9 +1421,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (DefaultExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1383,9 +1457,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TypeOfExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1417,9 +1493,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (SizeOfExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1455,10 +1533,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (InvocationExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1494,10 +1575,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ElementAccessExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1521,6 +1605,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseArgumentListSyntax)node;
+
+            if (_arguments != null)
+                _arguments.RunCallback(typed.Arguments, semanticModel);
         }
     }
 
@@ -1547,10 +1639,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ArgumentListSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1577,10 +1672,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (BracketedArgumentListSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1616,10 +1714,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ArgumentSyntax)node;
 
-            _nameColon?.RunCallback(typed.NameColon, semanticModel);
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_nameColon != null)
+                _nameColon.RunCallback(typed.NameColon, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1651,9 +1752,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (NameColonSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1689,10 +1792,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (DeclarationExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _designation?.RunCallback(typed.Designation, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_designation != null)
+                _designation.RunCallback(typed.Designation, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1728,10 +1834,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CastExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1755,6 +1864,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (AnonymousFunctionExpressionSyntax)node;
+
+            if (_body != null)
+                _body.RunCallback(typed.Body, semanticModel);
         }
     }
 
@@ -1785,11 +1902,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (AnonymousMethodExpressionSyntax)node;
 
-            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+            if (_parameterList != null)
+                _parameterList.RunCallback(typed.ParameterList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1842,9 +1963,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (SimpleLambdaExpressionSyntax)node;
 
-            _parameter?.RunCallback(typed.Parameter, semanticModel);
+            if (_parameter != null)
+                _parameter.RunCallback(typed.Parameter, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1876,9 +1999,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (RefExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1911,9 +2036,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ParenthesizedLambdaExpressionSyntax)node;
 
-            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
+            if (_parameterList != null)
+                _parameterList.RunCallback(typed.ParameterList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1949,9 +2076,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (InitializerExpressionSyntax)node;
 
-            _expressions?.RunCallback(typed.Expressions, semanticModel);
+            if (_expressions != null)
+                _expressions.RunCallback(typed.Expressions, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -1991,11 +2120,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ObjectCreationExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
-            _initializer?.RunCallback(typed.Initializer, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
+            if (_initializer != null)
+                _initializer.RunCallback(typed.Initializer, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2031,10 +2164,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AnonymousObjectMemberDeclaratorSyntax)node;
 
-            _nameEquals?.RunCallback(typed.NameEquals, semanticModel);
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_nameEquals != null)
+                _nameEquals.RunCallback(typed.NameEquals, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2066,9 +2202,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AnonymousObjectCreationExpressionSyntax)node;
 
-            _initializers?.RunCallback(typed.Initializers, semanticModel);
+            if (_initializers != null)
+                _initializers.RunCallback(typed.Initializers, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2104,10 +2242,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ArrayCreationExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _initializer?.RunCallback(typed.Initializer, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_initializer != null)
+                _initializer.RunCallback(typed.Initializer, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2139,9 +2280,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ImplicitArrayCreationExpressionSyntax)node;
 
-            _initializer?.RunCallback(typed.Initializer, semanticModel);
+            if (_initializer != null)
+                _initializer.RunCallback(typed.Initializer, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2173,9 +2316,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (StackAllocArrayCreationExpressionSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2249,10 +2394,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (QueryExpressionSyntax)node;
 
-            _fromClause?.RunCallback(typed.FromClause, semanticModel);
-            _body?.RunCallback(typed.Body, semanticModel);
+            if (_fromClause != null)
+                _fromClause.RunCallback(typed.FromClause, semanticModel);
+            if (_body != null)
+                _body.RunCallback(typed.Body, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2292,11 +2440,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (QueryBodySyntax)node;
 
-            _clauses?.RunCallback(typed.Clauses, semanticModel);
-            _selectOrGroup?.RunCallback(typed.SelectOrGroup, semanticModel);
-            _continuation?.RunCallback(typed.Continuation, semanticModel);
+            if (_clauses != null)
+                _clauses.RunCallback(typed.Clauses, semanticModel);
+            if (_selectOrGroup != null)
+                _selectOrGroup.RunCallback(typed.SelectOrGroup, semanticModel);
+            if (_continuation != null)
+                _continuation.RunCallback(typed.Continuation, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2336,10 +2488,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (FromClauseSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2375,9 +2530,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (LetClauseSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2429,13 +2586,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (JoinClauseSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _inExpression?.RunCallback(typed.InExpression, semanticModel);
-            _leftExpression?.RunCallback(typed.LeftExpression, semanticModel);
-            _rightExpression?.RunCallback(typed.RightExpression, semanticModel);
-            _into?.RunCallback(typed.Into, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_inExpression != null)
+                _inExpression.RunCallback(typed.InExpression, semanticModel);
+            if (_leftExpression != null)
+                _leftExpression.RunCallback(typed.LeftExpression, semanticModel);
+            if (_rightExpression != null)
+                _rightExpression.RunCallback(typed.RightExpression, semanticModel);
+            if (_into != null)
+                _into.RunCallback(typed.Into, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2468,7 +2631,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (JoinIntoClauseSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2500,9 +2664,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (WhereClauseSyntax)node;
 
-            _condition?.RunCallback(typed.Condition, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2534,9 +2700,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (OrderByClauseSyntax)node;
 
-            _orderings?.RunCallback(typed.Orderings, semanticModel);
+            if (_orderings != null)
+                _orderings.RunCallback(typed.Orderings, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2572,9 +2740,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (OrderingSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2606,9 +2776,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (SelectClauseSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2644,10 +2816,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (GroupClauseSyntax)node;
 
-            _groupExpression?.RunCallback(typed.GroupExpression, semanticModel);
-            _byExpression?.RunCallback(typed.ByExpression, semanticModel);
+            if (_groupExpression != null)
+                _groupExpression.RunCallback(typed.GroupExpression, semanticModel);
+            if (_byExpression != null)
+                _byExpression.RunCallback(typed.ByExpression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2683,9 +2858,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (QueryContinuationSyntax)node;
 
-            _body?.RunCallback(typed.Body, semanticModel);
+            if (_body != null)
+                _body.RunCallback(typed.Body, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2714,7 +2891,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (OmittedArraySizeExpressionSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2746,9 +2924,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (InterpolatedStringExpressionSyntax)node;
 
-            _contents?.RunCallback(typed.Contents, semanticModel);
+            if (_contents != null)
+                _contents.RunCallback(typed.Contents, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2784,10 +2964,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (IsPatternExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _pattern?.RunCallback(typed.Pattern, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_pattern != null)
+                _pattern.RunCallback(typed.Pattern, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2819,9 +3002,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ThrowExpressionSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2853,9 +3038,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (WhenClauseSyntax)node;
 
-            _condition?.RunCallback(typed.Condition, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2910,10 +3097,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (DeclarationPatternSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _designation?.RunCallback(typed.Designation, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_designation != null)
+                _designation.RunCallback(typed.Designation, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2945,9 +3135,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ConstantPatternSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -2995,7 +3187,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (InterpolatedStringTextSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3035,11 +3228,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (InterpolationSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _alignmentClause?.RunCallback(typed.AlignmentClause, semanticModel);
-            _formatClause?.RunCallback(typed.FormatClause, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_alignmentClause != null)
+                _alignmentClause.RunCallback(typed.AlignmentClause, semanticModel);
+            if (_formatClause != null)
+                _formatClause.RunCallback(typed.FormatClause, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3071,9 +3268,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (InterpolationAlignmentClauseSyntax)node;
 
-            _value?.RunCallback(typed.Value, semanticModel);
+            if (_value != null)
+                _value.RunCallback(typed.Value, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3102,7 +3301,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (InterpolationFormatClauseSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3134,9 +3334,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (GlobalStatementSyntax)node;
 
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3187,9 +3389,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (BlockSyntax)node;
 
-            _statements?.RunCallback(typed.Statements, semanticModel);
+            if (_statements != null)
+                _statements.RunCallback(typed.Statements, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3249,14 +3453,21 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (LocalFunctionStatementSyntax)node;
 
-            _returnType?.RunCallback(typed.ReturnType, semanticModel);
-            _typeParameterList?.RunCallback(typed.TypeParameterList, semanticModel);
-            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
-            _constraintClauses?.RunCallback(typed.ConstraintClauses, semanticModel);
-            _body?.RunCallback(typed.Body, semanticModel);
-            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+            if (_returnType != null)
+                _returnType.RunCallback(typed.ReturnType, semanticModel);
+            if (_typeParameterList != null)
+                _typeParameterList.RunCallback(typed.TypeParameterList, semanticModel);
+            if (_parameterList != null)
+                _parameterList.RunCallback(typed.ParameterList, semanticModel);
+            if (_constraintClauses != null)
+                _constraintClauses.RunCallback(typed.ConstraintClauses, semanticModel);
+            if (_body != null)
+                _body.RunCallback(typed.Body, semanticModel);
+            if (_expressionBody != null)
+                _expressionBody.RunCallback(typed.ExpressionBody, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3292,9 +3503,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (LocalDeclarationStatementSyntax)node;
 
-            _declaration?.RunCallback(typed.Declaration, semanticModel);
+            if (_declaration != null)
+                _declaration.RunCallback(typed.Declaration, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3330,10 +3543,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (VariableDeclarationSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
-            _variables?.RunCallback(typed.Variables, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_variables != null)
+                _variables.RunCallback(typed.Variables, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3373,10 +3589,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (VariableDeclaratorSyntax)node;
 
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
-            _initializer?.RunCallback(typed.Initializer, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
+            if (_initializer != null)
+                _initializer.RunCallback(typed.Initializer, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3408,9 +3627,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (EqualsValueClauseSyntax)node;
 
-            _value?.RunCallback(typed.Value, semanticModel);
+            if (_value != null)
+                _value.RunCallback(typed.Value, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3462,7 +3683,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (SingleVariableDesignationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3491,7 +3713,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (DiscardDesignationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3523,9 +3746,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ParenthesizedVariableDesignationSyntax)node;
 
-            _variables?.RunCallback(typed.Variables, semanticModel);
+            if (_variables != null)
+                _variables.RunCallback(typed.Variables, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3557,9 +3782,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ExpressionStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3588,7 +3815,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (EmptyStatementSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3624,9 +3852,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (LabeledStatementSyntax)node;
 
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3662,9 +3892,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (GotoStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3693,7 +3925,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (BreakStatementSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3722,7 +3955,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (ContinueStatementSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3754,9 +3988,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ReturnStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3788,9 +4024,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ThrowStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3826,9 +4064,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (YieldStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3864,10 +4104,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (WhileStatementSyntax)node;
 
-            _condition?.RunCallback(typed.Condition, semanticModel);
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3903,10 +4146,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (DoStatementSyntax)node;
 
-            _statement?.RunCallback(typed.Statement, semanticModel);
-            _condition?.RunCallback(typed.Condition, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3954,13 +4200,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ForStatementSyntax)node;
 
-            _declaration?.RunCallback(typed.Declaration, semanticModel);
-            _initializers?.RunCallback(typed.Initializers, semanticModel);
-            _condition?.RunCallback(typed.Condition, semanticModel);
-            _incrementors?.RunCallback(typed.Incrementors, semanticModel);
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_declaration != null)
+                _declaration.RunCallback(typed.Declaration, semanticModel);
+            if (_initializers != null)
+                _initializers.RunCallback(typed.Initializers, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
+            if (_incrementors != null)
+                _incrementors.RunCallback(typed.Incrementors, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -3988,6 +4240,16 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (CommonForEachStatementSyntax)node;
+
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
         }
     }
 
@@ -4022,11 +4284,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ForEachStatementSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4057,11 +4323,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ForEachVariableStatementSyntax)node;
 
-            _variable?.RunCallback(typed.Variable, semanticModel);
+            if (_variable != null)
+                _variable.RunCallback(typed.Variable, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4101,11 +4371,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (UsingStatementSyntax)node;
 
-            _declaration?.RunCallback(typed.Declaration, semanticModel);
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_declaration != null)
+                _declaration.RunCallback(typed.Declaration, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4141,10 +4415,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (FixedStatementSyntax)node;
 
-            _declaration?.RunCallback(typed.Declaration, semanticModel);
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_declaration != null)
+                _declaration.RunCallback(typed.Declaration, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4180,9 +4457,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CheckedStatementSyntax)node;
 
-            _block?.RunCallback(typed.Block, semanticModel);
+            if (_block != null)
+                _block.RunCallback(typed.Block, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4214,9 +4493,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (UnsafeStatementSyntax)node;
 
-            _block?.RunCallback(typed.Block, semanticModel);
+            if (_block != null)
+                _block.RunCallback(typed.Block, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4252,10 +4533,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (LockStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4295,11 +4579,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (IfStatementSyntax)node;
 
-            _condition?.RunCallback(typed.Condition, semanticModel);
-            _statement?.RunCallback(typed.Statement, semanticModel);
-            _else?.RunCallback(typed.Else, semanticModel);
+            if (_condition != null)
+                _condition.RunCallback(typed.Condition, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
+            if (_else != null)
+                _else.RunCallback(typed.Else, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4331,9 +4619,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ElseClauseSyntax)node;
 
-            _statement?.RunCallback(typed.Statement, semanticModel);
+            if (_statement != null)
+                _statement.RunCallback(typed.Statement, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4369,10 +4659,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (SwitchStatementSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
-            _sections?.RunCallback(typed.Sections, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
+            if (_sections != null)
+                _sections.RunCallback(typed.Sections, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4408,10 +4701,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (SwitchSectionSyntax)node;
 
-            _labels?.RunCallback(typed.Labels, semanticModel);
-            _statements?.RunCallback(typed.Statements, semanticModel);
+            if (_labels != null)
+                _labels.RunCallback(typed.Labels, semanticModel);
+            if (_statements != null)
+                _statements.RunCallback(typed.Statements, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4466,10 +4762,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CasePatternSwitchLabelSyntax)node;
 
-            _pattern?.RunCallback(typed.Pattern, semanticModel);
-            _whenClause?.RunCallback(typed.WhenClause, semanticModel);
+            if (_pattern != null)
+                _pattern.RunCallback(typed.Pattern, semanticModel);
+            if (_whenClause != null)
+                _whenClause.RunCallback(typed.WhenClause, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4501,9 +4800,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CaseSwitchLabelSyntax)node;
 
-            _value?.RunCallback(typed.Value, semanticModel);
+            if (_value != null)
+                _value.RunCallback(typed.Value, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4532,7 +4833,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (DefaultSwitchLabelSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4572,11 +4874,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TryStatementSyntax)node;
 
-            _block?.RunCallback(typed.Block, semanticModel);
-            _catches?.RunCallback(typed.Catches, semanticModel);
-            _finally?.RunCallback(typed.Finally, semanticModel);
+            if (_block != null)
+                _block.RunCallback(typed.Block, semanticModel);
+            if (_catches != null)
+                _catches.RunCallback(typed.Catches, semanticModel);
+            if (_finally != null)
+                _finally.RunCallback(typed.Finally, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4616,11 +4922,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CatchClauseSyntax)node;
 
-            _declaration?.RunCallback(typed.Declaration, semanticModel);
-            _filter?.RunCallback(typed.Filter, semanticModel);
-            _block?.RunCallback(typed.Block, semanticModel);
+            if (_declaration != null)
+                _declaration.RunCallback(typed.Declaration, semanticModel);
+            if (_filter != null)
+                _filter.RunCallback(typed.Filter, semanticModel);
+            if (_block != null)
+                _block.RunCallback(typed.Block, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4656,9 +4966,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CatchDeclarationSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4690,9 +5002,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CatchFilterClauseSyntax)node;
 
-            _filterExpression?.RunCallback(typed.FilterExpression, semanticModel);
+            if (_filterExpression != null)
+                _filterExpression.RunCallback(typed.FilterExpression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4724,9 +5038,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (FinallyClauseSyntax)node;
 
-            _block?.RunCallback(typed.Block, semanticModel);
+            if (_block != null)
+                _block.RunCallback(typed.Block, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4770,12 +5086,17 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (CompilationUnitSyntax)node;
 
-            _externs?.RunCallback(typed.Externs, semanticModel);
-            _usings?.RunCallback(typed.Usings, semanticModel);
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
-            _members?.RunCallback(typed.Members, semanticModel);
+            if (_externs != null)
+                _externs.RunCallback(typed.Externs, semanticModel);
+            if (_usings != null)
+                _usings.RunCallback(typed.Usings, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_members != null)
+                _members.RunCallback(typed.Members, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4808,7 +5129,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (ExternAliasDirectiveSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4844,10 +5166,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (UsingDirectiveSyntax)node;
 
-            _alias?.RunCallback(typed.Alias, semanticModel);
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_alias != null)
+                _alias.RunCallback(typed.Alias, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4910,12 +5235,17 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (NamespaceDeclarationSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
-            _externs?.RunCallback(typed.Externs, semanticModel);
-            _usings?.RunCallback(typed.Usings, semanticModel);
-            _members?.RunCallback(typed.Members, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
+            if (_externs != null)
+                _externs.RunCallback(typed.Externs, semanticModel);
+            if (_usings != null)
+                _usings.RunCallback(typed.Usings, semanticModel);
+            if (_members != null)
+                _members.RunCallback(typed.Members, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4951,10 +5281,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AttributeListSyntax)node;
 
-            _target?.RunCallback(typed.Target, semanticModel);
-            _attributes?.RunCallback(typed.Attributes, semanticModel);
+            if (_target != null)
+                _target.RunCallback(typed.Target, semanticModel);
+            if (_attributes != null)
+                _attributes.RunCallback(typed.Attributes, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -4987,7 +5320,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (AttributeTargetSpecifierSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5023,10 +5357,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AttributeSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5058,9 +5395,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AttributeArgumentListSyntax)node;
 
-            _arguments?.RunCallback(typed.Arguments, semanticModel);
+            if (_arguments != null)
+                _arguments.RunCallback(typed.Arguments, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5100,11 +5439,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AttributeArgumentSyntax)node;
 
-            _nameEquals?.RunCallback(typed.NameEquals, semanticModel);
-            _nameColon?.RunCallback(typed.NameColon, semanticModel);
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_nameEquals != null)
+                _nameEquals.RunCallback(typed.NameEquals, semanticModel);
+            if (_nameColon != null)
+                _nameColon.RunCallback(typed.NameColon, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5136,9 +5479,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (NameEqualsSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5170,9 +5515,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TypeParameterListSyntax)node;
 
-            _parameters?.RunCallback(typed.Parameters, semanticModel);
+            if (_parameters != null)
+                _parameters.RunCallback(typed.Parameters, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5208,9 +5555,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TypeParameterSyntax)node;
 
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5247,6 +5596,16 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
             return true;
         }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseTypeDeclarationSyntax)node;
+
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_baseList != null)
+                _baseList.RunCallback(typed.BaseList, semanticModel);
+        }
     }
 
     public abstract partial class TypeDeclarationPattern : BaseTypeDeclarationPattern
@@ -5279,6 +5638,20 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
             return true;
         }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            base.RunCallback(node, semanticModel);
+
+            var typed = (TypeDeclarationSyntax)node;
+
+            if (_typeParameterList != null)
+                _typeParameterList.RunCallback(typed.TypeParameterList, semanticModel);
+            if (_constraintClauses != null)
+                _constraintClauses.RunCallback(typed.ConstraintClauses, semanticModel);
+            if (_members != null)
+                _members.RunCallback(typed.Members, semanticModel);
+        }
     }
 
     public partial class ClassDeclarationPattern : TypeDeclarationPattern
@@ -5304,10 +5677,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ClassDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5334,10 +5710,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (StructDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5364,10 +5743,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (InterfaceDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5398,11 +5780,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (EnumDeclarationSyntax)node;
 
-            _members?.RunCallback(typed.Members, semanticModel);
+            if (_members != null)
+                _members.RunCallback(typed.Members, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5458,13 +5844,19 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (DelegateDeclarationSyntax)node;
 
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
-            _returnType?.RunCallback(typed.ReturnType, semanticModel);
-            _typeParameterList?.RunCallback(typed.TypeParameterList, semanticModel);
-            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
-            _constraintClauses?.RunCallback(typed.ConstraintClauses, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_returnType != null)
+                _returnType.RunCallback(typed.ReturnType, semanticModel);
+            if (_typeParameterList != null)
+                _typeParameterList.RunCallback(typed.TypeParameterList, semanticModel);
+            if (_parameterList != null)
+                _parameterList.RunCallback(typed.ParameterList, semanticModel);
+            if (_constraintClauses != null)
+                _constraintClauses.RunCallback(typed.ConstraintClauses, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5504,10 +5896,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (EnumMemberDeclarationSyntax)node;
 
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
-            _equalsValue?.RunCallback(typed.EqualsValue, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_equalsValue != null)
+                _equalsValue.RunCallback(typed.EqualsValue, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5539,9 +5934,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (BaseListSyntax)node;
 
-            _types?.RunCallback(typed.Types, semanticModel);
+            if (_types != null)
+                _types.RunCallback(typed.Types, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5565,6 +5962,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseTypeSyntax)node;
+
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
         }
     }
 
@@ -5591,10 +5996,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (SimpleBaseTypeSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5630,10 +6038,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TypeParameterConstraintClauseSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
-            _constraints?.RunCallback(typed.Constraints, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
+            if (_constraints != null)
+                _constraints.RunCallback(typed.Constraints, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5681,7 +6092,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (ConstructorConstraintSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5714,7 +6126,8 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             var typed = (ClassOrStructConstraintSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5746,9 +6159,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (TypeConstraintSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5781,6 +6196,16 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
             return true;
         }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseFieldDeclarationSyntax)node;
+
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_declaration != null)
+                _declaration.RunCallback(typed.Declaration, semanticModel);
+        }
     }
 
     public partial class FieldDeclarationPattern : BaseFieldDeclarationPattern
@@ -5806,10 +6231,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (FieldDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5836,10 +6264,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (EventFieldDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5871,9 +6302,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ExplicitInterfaceSpecifierSyntax)node;
 
-            _name?.RunCallback(typed.Name, semanticModel);
+            if (_name != null)
+                _name.RunCallback(typed.Name, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5913,6 +6346,20 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseMethodDeclarationSyntax)node;
+
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_parameterList != null)
+                _parameterList.RunCallback(typed.ParameterList, semanticModel);
+            if (_body != null)
+                _body.RunCallback(typed.Body, semanticModel);
+            if (_expressionBody != null)
+                _expressionBody.RunCallback(typed.ExpressionBody, semanticModel);
         }
     }
 
@@ -5959,14 +6406,21 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (MethodDeclarationSyntax)node;
 
-            _returnType?.RunCallback(typed.ReturnType, semanticModel);
-            _explicitInterfaceSpecifier?.RunCallback(typed.ExplicitInterfaceSpecifier, semanticModel);
-            _typeParameterList?.RunCallback(typed.TypeParameterList, semanticModel);
-            _constraintClauses?.RunCallback(typed.ConstraintClauses, semanticModel);
+            if (_returnType != null)
+                _returnType.RunCallback(typed.ReturnType, semanticModel);
+            if (_explicitInterfaceSpecifier != null)
+                _explicitInterfaceSpecifier.RunCallback(typed.ExplicitInterfaceSpecifier, semanticModel);
+            if (_typeParameterList != null)
+                _typeParameterList.RunCallback(typed.TypeParameterList, semanticModel);
+            if (_constraintClauses != null)
+                _constraintClauses.RunCallback(typed.ConstraintClauses, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -5997,11 +6451,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (OperatorDeclarationSyntax)node;
 
-            _returnType?.RunCallback(typed.ReturnType, semanticModel);
+            if (_returnType != null)
+                _returnType.RunCallback(typed.ReturnType, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6032,11 +6490,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ConversionOperatorDeclarationSyntax)node;
 
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6071,11 +6533,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ConstructorDeclarationSyntax)node;
 
-            _initializer?.RunCallback(typed.Initializer, semanticModel);
+            if (_initializer != null)
+                _initializer.RunCallback(typed.Initializer, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6111,9 +6577,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ConstructorInitializerSyntax)node;
 
-            _argumentList?.RunCallback(typed.ArgumentList, semanticModel);
+            if (_argumentList != null)
+                _argumentList.RunCallback(typed.ArgumentList, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6144,10 +6612,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (DestructorDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6188,6 +6659,20 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
             return true;
         }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BasePropertyDeclarationSyntax)node;
+
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_explicitInterfaceSpecifier != null)
+                _explicitInterfaceSpecifier.RunCallback(typed.ExplicitInterfaceSpecifier, semanticModel);
+            if (_accessorList != null)
+                _accessorList.RunCallback(typed.AccessorList, semanticModel);
+        }
     }
 
     public partial class PropertyDeclarationPattern : BasePropertyDeclarationPattern
@@ -6225,12 +6710,17 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (PropertyDeclarationSyntax)node;
 
-            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
-            _initializer?.RunCallback(typed.Initializer, semanticModel);
+            if (_expressionBody != null)
+                _expressionBody.RunCallback(typed.ExpressionBody, semanticModel);
+            if (_initializer != null)
+                _initializer.RunCallback(typed.Initializer, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6262,9 +6752,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ArrowExpressionClauseSyntax)node;
 
-            _expression?.RunCallback(typed.Expression, semanticModel);
+            if (_expression != null)
+                _expression.RunCallback(typed.Expression, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6295,10 +6787,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (EventDeclarationSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6333,12 +6828,17 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (IndexerDeclarationSyntax)node;
 
-            _parameterList?.RunCallback(typed.ParameterList, semanticModel);
-            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+            if (_parameterList != null)
+                _parameterList.RunCallback(typed.ParameterList, semanticModel);
+            if (_expressionBody != null)
+                _expressionBody.RunCallback(typed.ExpressionBody, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6370,9 +6870,11 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AccessorListSyntax)node;
 
-            _accessors?.RunCallback(typed.Accessors, semanticModel);
+            if (_accessors != null)
+                _accessors.RunCallback(typed.Accessors, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6420,11 +6922,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (AccessorDeclarationSyntax)node;
 
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
-            _body?.RunCallback(typed.Body, semanticModel);
-            _expressionBody?.RunCallback(typed.ExpressionBody, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_body != null)
+                _body.RunCallback(typed.Body, semanticModel);
+            if (_expressionBody != null)
+                _expressionBody.RunCallback(typed.ExpressionBody, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6448,6 +6954,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
                 return false;
 
             return true;
+        }
+
+        internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+        {
+            var typed = (BaseParameterListSyntax)node;
+
+            if (_parameters != null)
+                _parameters.RunCallback(typed.Parameters, semanticModel);
         }
     }
 
@@ -6474,10 +6988,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (ParameterListSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6504,10 +7021,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
+            base.RunCallback(node, semanticModel);
+
             var typed = (BracketedParameterListSyntax)node;
 
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6555,11 +7075,15 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (ParameterSyntax)node;
 
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
-            _type?.RunCallback(typed.Type, semanticModel);
-            _default?.RunCallback(typed.Default, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
+            if (_default != null)
+                _default.RunCallback(typed.Default, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6599,10 +7123,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             var typed = (IncompleteMemberSyntax)node;
 
-            _attributeLists?.RunCallback(typed.AttributeLists, semanticModel);
-            _type?.RunCallback(typed.Type, semanticModel);
+            if (_attributeLists != null)
+                _attributeLists.RunCallback(typed.AttributeLists, semanticModel);
+            if (_type != null)
+                _type.RunCallback(typed.Type, semanticModel);
 
-            _action?.Invoke(typed);
+            if (_action != null)
+                _action(typed);
         }
     }
 
@@ -6612,17 +7139,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new IdentifierNamePattern(identifier, action);
         }
-
         public static QualifiedNamePattern QualifiedName(NamePattern left = null, SimpleNamePattern right = null, Action<QualifiedNameSyntax> action = null)
         {
             return new QualifiedNamePattern(left, right, action);
         }
-
         public static GenericNamePattern GenericName(string identifier = null, TypeArgumentListPattern typeArgumentList = null, Action<GenericNameSyntax> action = null)
         {
             return new GenericNamePattern(identifier, typeArgumentList, action);
         }
-
         public static TypeArgumentListPattern TypeArgumentList(IEnumerable<TypePattern> arguments = null, Action<TypeArgumentListSyntax> action = null)
         {
             return new TypeArgumentListPattern(NodeList(arguments), action);
@@ -6632,22 +7156,18 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new TypeArgumentListPattern(NodeList(arguments), null);
         }
-
         public static AliasQualifiedNamePattern AliasQualifiedName(IdentifierNamePattern alias = null, SimpleNamePattern name = null, Action<AliasQualifiedNameSyntax> action = null)
         {
             return new AliasQualifiedNamePattern(alias, name, action);
         }
-
         public static PredefinedTypePattern PredefinedType(string keyword = null, Action<PredefinedTypeSyntax> action = null)
         {
             return new PredefinedTypePattern(keyword, action);
         }
-
         public static ArrayTypePattern ArrayType(TypePattern elementType = null, IEnumerable<ArrayRankSpecifierPattern> rankSpecifiers = null, Action<ArrayTypeSyntax> action = null)
         {
             return new ArrayTypePattern(elementType, NodeList(rankSpecifiers), action);
         }
-
         public static ArrayRankSpecifierPattern ArrayRankSpecifier(IEnumerable<ExpressionPattern> sizes = null, Action<ArrayRankSpecifierSyntax> action = null)
         {
             return new ArrayRankSpecifierPattern(NodeList(sizes), action);
@@ -6657,17 +7177,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new ArrayRankSpecifierPattern(NodeList(sizes), null);
         }
-
         public static PointerTypePattern PointerType(TypePattern elementType = null, Action<PointerTypeSyntax> action = null)
         {
             return new PointerTypePattern(elementType, action);
         }
-
         public static NullableTypePattern NullableType(TypePattern elementType = null, Action<NullableTypeSyntax> action = null)
         {
             return new NullableTypePattern(elementType, action);
         }
-
         public static TupleTypePattern TupleType(IEnumerable<TupleElementPattern> elements = null, Action<TupleTypeSyntax> action = null)
         {
             return new TupleTypePattern(NodeList(elements), action);
@@ -6677,27 +7194,22 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new TupleTypePattern(NodeList(elements), null);
         }
-
         public static TupleElementPattern TupleElement(TypePattern type = null, string identifier = null, Action<TupleElementSyntax> action = null)
         {
             return new TupleElementPattern(type, identifier, action);
         }
-
         public static OmittedTypeArgumentPattern OmittedTypeArgument(Action<OmittedTypeArgumentSyntax> action = null)
         {
             return new OmittedTypeArgumentPattern(action);
         }
-
         public static RefTypePattern RefType(TypePattern type = null, Action<RefTypeSyntax> action = null)
         {
             return new RefTypePattern(type, action);
         }
-
         public static ParenthesizedExpressionPattern ParenthesizedExpression(ExpressionPattern expression = null, Action<ParenthesizedExpressionSyntax> action = null)
         {
             return new ParenthesizedExpressionPattern(expression, action);
         }
-
         public static TupleExpressionPattern TupleExpression(IEnumerable<ArgumentPattern> arguments = null, Action<TupleExpressionSyntax> action = null)
         {
             return new TupleExpressionPattern(NodeList(arguments), action);
@@ -6707,122 +7219,98 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new TupleExpressionPattern(NodeList(arguments), null);
         }
-
         public static PrefixUnaryExpressionPattern PrefixUnaryExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern operand = null, Action<PrefixUnaryExpressionSyntax> action = null)
         {
             return new PrefixUnaryExpressionPattern(kind, operand, action);
         }
-
         public static AwaitExpressionPattern AwaitExpression(ExpressionPattern expression = null, Action<AwaitExpressionSyntax> action = null)
         {
             return new AwaitExpressionPattern(expression, action);
         }
-
         public static PostfixUnaryExpressionPattern PostfixUnaryExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern operand = null, Action<PostfixUnaryExpressionSyntax> action = null)
         {
             return new PostfixUnaryExpressionPattern(kind, operand, action);
         }
-
         public static MemberAccessExpressionPattern MemberAccessExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, SimpleNamePattern name = null, Action<MemberAccessExpressionSyntax> action = null)
         {
             return new MemberAccessExpressionPattern(kind, expression, name, action);
         }
-
         public static ConditionalAccessExpressionPattern ConditionalAccessExpression(ExpressionPattern expression = null, ExpressionPattern whenNotNull = null, Action<ConditionalAccessExpressionSyntax> action = null)
         {
             return new ConditionalAccessExpressionPattern(expression, whenNotNull, action);
         }
-
         public static MemberBindingExpressionPattern MemberBindingExpression(SimpleNamePattern name = null, Action<MemberBindingExpressionSyntax> action = null)
         {
             return new MemberBindingExpressionPattern(name, action);
         }
-
         public static ElementBindingExpressionPattern ElementBindingExpression(BracketedArgumentListPattern argumentList = null, Action<ElementBindingExpressionSyntax> action = null)
         {
             return new ElementBindingExpressionPattern(argumentList, action);
         }
-
         public static ImplicitElementAccessPattern ImplicitElementAccess(BracketedArgumentListPattern argumentList = null, Action<ImplicitElementAccessSyntax> action = null)
         {
             return new ImplicitElementAccessPattern(argumentList, action);
         }
-
         public static BinaryExpressionPattern BinaryExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern left = null, ExpressionPattern right = null, Action<BinaryExpressionSyntax> action = null)
         {
             return new BinaryExpressionPattern(kind, left, right, action);
         }
-
         public static AssignmentExpressionPattern AssignmentExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern left = null, ExpressionPattern right = null, Action<AssignmentExpressionSyntax> action = null)
         {
             return new AssignmentExpressionPattern(kind, left, right, action);
         }
-
         public static ConditionalExpressionPattern ConditionalExpression(ExpressionPattern condition = null, ExpressionPattern whenTrue = null, ExpressionPattern whenFalse = null, Action<ConditionalExpressionSyntax> action = null)
         {
             return new ConditionalExpressionPattern(condition, whenTrue, whenFalse, action);
         }
-
         public static ThisExpressionPattern ThisExpression(Action<ThisExpressionSyntax> action = null)
         {
             return new ThisExpressionPattern(action);
         }
-
         public static BaseExpressionPattern BaseExpression(Action<BaseExpressionSyntax> action = null)
         {
             return new BaseExpressionPattern(action);
         }
-
         public static LiteralExpressionPattern LiteralExpression(SyntaxKind kind = default(SyntaxKind), Action<LiteralExpressionSyntax> action = null)
         {
             return new LiteralExpressionPattern(kind, action);
         }
-
         public static MakeRefExpressionPattern MakeRefExpression(ExpressionPattern expression = null, Action<MakeRefExpressionSyntax> action = null)
         {
             return new MakeRefExpressionPattern(expression, action);
         }
-
         public static RefTypeExpressionPattern RefTypeExpression(ExpressionPattern expression = null, Action<RefTypeExpressionSyntax> action = null)
         {
             return new RefTypeExpressionPattern(expression, action);
         }
-
         public static RefValueExpressionPattern RefValueExpression(ExpressionPattern expression = null, TypePattern type = null, Action<RefValueExpressionSyntax> action = null)
         {
             return new RefValueExpressionPattern(expression, type, action);
         }
-
         public static CheckedExpressionPattern CheckedExpression(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<CheckedExpressionSyntax> action = null)
         {
             return new CheckedExpressionPattern(kind, expression, action);
         }
-
         public static DefaultExpressionPattern DefaultExpression(TypePattern type = null, Action<DefaultExpressionSyntax> action = null)
         {
             return new DefaultExpressionPattern(type, action);
         }
-
         public static TypeOfExpressionPattern TypeOfExpression(TypePattern type = null, Action<TypeOfExpressionSyntax> action = null)
         {
             return new TypeOfExpressionPattern(type, action);
         }
-
         public static SizeOfExpressionPattern SizeOfExpression(TypePattern type = null, Action<SizeOfExpressionSyntax> action = null)
         {
             return new SizeOfExpressionPattern(type, action);
         }
-
         public static InvocationExpressionPattern InvocationExpression(ExpressionPattern expression = null, ArgumentListPattern argumentList = null, Action<InvocationExpressionSyntax> action = null)
         {
             return new InvocationExpressionPattern(expression, argumentList, action);
         }
-
         public static ElementAccessExpressionPattern ElementAccessExpression(ExpressionPattern expression = null, BracketedArgumentListPattern argumentList = null, Action<ElementAccessExpressionSyntax> action = null)
         {
             return new ElementAccessExpressionPattern(expression, argumentList, action);
         }
-
         public static ArgumentListPattern ArgumentList(IEnumerable<ArgumentPattern> arguments = null, Action<ArgumentListSyntax> action = null)
         {
             return new ArgumentListPattern(NodeList(arguments), action);
@@ -6832,7 +7320,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new ArgumentListPattern(NodeList(arguments), null);
         }
-
         public static BracketedArgumentListPattern BracketedArgumentList(IEnumerable<ArgumentPattern> arguments = null, Action<BracketedArgumentListSyntax> action = null)
         {
             return new BracketedArgumentListPattern(NodeList(arguments), action);
@@ -6842,47 +7329,38 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new BracketedArgumentListPattern(NodeList(arguments), null);
         }
-
         public static ArgumentPattern Argument(NameColonPattern nameColon = null, ExpressionPattern expression = null, Action<ArgumentSyntax> action = null)
         {
             return new ArgumentPattern(nameColon, expression, action);
         }
-
         public static NameColonPattern NameColon(IdentifierNamePattern name = null, Action<NameColonSyntax> action = null)
         {
             return new NameColonPattern(name, action);
         }
-
         public static DeclarationExpressionPattern DeclarationExpression(TypePattern type = null, VariableDesignationPattern designation = null, Action<DeclarationExpressionSyntax> action = null)
         {
             return new DeclarationExpressionPattern(type, designation, action);
         }
-
         public static CastExpressionPattern CastExpression(TypePattern type = null, ExpressionPattern expression = null, Action<CastExpressionSyntax> action = null)
         {
             return new CastExpressionPattern(type, expression, action);
         }
-
         public static AnonymousMethodExpressionPattern AnonymousMethodExpression(PatternNode body = null, ParameterListPattern parameterList = null, Action<AnonymousMethodExpressionSyntax> action = null)
         {
             return new AnonymousMethodExpressionPattern(body, parameterList, action);
         }
-
         public static SimpleLambdaExpressionPattern SimpleLambdaExpression(PatternNode body = null, ParameterPattern parameter = null, Action<SimpleLambdaExpressionSyntax> action = null)
         {
             return new SimpleLambdaExpressionPattern(body, parameter, action);
         }
-
         public static RefExpressionPattern RefExpression(ExpressionPattern expression = null, Action<RefExpressionSyntax> action = null)
         {
             return new RefExpressionPattern(expression, action);
         }
-
         public static ParenthesizedLambdaExpressionPattern ParenthesizedLambdaExpression(PatternNode body = null, ParameterListPattern parameterList = null, Action<ParenthesizedLambdaExpressionSyntax> action = null)
         {
             return new ParenthesizedLambdaExpressionPattern(body, parameterList, action);
         }
-
         public static InitializerExpressionPattern InitializerExpression(SyntaxKind kind = default(SyntaxKind), IEnumerable<ExpressionPattern> expressions = null, Action<InitializerExpressionSyntax> action = null)
         {
             return new InitializerExpressionPattern(kind, NodeList(expressions), action);
@@ -6892,17 +7370,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new InitializerExpressionPattern(kind, NodeList(expressions), null);
         }
-
         public static ObjectCreationExpressionPattern ObjectCreationExpression(TypePattern type = null, ArgumentListPattern argumentList = null, InitializerExpressionPattern initializer = null, Action<ObjectCreationExpressionSyntax> action = null)
         {
             return new ObjectCreationExpressionPattern(type, argumentList, initializer, action);
         }
-
         public static AnonymousObjectMemberDeclaratorPattern AnonymousObjectMemberDeclarator(NameEqualsPattern nameEquals = null, ExpressionPattern expression = null, Action<AnonymousObjectMemberDeclaratorSyntax> action = null)
         {
             return new AnonymousObjectMemberDeclaratorPattern(nameEquals, expression, action);
         }
-
         public static AnonymousObjectCreationExpressionPattern AnonymousObjectCreationExpression(IEnumerable<AnonymousObjectMemberDeclaratorPattern> initializers = null, Action<AnonymousObjectCreationExpressionSyntax> action = null)
         {
             return new AnonymousObjectCreationExpressionPattern(NodeList(initializers), action);
@@ -6912,57 +7387,46 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new AnonymousObjectCreationExpressionPattern(NodeList(initializers), null);
         }
-
         public static ArrayCreationExpressionPattern ArrayCreationExpression(ArrayTypePattern type = null, InitializerExpressionPattern initializer = null, Action<ArrayCreationExpressionSyntax> action = null)
         {
             return new ArrayCreationExpressionPattern(type, initializer, action);
         }
-
         public static ImplicitArrayCreationExpressionPattern ImplicitArrayCreationExpression(InitializerExpressionPattern initializer = null, Action<ImplicitArrayCreationExpressionSyntax> action = null)
         {
             return new ImplicitArrayCreationExpressionPattern(initializer, action);
         }
-
         public static StackAllocArrayCreationExpressionPattern StackAllocArrayCreationExpression(TypePattern type = null, Action<StackAllocArrayCreationExpressionSyntax> action = null)
         {
             return new StackAllocArrayCreationExpressionPattern(type, action);
         }
-
         public static QueryExpressionPattern QueryExpression(FromClausePattern fromClause = null, QueryBodyPattern body = null, Action<QueryExpressionSyntax> action = null)
         {
             return new QueryExpressionPattern(fromClause, body, action);
         }
-
         public static QueryBodyPattern QueryBody(IEnumerable<QueryClausePattern> clauses = null, SelectOrGroupClausePattern selectOrGroup = null, QueryContinuationPattern continuation = null, Action<QueryBodySyntax> action = null)
         {
             return new QueryBodyPattern(NodeList(clauses), selectOrGroup, continuation, action);
         }
-
         public static FromClausePattern FromClause(TypePattern type = null, string identifier = null, ExpressionPattern expression = null, Action<FromClauseSyntax> action = null)
         {
             return new FromClausePattern(type, identifier, expression, action);
         }
-
         public static LetClausePattern LetClause(string identifier = null, ExpressionPattern expression = null, Action<LetClauseSyntax> action = null)
         {
             return new LetClausePattern(identifier, expression, action);
         }
-
         public static JoinClausePattern JoinClause(TypePattern type = null, string identifier = null, ExpressionPattern inExpression = null, ExpressionPattern leftExpression = null, ExpressionPattern rightExpression = null, JoinIntoClausePattern into = null, Action<JoinClauseSyntax> action = null)
         {
             return new JoinClausePattern(type, identifier, inExpression, leftExpression, rightExpression, into, action);
         }
-
         public static JoinIntoClausePattern JoinIntoClause(string identifier = null, Action<JoinIntoClauseSyntax> action = null)
         {
             return new JoinIntoClausePattern(identifier, action);
         }
-
         public static WhereClausePattern WhereClause(ExpressionPattern condition = null, Action<WhereClauseSyntax> action = null)
         {
             return new WhereClausePattern(condition, action);
         }
-
         public static OrderByClausePattern OrderByClause(IEnumerable<OrderingPattern> orderings = null, Action<OrderByClauseSyntax> action = null)
         {
             return new OrderByClausePattern(NodeList(orderings), action);
@@ -6972,32 +7436,26 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new OrderByClausePattern(NodeList(orderings), null);
         }
-
         public static OrderingPattern Ordering(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<OrderingSyntax> action = null)
         {
             return new OrderingPattern(kind, expression, action);
         }
-
         public static SelectClausePattern SelectClause(ExpressionPattern expression = null, Action<SelectClauseSyntax> action = null)
         {
             return new SelectClausePattern(expression, action);
         }
-
         public static GroupClausePattern GroupClause(ExpressionPattern groupExpression = null, ExpressionPattern byExpression = null, Action<GroupClauseSyntax> action = null)
         {
             return new GroupClausePattern(groupExpression, byExpression, action);
         }
-
         public static QueryContinuationPattern QueryContinuation(string identifier = null, QueryBodyPattern body = null, Action<QueryContinuationSyntax> action = null)
         {
             return new QueryContinuationPattern(identifier, body, action);
         }
-
         public static OmittedArraySizeExpressionPattern OmittedArraySizeExpression(Action<OmittedArraySizeExpressionSyntax> action = null)
         {
             return new OmittedArraySizeExpressionPattern(action);
         }
-
         public static InterpolatedStringExpressionPattern InterpolatedStringExpression(IEnumerable<InterpolatedStringContentPattern> contents = null, Action<InterpolatedStringExpressionSyntax> action = null)
         {
             return new InterpolatedStringExpressionPattern(NodeList(contents), action);
@@ -7007,57 +7465,46 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new InterpolatedStringExpressionPattern(NodeList(contents), null);
         }
-
         public static IsPatternExpressionPattern IsPatternExpression(ExpressionPattern expression = null, PatternPattern pattern = null, Action<IsPatternExpressionSyntax> action = null)
         {
             return new IsPatternExpressionPattern(expression, pattern, action);
         }
-
         public static ThrowExpressionPattern ThrowExpression(ExpressionPattern expression = null, Action<ThrowExpressionSyntax> action = null)
         {
             return new ThrowExpressionPattern(expression, action);
         }
-
         public static WhenClausePattern WhenClause(ExpressionPattern condition = null, Action<WhenClauseSyntax> action = null)
         {
             return new WhenClausePattern(condition, action);
         }
-
         public static DeclarationPatternPattern DeclarationPattern(TypePattern type = null, VariableDesignationPattern designation = null, Action<DeclarationPatternSyntax> action = null)
         {
             return new DeclarationPatternPattern(type, designation, action);
         }
-
         public static ConstantPatternPattern ConstantPattern(ExpressionPattern expression = null, Action<ConstantPatternSyntax> action = null)
         {
             return new ConstantPatternPattern(expression, action);
         }
-
         public static InterpolatedStringTextPattern InterpolatedStringText(Action<InterpolatedStringTextSyntax> action = null)
         {
             return new InterpolatedStringTextPattern(action);
         }
-
         public static InterpolationPattern Interpolation(ExpressionPattern expression = null, InterpolationAlignmentClausePattern alignmentClause = null, InterpolationFormatClausePattern formatClause = null, Action<InterpolationSyntax> action = null)
         {
             return new InterpolationPattern(expression, alignmentClause, formatClause, action);
         }
-
         public static InterpolationAlignmentClausePattern InterpolationAlignmentClause(ExpressionPattern value = null, Action<InterpolationAlignmentClauseSyntax> action = null)
         {
             return new InterpolationAlignmentClausePattern(value, action);
         }
-
         public static InterpolationFormatClausePattern InterpolationFormatClause(Action<InterpolationFormatClauseSyntax> action = null)
         {
             return new InterpolationFormatClausePattern(action);
         }
-
         public static GlobalStatementPattern GlobalStatement(StatementPattern statement = null, Action<GlobalStatementSyntax> action = null)
         {
             return new GlobalStatementPattern(statement, action);
         }
-
         public static BlockPattern Block(IEnumerable<StatementPattern> statements = null, Action<BlockSyntax> action = null)
         {
             return new BlockPattern(NodeList(statements), action);
@@ -7067,17 +7514,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new BlockPattern(NodeList(statements), null);
         }
-
         public static LocalFunctionStatementPattern LocalFunctionStatement(IEnumerable<string> modifiers = null, TypePattern returnType = null, string identifier = null, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<LocalFunctionStatementSyntax> action = null)
         {
             return new LocalFunctionStatementPattern(TokenList(modifiers), returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), body, expressionBody, action);
         }
-
         public static LocalDeclarationStatementPattern LocalDeclarationStatement(IEnumerable<string> modifiers = null, VariableDeclarationPattern declaration = null, Action<LocalDeclarationStatementSyntax> action = null)
         {
             return new LocalDeclarationStatementPattern(TokenList(modifiers), declaration, action);
         }
-
         public static VariableDeclarationPattern VariableDeclaration(TypePattern type = null, IEnumerable<VariableDeclaratorPattern> variables = null, Action<VariableDeclarationSyntax> action = null)
         {
             return new VariableDeclarationPattern(type, NodeList(variables), action);
@@ -7087,27 +7531,22 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new VariableDeclarationPattern(null, NodeList(variables), null);
         }
-
         public static VariableDeclaratorPattern VariableDeclarator(string identifier = null, BracketedArgumentListPattern argumentList = null, EqualsValueClausePattern initializer = null, Action<VariableDeclaratorSyntax> action = null)
         {
             return new VariableDeclaratorPattern(identifier, argumentList, initializer, action);
         }
-
         public static EqualsValueClausePattern EqualsValueClause(ExpressionPattern value = null, Action<EqualsValueClauseSyntax> action = null)
         {
             return new EqualsValueClausePattern(value, action);
         }
-
         public static SingleVariableDesignationPattern SingleVariableDesignation(string identifier = null, Action<SingleVariableDesignationSyntax> action = null)
         {
             return new SingleVariableDesignationPattern(identifier, action);
         }
-
         public static DiscardDesignationPattern DiscardDesignation(Action<DiscardDesignationSyntax> action = null)
         {
             return new DiscardDesignationPattern(action);
         }
-
         public static ParenthesizedVariableDesignationPattern ParenthesizedVariableDesignation(IEnumerable<VariableDesignationPattern> variables = null, Action<ParenthesizedVariableDesignationSyntax> action = null)
         {
             return new ParenthesizedVariableDesignationPattern(NodeList(variables), action);
@@ -7117,112 +7556,90 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new ParenthesizedVariableDesignationPattern(NodeList(variables), null);
         }
-
         public static ExpressionStatementPattern ExpressionStatement(ExpressionPattern expression = null, Action<ExpressionStatementSyntax> action = null)
         {
             return new ExpressionStatementPattern(expression, action);
         }
-
         public static EmptyStatementPattern EmptyStatement(Action<EmptyStatementSyntax> action = null)
         {
             return new EmptyStatementPattern(action);
         }
-
         public static LabeledStatementPattern LabeledStatement(string identifier = null, StatementPattern statement = null, Action<LabeledStatementSyntax> action = null)
         {
             return new LabeledStatementPattern(identifier, statement, action);
         }
-
         public static GotoStatementPattern GotoStatement(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<GotoStatementSyntax> action = null)
         {
             return new GotoStatementPattern(kind, expression, action);
         }
-
         public static BreakStatementPattern BreakStatement(Action<BreakStatementSyntax> action = null)
         {
             return new BreakStatementPattern(action);
         }
-
         public static ContinueStatementPattern ContinueStatement(Action<ContinueStatementSyntax> action = null)
         {
             return new ContinueStatementPattern(action);
         }
-
         public static ReturnStatementPattern ReturnStatement(ExpressionPattern expression = null, Action<ReturnStatementSyntax> action = null)
         {
             return new ReturnStatementPattern(expression, action);
         }
-
         public static ThrowStatementPattern ThrowStatement(ExpressionPattern expression = null, Action<ThrowStatementSyntax> action = null)
         {
             return new ThrowStatementPattern(expression, action);
         }
-
         public static YieldStatementPattern YieldStatement(SyntaxKind kind = default(SyntaxKind), ExpressionPattern expression = null, Action<YieldStatementSyntax> action = null)
         {
             return new YieldStatementPattern(kind, expression, action);
         }
-
         public static WhileStatementPattern WhileStatement(ExpressionPattern condition = null, StatementPattern statement = null, Action<WhileStatementSyntax> action = null)
         {
             return new WhileStatementPattern(condition, statement, action);
         }
-
         public static DoStatementPattern DoStatement(StatementPattern statement = null, ExpressionPattern condition = null, Action<DoStatementSyntax> action = null)
         {
             return new DoStatementPattern(statement, condition, action);
         }
-
         public static ForStatementPattern ForStatement(VariableDeclarationPattern declaration = null, IEnumerable<ExpressionPattern> initializers = null, ExpressionPattern condition = null, IEnumerable<ExpressionPattern> incrementors = null, StatementPattern statement = null, Action<ForStatementSyntax> action = null)
         {
             return new ForStatementPattern(declaration, NodeList(initializers), condition, NodeList(incrementors), statement, action);
         }
-
         public static ForEachStatementPattern ForEachStatement(ExpressionPattern expression = null, StatementPattern statement = null, TypePattern type = null, string identifier = null, Action<ForEachStatementSyntax> action = null)
         {
             return new ForEachStatementPattern(expression, statement, type, identifier, action);
         }
-
         public static ForEachVariableStatementPattern ForEachVariableStatement(ExpressionPattern expression = null, StatementPattern statement = null, ExpressionPattern variable = null, Action<ForEachVariableStatementSyntax> action = null)
         {
             return new ForEachVariableStatementPattern(expression, statement, variable, action);
         }
-
         public static UsingStatementPattern UsingStatement(VariableDeclarationPattern declaration = null, ExpressionPattern expression = null, StatementPattern statement = null, Action<UsingStatementSyntax> action = null)
         {
             return new UsingStatementPattern(declaration, expression, statement, action);
         }
-
         public static FixedStatementPattern FixedStatement(VariableDeclarationPattern declaration = null, StatementPattern statement = null, Action<FixedStatementSyntax> action = null)
         {
             return new FixedStatementPattern(declaration, statement, action);
         }
-
         public static CheckedStatementPattern CheckedStatement(SyntaxKind kind = default(SyntaxKind), BlockPattern block = null, Action<CheckedStatementSyntax> action = null)
         {
             return new CheckedStatementPattern(kind, block, action);
         }
-
         public static UnsafeStatementPattern UnsafeStatement(BlockPattern block = null, Action<UnsafeStatementSyntax> action = null)
         {
             return new UnsafeStatementPattern(block, action);
         }
-
         public static LockStatementPattern LockStatement(ExpressionPattern expression = null, StatementPattern statement = null, Action<LockStatementSyntax> action = null)
         {
             return new LockStatementPattern(expression, statement, action);
         }
-
         public static IfStatementPattern IfStatement(ExpressionPattern condition = null, StatementPattern statement = null, ElseClausePattern @else = null, Action<IfStatementSyntax> action = null)
         {
             return new IfStatementPattern(condition, statement, @else, action);
         }
-
         public static ElseClausePattern ElseClause(StatementPattern statement = null, Action<ElseClauseSyntax> action = null)
         {
             return new ElseClausePattern(statement, action);
         }
-
         public static SwitchStatementPattern SwitchStatement(ExpressionPattern expression = null, IEnumerable<SwitchSectionPattern> sections = null, Action<SwitchStatementSyntax> action = null)
         {
             return new SwitchStatementPattern(expression, NodeList(sections), action);
@@ -7232,72 +7649,58 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new SwitchStatementPattern(null, NodeList(sections), null);
         }
-
         public static SwitchSectionPattern SwitchSection(IEnumerable<SwitchLabelPattern> labels = null, IEnumerable<StatementPattern> statements = null, Action<SwitchSectionSyntax> action = null)
         {
             return new SwitchSectionPattern(NodeList(labels), NodeList(statements), action);
         }
-
         public static CasePatternSwitchLabelPattern CasePatternSwitchLabel(PatternPattern pattern = null, WhenClausePattern whenClause = null, Action<CasePatternSwitchLabelSyntax> action = null)
         {
             return new CasePatternSwitchLabelPattern(pattern, whenClause, action);
         }
-
         public static CaseSwitchLabelPattern CaseSwitchLabel(ExpressionPattern value = null, Action<CaseSwitchLabelSyntax> action = null)
         {
             return new CaseSwitchLabelPattern(value, action);
         }
-
         public static DefaultSwitchLabelPattern DefaultSwitchLabel(Action<DefaultSwitchLabelSyntax> action = null)
         {
             return new DefaultSwitchLabelPattern(action);
         }
-
         public static TryStatementPattern TryStatement(BlockPattern block = null, IEnumerable<CatchClausePattern> catches = null, FinallyClausePattern @finally = null, Action<TryStatementSyntax> action = null)
         {
             return new TryStatementPattern(block, NodeList(catches), @finally, action);
         }
-
         public static CatchClausePattern CatchClause(CatchDeclarationPattern declaration = null, CatchFilterClausePattern filter = null, BlockPattern block = null, Action<CatchClauseSyntax> action = null)
         {
             return new CatchClausePattern(declaration, filter, block, action);
         }
-
         public static CatchDeclarationPattern CatchDeclaration(TypePattern type = null, string identifier = null, Action<CatchDeclarationSyntax> action = null)
         {
             return new CatchDeclarationPattern(type, identifier, action);
         }
-
         public static CatchFilterClausePattern CatchFilterClause(ExpressionPattern filterExpression = null, Action<CatchFilterClauseSyntax> action = null)
         {
             return new CatchFilterClausePattern(filterExpression, action);
         }
-
         public static FinallyClausePattern FinallyClause(BlockPattern block = null, Action<FinallyClauseSyntax> action = null)
         {
             return new FinallyClausePattern(block, action);
         }
-
         public static CompilationUnitPattern CompilationUnit(IEnumerable<ExternAliasDirectivePattern> externs = null, IEnumerable<UsingDirectivePattern> usings = null, IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<MemberDeclarationPattern> members = null, Action<CompilationUnitSyntax> action = null)
         {
             return new CompilationUnitPattern(NodeList(externs), NodeList(usings), NodeList(attributeLists), NodeList(members), action);
         }
-
         public static ExternAliasDirectivePattern ExternAliasDirective(string identifier = null, Action<ExternAliasDirectiveSyntax> action = null)
         {
             return new ExternAliasDirectivePattern(identifier, action);
         }
-
         public static UsingDirectivePattern UsingDirective(NameEqualsPattern alias = null, NamePattern name = null, Action<UsingDirectiveSyntax> action = null)
         {
             return new UsingDirectivePattern(alias, name, action);
         }
-
         public static NamespaceDeclarationPattern NamespaceDeclaration(NamePattern name = null, IEnumerable<ExternAliasDirectivePattern> externs = null, IEnumerable<UsingDirectivePattern> usings = null, IEnumerable<MemberDeclarationPattern> members = null, Action<NamespaceDeclarationSyntax> action = null)
         {
             return new NamespaceDeclarationPattern(name, NodeList(externs), NodeList(usings), NodeList(members), action);
         }
-
         public static AttributeListPattern AttributeList(AttributeTargetSpecifierPattern target = null, IEnumerable<AttributePattern> attributes = null, Action<AttributeListSyntax> action = null)
         {
             return new AttributeListPattern(target, NodeList(attributes), action);
@@ -7307,17 +7710,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new AttributeListPattern(null, NodeList(attributes), null);
         }
-
         public static AttributeTargetSpecifierPattern AttributeTargetSpecifier(string identifier = null, Action<AttributeTargetSpecifierSyntax> action = null)
         {
             return new AttributeTargetSpecifierPattern(identifier, action);
         }
-
         public static AttributePattern Attribute(NamePattern name = null, AttributeArgumentListPattern argumentList = null, Action<AttributeSyntax> action = null)
         {
             return new AttributePattern(name, argumentList, action);
         }
-
         public static AttributeArgumentListPattern AttributeArgumentList(IEnumerable<AttributeArgumentPattern> arguments = null, Action<AttributeArgumentListSyntax> action = null)
         {
             return new AttributeArgumentListPattern(NodeList(arguments), action);
@@ -7327,17 +7727,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new AttributeArgumentListPattern(NodeList(arguments), null);
         }
-
         public static AttributeArgumentPattern AttributeArgument(NameEqualsPattern nameEquals = null, NameColonPattern nameColon = null, ExpressionPattern expression = null, Action<AttributeArgumentSyntax> action = null)
         {
             return new AttributeArgumentPattern(nameEquals, nameColon, expression, action);
         }
-
         public static NameEqualsPattern NameEquals(IdentifierNamePattern name = null, Action<NameEqualsSyntax> action = null)
         {
             return new NameEqualsPattern(name, action);
         }
-
         public static TypeParameterListPattern TypeParameterList(IEnumerable<TypeParameterPattern> parameters = null, Action<TypeParameterListSyntax> action = null)
         {
             return new TypeParameterListPattern(NodeList(parameters), action);
@@ -7347,12 +7744,10 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new TypeParameterListPattern(NodeList(parameters), null);
         }
-
         public static TypeParameterPattern TypeParameter(IEnumerable<AttributeListPattern> attributeLists = null, string identifier = null, Action<TypeParameterSyntax> action = null)
         {
             return new TypeParameterPattern(NodeList(attributeLists), identifier, action);
         }
-
         public static ClassDeclarationPattern ClassDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<ClassDeclarationSyntax> action = null)
         {
             return new ClassDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
@@ -7362,7 +7757,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new ClassDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
         }
-
         public static StructDeclarationPattern StructDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<StructDeclarationSyntax> action = null)
         {
             return new StructDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
@@ -7372,7 +7766,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new StructDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
         }
-
         public static InterfaceDeclarationPattern InterfaceDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, IEnumerable<MemberDeclarationPattern> members = null, Action<InterfaceDeclarationSyntax> action = null)
         {
             return new InterfaceDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, typeParameterList, NodeList(constraintClauses), NodeList(members), action);
@@ -7382,7 +7775,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new InterfaceDeclarationPattern(null, null, null, null, null, null, NodeList(members), null);
         }
-
         public static EnumDeclarationPattern EnumDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, string identifier = null, BaseListPattern baseList = null, IEnumerable<EnumMemberDeclarationPattern> members = null, Action<EnumDeclarationSyntax> action = null)
         {
             return new EnumDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), identifier, baseList, NodeList(members), action);
@@ -7392,17 +7784,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new EnumDeclarationPattern(null, null, null, null, NodeList(members), null);
         }
-
         public static DelegateDeclarationPattern DelegateDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern returnType = null, string identifier = null, TypeParameterListPattern typeParameterList = null, ParameterListPattern parameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<DelegateDeclarationSyntax> action = null)
         {
             return new DelegateDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), returnType, identifier, typeParameterList, parameterList, NodeList(constraintClauses), action);
         }
-
         public static EnumMemberDeclarationPattern EnumMemberDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, string identifier = null, EqualsValueClausePattern equalsValue = null, Action<EnumMemberDeclarationSyntax> action = null)
         {
             return new EnumMemberDeclarationPattern(NodeList(attributeLists), identifier, equalsValue, action);
         }
-
         public static BaseListPattern BaseList(IEnumerable<BaseTypePattern> types = null, Action<BaseListSyntax> action = null)
         {
             return new BaseListPattern(NodeList(types), action);
@@ -7412,97 +7801,78 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new BaseListPattern(NodeList(types), null);
         }
-
         public static SimpleBaseTypePattern SimpleBaseType(TypePattern type = null, Action<SimpleBaseTypeSyntax> action = null)
         {
             return new SimpleBaseTypePattern(type, action);
         }
-
         public static TypeParameterConstraintClausePattern TypeParameterConstraintClause(IdentifierNamePattern name = null, IEnumerable<TypeParameterConstraintPattern> constraints = null, Action<TypeParameterConstraintClauseSyntax> action = null)
         {
             return new TypeParameterConstraintClausePattern(name, NodeList(constraints), action);
         }
-
         public static ConstructorConstraintPattern ConstructorConstraint(Action<ConstructorConstraintSyntax> action = null)
         {
             return new ConstructorConstraintPattern(action);
         }
-
         public static ClassOrStructConstraintPattern ClassOrStructConstraint(SyntaxKind kind = default(SyntaxKind), Action<ClassOrStructConstraintSyntax> action = null)
         {
             return new ClassOrStructConstraintPattern(kind, action);
         }
-
         public static TypeConstraintPattern TypeConstraint(TypePattern type = null, Action<TypeConstraintSyntax> action = null)
         {
             return new TypeConstraintPattern(type, action);
         }
-
         public static FieldDeclarationPattern FieldDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, VariableDeclarationPattern declaration = null, Action<FieldDeclarationSyntax> action = null)
         {
             return new FieldDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), declaration, action);
         }
-
         public static EventFieldDeclarationPattern EventFieldDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, VariableDeclarationPattern declaration = null, Action<EventFieldDeclarationSyntax> action = null)
         {
             return new EventFieldDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), declaration, action);
         }
-
         public static ExplicitInterfaceSpecifierPattern ExplicitInterfaceSpecifier(NamePattern name = null, Action<ExplicitInterfaceSpecifierSyntax> action = null)
         {
             return new ExplicitInterfaceSpecifierPattern(name, action);
         }
-
         public static MethodDeclarationPattern MethodDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, string identifier = null, TypeParameterListPattern typeParameterList = null, IEnumerable<TypeParameterConstraintClausePattern> constraintClauses = null, Action<MethodDeclarationSyntax> action = null)
         {
             return new MethodDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, returnType, explicitInterfaceSpecifier, identifier, typeParameterList, NodeList(constraintClauses), action);
         }
-
         public static OperatorDeclarationPattern OperatorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern returnType = null, Action<OperatorDeclarationSyntax> action = null)
         {
             return new OperatorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, returnType, action);
         }
-
         public static ConversionOperatorDeclarationPattern ConversionOperatorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, TypePattern type = null, Action<ConversionOperatorDeclarationSyntax> action = null)
         {
             return new ConversionOperatorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, type, action);
         }
-
         public static ConstructorDeclarationPattern ConstructorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, ConstructorInitializerPattern initializer = null, Action<ConstructorDeclarationSyntax> action = null)
         {
             return new ConstructorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, identifier, initializer, action);
         }
-
         public static ConstructorInitializerPattern ConstructorInitializer(SyntaxKind kind = default(SyntaxKind), ArgumentListPattern argumentList = null, Action<ConstructorInitializerSyntax> action = null)
         {
             return new ConstructorInitializerPattern(kind, argumentList, action);
         }
-
         public static DestructorDeclarationPattern DestructorDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, ParameterListPattern parameterList = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, string identifier = null, Action<DestructorDeclarationSyntax> action = null)
         {
             return new DestructorDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), parameterList, body, expressionBody, identifier, action);
         }
-
         public static PropertyDeclarationPattern PropertyDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, ArrowExpressionClausePattern expressionBody = null, EqualsValueClausePattern initializer = null, Action<PropertyDeclarationSyntax> action = null)
         {
             return new PropertyDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, expressionBody, initializer, action);
         }
-
         public static ArrowExpressionClausePattern ArrowExpressionClause(ExpressionPattern expression = null, Action<ArrowExpressionClauseSyntax> action = null)
         {
             return new ArrowExpressionClausePattern(expression, action);
         }
-
         public static EventDeclarationPattern EventDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, string identifier = null, Action<EventDeclarationSyntax> action = null)
         {
             return new EventDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, identifier, action);
         }
-
         public static IndexerDeclarationPattern IndexerDeclaration(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, ExplicitInterfaceSpecifierPattern explicitInterfaceSpecifier = null, AccessorListPattern accessorList = null, BracketedParameterListPattern parameterList = null, ArrowExpressionClausePattern expressionBody = null, Action<IndexerDeclarationSyntax> action = null)
         {
             return new IndexerDeclarationPattern(NodeList(attributeLists), TokenList(modifiers), type, explicitInterfaceSpecifier, accessorList, parameterList, expressionBody, action);
         }
-
         public static AccessorListPattern AccessorList(IEnumerable<AccessorDeclarationPattern> accessors = null, Action<AccessorListSyntax> action = null)
         {
             return new AccessorListPattern(NodeList(accessors), action);
@@ -7512,12 +7882,10 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new AccessorListPattern(NodeList(accessors), null);
         }
-
         public static AccessorDeclarationPattern AccessorDeclaration(SyntaxKind kind = default(SyntaxKind), IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, BlockPattern body = null, ArrowExpressionClausePattern expressionBody = null, Action<AccessorDeclarationSyntax> action = null)
         {
             return new AccessorDeclarationPattern(kind, NodeList(attributeLists), TokenList(modifiers), body, expressionBody, action);
         }
-
         public static ParameterListPattern ParameterList(IEnumerable<ParameterPattern> parameters = null, Action<ParameterListSyntax> action = null)
         {
             return new ParameterListPattern(NodeList(parameters), action);
@@ -7527,7 +7895,6 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new ParameterListPattern(NodeList(parameters), null);
         }
-
         public static BracketedParameterListPattern BracketedParameterList(IEnumerable<ParameterPattern> parameters = null, Action<BracketedParameterListSyntax> action = null)
         {
             return new BracketedParameterListPattern(NodeList(parameters), action);
@@ -7537,16 +7904,13 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
         {
             return new BracketedParameterListPattern(NodeList(parameters), null);
         }
-
         public static ParameterPattern Parameter(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, string identifier = null, EqualsValueClausePattern @default = null, Action<ParameterSyntax> action = null)
         {
             return new ParameterPattern(NodeList(attributeLists), TokenList(modifiers), type, identifier, @default, action);
         }
-
         public static IncompleteMemberPattern IncompleteMember(IEnumerable<AttributeListPattern> attributeLists = null, IEnumerable<string> modifiers = null, TypePattern type = null, Action<IncompleteMemberSyntax> action = null)
         {
             return new IncompleteMemberPattern(NodeList(attributeLists), TokenList(modifiers), type, action);
         }
-
     }
 }

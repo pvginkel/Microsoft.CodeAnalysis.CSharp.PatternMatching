@@ -26,4 +26,27 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action?.Invoke();
         }
     }
+
+    public class NullExpressionPattern<TResult> : ExpressionPattern<TResult>
+    {
+        private readonly Func<TResult, TResult> _action;
+
+        internal NullExpressionPattern(Func<TResult, TResult> action)
+        {
+            _action = action;
+        }
+
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
+        {
+            return node == null;
+        }
+
+        internal override TResult RunCallback(TResult result, SyntaxNode node, SemanticModel semanticModel)
+        {
+            if (_action != null)
+                result = _action(result);
+
+            return result;
+        }
+    }
 }

@@ -40,4 +40,41 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             _action?.Invoke((ExpressionSyntax)node);
         }
     }
+
+    public class SymbolPattern<TResult> : ExpressionPattern<TResult>
+    {
+        private readonly ISymbol _symbol;
+        private readonly Func<TResult, ExpressionSyntax, TResult> _action;
+
+        public SymbolPattern(ISymbol symbol, Func<TResult, ExpressionSyntax, TResult> action)
+        {
+            _symbol = symbol;
+            _action = action;
+        }
+
+        internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
+        {
+            if (semanticModel == null)
+                throw new ArgumentNullException(nameof(semanticModel));
+
+            if (!(node is ExpressionSyntax typed))
+                return false;
+
+            if (!semanticModel.TryGetSymbol(typed, out var nodeSymbol))
+                return false;
+
+            return _symbol == null || _symbol.Equals(nodeSymbol);
+        }
+
+        internal override TResult RunCallback(TResult result, SyntaxNode node, SemanticModel semanticModel)
+        {
+            if (semanticModel == null)
+                throw new ArgumentNullException(nameof(semanticModel));
+
+            if (_action != null)
+                result = _action(result, (ExpressionSyntax)node);
+
+            return result;
+        }
+    }
 }

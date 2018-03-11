@@ -90,16 +90,22 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 {
-<# foreach (var type in types) { #>
-    public <#= type.Abstract ? "abstract " : "" #>partial class <#= GetPatternName(type.Name) #> : <#= GetPatternName(type.BaseType) #>
+<# for (int phase = 0; phase < 2; phase++) {
+    bool typed = phase == 0;
+    string genericType = typed ? "<TResult>" : null;
+#>
+<# foreach (var type in types) {
+    string actionType = !typed ? "Action<" + type.Name + ">" : "Func<TResult, " + type.Name + ", TResult>";
+#>
+    public <#= type.Abstract ? "abstract " : "" #>partial class <#= GetPatternName(type.Name, genericType) #> : <#= GetPatternName(type.BaseType, genericType) #>
     {
 <# foreach (var field in type.Fields) {
     if (field.Override) continue;
 #>
-        private readonly <#= GetPatternName(field.Type) #> <#= GetFieldName(field.Name) #>;
+        private readonly <#= GetPatternName(field.Type, genericType) #> <#= GetFieldName(field.Name) #>;
 <# } #>
 <# if (!type.Abstract) { #>
-        private readonly Action<<#= type.Name #>> _action;
+        private readonly <#= actionType #> _action;
 <# } #>
 <#
 
@@ -108,20 +114,20 @@ var baseFields = GetAllFields(types, type.BaseType);
 
 #>
 
-        internal <#= GetPatternName(type.Name) #>(<#
+        internal <#= GetPatternName(type.Name, null) #>(<#
    for (int i = 0; i < thisFields.Count; i++)
    {
        if (i > 0) {
            #>, <#
        }
-       #><#= GetPatternName(thisFields[i].Type) #> <#= GetLocalName(thisFields[i].Name) #><#
+       #><#= GetPatternName(thisFields[i].Type, genericType) #> <#= GetLocalName(thisFields[i].Name) #><#
    }
    if (!type.Abstract)
    {
        if (thisFields.Count > 0) {
            #>, <#
        }
-       #>Action<<#= type.Name #>> action<#
+       #><#= actionType #> action<#
    }
    #>)
 <# if (baseFields.Count > 0) { #>
@@ -155,7 +161,7 @@ var baseFields = GetAllFields(types, type.BaseType);
 <# if (field.Name == "Kind") { #>
             if (_kind != SyntaxKind.None && !typed.IsKind(_kind))
                 return false;
-<# } else if (GetPatternName(field.Type) == "string") { #>
+<# } else if (GetPatternName(field.Type, null) == "string") { #>
             if (<#= GetFieldName(field.Name) #> != null && <#= GetFieldName(field.Name) #> != typed.<#= field.Name #>.Text)
                 return false;
 <# } else { #>
@@ -166,54 +172,85 @@ var baseFields = GetAllFields(types, type.BaseType);
 
             return true;
         }
-<# if (!type.Abstract) { #>
+<# if (HasRunCallback(types, type.Name)) { #>
 
+<# if (typed) { #>
+        internal override TResult RunCallback(TResult result, SyntaxNode node, SemanticModel semanticModel)
+<# } else { #>
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
+<# } #>
         {
+<# if (HasRunCallback(types, type.BaseType)) { #>
+<# if (typed) { #>
+            result = base.RunCallback(result, node, semanticModel);
+<# } else { #>
+            base.RunCallback(node, semanticModel);
+<# } #>
+
+<# } #>
             var typed = (<#= type.Name #>)node;
 
-<# foreach (var field in type.Fields.Where(p => !p.Override)) { #>
-<# if (field.Name != "Kind" && GetPatternName(field.Type) != "string" && GetPatternName(field.Type) != "TokenListPattern") { #>
-            <#= GetFieldName(field.Name) #>?.RunCallback(typed.<#= field.Name #>, semanticModel);
+<# foreach (var field in type.Fields.Where(p => CanRunCallback(p))) { #>
+            if (<#= GetFieldName(field.Name) #> != null)
+<# if (typed) { #>
+                result = <#= GetFieldName(field.Name) #>.RunCallback(result, typed.<#= field.Name #>, semanticModel);
+<# } else { #>
+                <#= GetFieldName(field.Name) #>.RunCallback(typed.<#= field.Name #>, semanticModel);
 <# } #>
 <# } #>
+<# if (!type.Abstract) { #>
 
-            _action?.Invoke(typed);
+            if (_action != null)
+<# if (typed) { #>
+                result = _action(result, typed);
+
+            return result;
+<# } else { #>
+                _action(typed);
+<# } #>
+<# } else if (typed) { #>
+            return result;
+<# } #>
         }
 <# } #>
     }
 
 <# } #>
+<# if (!typed) { #>
     partial class Pattern
+<# } else { #>
+    partial struct PatternBuilder<TResult>
+<# } #>
     {
 <# foreach (var type in types.Where(p => !p.Abstract)) {
 
+    string actionType = !typed ? "Action<" + type.Name + ">" : "Func<TResult, " + type.Name + ", TResult>";
     var thisFields = GetAllFields(types, type.Name);
 
 #>
-        public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
+        public <#= !typed ? "static " : "" #><#= GetPatternName(type.Name, genericType) #> <#= GetSimpleName(type.Name) #>(<#
    for (int i = 0; i < thisFields.Count; i++)
    {
        if (i > 0) {
            #>, <#
        }
-       #><#= GetPatternName(thisFields[i].Type, true) #> <#= GetLocalName(thisFields[i].Name) #> = <#= thisFields[i].Default #><#
+       #><#= GetPatternName(thisFields[i].Type, genericType, true) #> <#= GetLocalName(thisFields[i].Name) #> = <#= thisFields[i].Default #><#
    }
    if (thisFields.Count > 0) {
        #>, <#
    }
-   #>Action<<#= type.Name #>> action = null<#
+   #><#= actionType #> action = null<#
    #>)
         {
-            return new <#= GetPatternName(type.Name) #>(<#
+            return new <#= GetPatternName(type.Name, genericType) #>(<#
    for (int i = 0; i < thisFields.Count; i++)
    {
        if (i > 0) {
            #>, <#
        }
-       if (GetPatternName(thisFields[i].Type).StartsWith("NodeListPattern<")) {
+       if (GetPatternName(thisFields[i].Type, null).StartsWith("NodeListPattern<")) {
            #>NodeList(<#= GetLocalName(thisFields[i].Name) #>)<#
-       } else if (GetPatternName(thisFields[i].Type) == "TokenListPattern") {
+       } else if (GetPatternName(thisFields[i].Type, null) == "TokenListPattern") {
            #>TokenList(<#= GetLocalName(thisFields[i].Name) #>)<#
        } else {
            #><#= GetLocalName(thisFields[i].Name) #><#
@@ -232,13 +269,13 @@ if (paramsFields.Count == 1) {
     var kindField = thisFields.SingleOrDefault(p => p.Name == "Kind");
 #>
 
-        public static <#= GetPatternName(type.Name) #> <#= GetSimpleName(type.Name) #>(<#
+        public <#= !typed ? "static " : "" #><#= GetPatternName(type.Name, genericType) #> <#= GetSimpleName(type.Name) #>(<#
         if (kindField != null) {
             #><#= kindField.Type #> <#= GetLocalName(kindField.Name) #>, <#
         }
-        #>params <#= GetGenericArgumentType(paramsField.Type) #>[] <#= GetLocalName(paramsField.Name) #>)
+        #>params <#= GetGenericArgumentType(paramsField.Type, genericType) #>[] <#= GetLocalName(paramsField.Name) #>)
         {
-            return new <#= GetPatternName(type.Name) #>(<#
+            return new <#= GetPatternName(type.Name, genericType) #>(<#
    for (int i = 0; i < thisFields.Count; i++)
    {
        if (i > 0) {
@@ -248,40 +285,40 @@ if (paramsFields.Count == 1) {
            #><#= GetLocalName(kindField.Name) #><#
        } else if (thisFields[i] != paramsField) {
            #><#= thisFields[i].Default #><#
-       } else if (GetPatternName(paramsField.Type).StartsWith("NodeListPattern<")) {
+       } else if (GetPatternName(paramsField.Type, null).StartsWith("NodeListPattern<")) {
            #>NodeList(<#= GetLocalName(paramsField.Name) #>)<#
-       } else if (GetPatternName(paramsField.Type) == "TokenListPattern") {
+       } else if (GetPatternName(paramsField.Type, null) == "TokenListPattern") {
            #>TokenList(<#= GetLocalName(paramsField.Name) #>)<#
        }
    }
    #>, null);
         }
 <# } #>
-
 <# } #>
     }
+<# } #>
 }
 <#+
 
 private static bool IsListType(string name)
 {
-    return GetPatternName(name).StartsWith("NodeListPattern<");
+    return GetPatternName(name, null).StartsWith("NodeListPattern<");
 }
 
-private static string GetGenericArgumentType(string name)
+private static string GetGenericArgumentType(string name, string genericType)
 {
     if (name.Contains("<"))
     {
         if (name == "SyntaxList<SyntaxToken>")
             return "string";
 
-        return GetPatternName(name.Substring(name.IndexOf('<') + 1).TrimEnd('>'));
+        return GetPatternName(name.Substring(name.IndexOf('<') + 1).TrimEnd('>'), genericType);
     }
 
     throw new InvalidOperationException();
 }
 
-private static string GetPatternName(string name, bool listAsEnumerable = false)
+private static string GetPatternName(string name, string genericArgument, bool listAsEnumerable = false)
 {
     if (name.Contains("<"))
     {
@@ -289,24 +326,27 @@ private static string GetPatternName(string name, bool listAsEnumerable = false)
             return listAsEnumerable ? "IEnumerable<string>" : "TokenListPattern";
         string baseName = name.Substring(0, name.IndexOf('<'));
         string argumentName = name.Substring(name.IndexOf('<') + 1).TrimEnd('>');
+        string listGenericArgument = null;
 
         switch (baseName)
         {
             case "SyntaxList":
             case "SeparatedSyntaxList":
                 baseName = listAsEnumerable ? "IEnumerable" : "NodeListPattern";
+                if (!listAsEnumerable && genericArgument != null)
+                    listGenericArgument = ", " + genericArgument.Trim('<', '>');
                 break;
             default:
                 throw new InvalidOperationException("Unmapped generic type '" + baseName + "'");
         }
 
-        return baseName + "<" + GetPatternName(argumentName) + ">";
+        return baseName + "<" + GetPatternName(argumentName, genericArgument) + listGenericArgument + ">";
     }
 
     switch (name)
     {
         case "CSharpSyntaxNode":
-            return "PatternNode";
+            return "PatternNode" + genericArgument;
         case "SyntaxToken":
             return "string";
         case "SyntaxKind":
@@ -316,7 +356,7 @@ private static string GetPatternName(string name, bool listAsEnumerable = false)
     if (!name.EndsWith("Syntax"))
         throw new InvalidOperationException("Invalid pattern name " + name);
 
-    return name.Substring(0, name.Length - 6) + "Pattern";
+    return name.Substring(0, name.Length - 6) + "Pattern" + genericArgument;
 }
 
 private static string GetSimpleName(string name)
@@ -397,8 +437,8 @@ private static bool ConsiderParamsFactory(string type, string fieldType)
 {
     return
         IsListType(fieldType) &&
-        GetGenericArgumentType(fieldType) != "AttributeListPattern" &&
-        GetGenericArgumentType(fieldType) != "TypeParameterConstraintClausePattern" &&
+        GetGenericArgumentType(fieldType, null) != "AttributeListPattern" &&
+        GetGenericArgumentType(fieldType, null) != "TypeParameterConstraintClausePattern" &&
         !_paramsFactoryBlacklist.Contains(GetSimpleName(type));
 }
 
@@ -410,6 +450,25 @@ private static readonly HashSet<string> _paramsFactoryBlacklist = new HashSet<st
     "TryStatement",
     "TypeParameterConstraintClause",
 };
+
+private static bool HasRunCallback(List<SyntaxType> types, string name)
+{
+    var type = types.SingleOrDefault(p => p.Name == name);
+    if (type == null)
+        return false;
+    if (!type.Abstract)
+        return true;
+    return type.Fields.Any(p => CanRunCallback(p));
+}
+
+private static bool CanRunCallback(SyntaxField field)
+{
+    return
+        !field.Override &&
+        field.Name != "Kind" &&
+        GetPatternName(field.Type, null) != "string" &&
+        GetPatternName(field.Type, null) != "TokenListPattern";
+}
 
 private class SyntaxType
 {

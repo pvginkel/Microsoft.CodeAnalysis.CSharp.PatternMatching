@@ -3,48 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 {
-    public class VarTypePattern : TypePattern
+    public class AnyNodePattern<TNode> : PatternNode
+        where TNode : SyntaxNode
     {
-        private readonly Action<TypeSyntax> _action;
+        private readonly Action<TNode> _action;
 
-        public VarTypePattern(Action<TypeSyntax> action)
+        public AnyNodePattern(Action<TNode> action)
         {
             _action = action;
         }
 
         internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            return node is TypeSyntax typed && !typed.IsVar;
+            return node is TNode;
         }
 
         internal override void RunCallback(SyntaxNode node, SemanticModel semanticModel)
         {
-            _action?.Invoke((TypeSyntax)node);
+            _action?.Invoke((TNode)node);
         }
     }
 
-    public class VarTypePattern<TResult> : TypePattern<TResult>
+    public class AnyNodePattern<TNode, TResult> : PatternNode<TResult>
+        where TNode : SyntaxNode
     {
-        private readonly Func<TResult, TypeSyntax, TResult> _action;
+        private readonly Func<TResult, TNode, TResult> _action;
 
-        public VarTypePattern(Func<TResult, TypeSyntax, TResult> action)
+        public AnyNodePattern(Func<TResult, TNode, TResult> action)
         {
             _action = action;
         }
 
         internal override bool Test(SyntaxNode node, SemanticModel semanticModel)
         {
-            return node is TypeSyntax typed && !typed.IsVar;
+            return node is TNode;
         }
 
         internal override TResult RunCallback(TResult result, SyntaxNode node, SemanticModel semanticModel)
         {
             if (_action != null)
-                result = _action(result, (TypeSyntax)node);
+                result = _action(result, (TNode)node);
 
             return result;
         }

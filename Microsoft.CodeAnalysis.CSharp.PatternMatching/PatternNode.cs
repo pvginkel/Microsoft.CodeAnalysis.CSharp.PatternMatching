@@ -26,4 +26,22 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 
         internal abstract void RunCallback(SyntaxNode node, SemanticModel semanticModel);
     }
+
+    public abstract class PatternNode<TResult>
+    {
+        public PatternMatch<TResult> IsMatch(SyntaxNode node, SemanticModel semanticModel = null)
+        {
+            if (Test(node, semanticModel))
+                return new PatternMatch<TResult>(true, RunCallback(default(TResult), node, semanticModel));
+
+            return default(PatternMatch<TResult>);
+        }
+
+        internal virtual bool Test(SyntaxNode node, SemanticModel semanticModel)
+        {
+            return true;
+        }
+
+        internal abstract TResult RunCallback(TResult result, SyntaxNode node, SemanticModel semanticModel);
+    }
 }

@@ -199,3 +199,14 @@ The core of this project is a set of pattern matching classes automatically gene
 ## License
 
 LGPL 3 License.
+
+
+
+```
+              Type |    Method |     Mean |     Error |    StdDev |
+------------------ |---------- |---------:|----------:|----------:|
+     CachedPattern | Benchmark | 7.345 us | 0.1210 us | 0.1073 us |
+ PatternMatchClass | Benchmark | 7.565 us | 0.0759 us | 0.0634 us |
+      RoslynNative | Benchmark | 7.363 us | 0.0951 us | 0.0890 us |
+   UncachedPattern | Benchmark | 7.619 us | 0.1071 us | 0.0949 us |
+```

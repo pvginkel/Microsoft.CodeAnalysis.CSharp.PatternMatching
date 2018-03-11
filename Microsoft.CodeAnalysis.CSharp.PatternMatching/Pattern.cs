@@ -9,14 +9,14 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
 {
     public static partial class Pattern
     {
-        public static AnyExpressionPattern AnyExpression(Action<ExpressionSyntax> action = null)
+        public static AnyNodePattern<ExpressionSyntax> AnyExpression(Action<ExpressionSyntax> action = null)
         {
-            return new AnyExpressionPattern(action);
+            return new AnyNodePattern<ExpressionSyntax>(action);
         }
 
-        public static AnyStatementPattern AnyStatement(Action<StatementSyntax> action = null)
+        public static AnyNodePattern<StatementSyntax> AnyStatement(Action<StatementSyntax> action = null)
         {
-            return new AnyStatementPattern(action);
+            return new AnyNodePattern<StatementSyntax>(action);
         }
 
         public static AnySymbolPattern AnySymbol(Action<ExpressionSyntax, ISymbol> action = null)
@@ -24,9 +24,9 @@ namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
             return new AnySymbolPattern(action);
         }
 
-        public static AnyTypePattern AnyType(Action<TypeSyntax> action = null)
+        public static AnyNodePattern<TypeSyntax> AnyType(Action<TypeSyntax> action = null)
         {
-            return new AnyTypePattern(action);
+            return new AnyNodePattern<TypeSyntax>(action);
         }
 
         public static VarTypePattern VarType(Action<TypeSyntax> action = null)

@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Microsoft.CodeAnalysis.CSharp.PatternMatching
+{
+    public static class ValueTupleExtensions
+    {
+<# for (int i = 2; i <= 7; i++) {
+    string genericArguments = "T1";
+    for (int j = 2; j <= i; j++) {
+        genericArguments += ", T" + j;
+    }
+#>
+<# for (int j = 1; j <= i; j++) { #>
+        public static ValueTuple<<#= genericArguments #>> WithItem<#= j #><<#= genericArguments #>>(this ValueTuple<<#= genericArguments #>> self, T<#= j #> value)
+        {
+            return (<#
+for (int k = 1; k <= i; k++) {
+    if (k > 1) {
+        #>, <#
+    }
+    if (k == j) {
+        #>value<#
+    } else {
+        #>self.Item<#= k #><#
+    }
+}
+       #>);
+        }
+
+<# } #>
+<# } #>
+    }
+}
